@@ -1,72 +1,35 @@
-# Getting Started with Create React App
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+# local 환경 React 실행 방법 (조만간 배포는 할 예정)
 
 ## Available Scripts
 
-In the project directory, you can run:
+
+### `npm install`
+리액트 설치
+### `npm run -script build`
+스크립트 빌트
+
+### `npm install react-router-dom`
+라우터 설정
+- 아래까지 다 하고 안될경우
+- npm install react-router-dom --save
+
+### `npm install -D tailwindcss postcss autoprefixer`
+테일 윈드를 사용하기 때문에 테일윈드 세팅을 합니다.
 
 ### `npm start`
+- 시작
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
-
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
-
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
-# FrontServer
-# FrontServer
+## 파일계층
+- src 
+  - components :재사용 가능한 컴포넌트들이 위치하는 폴더
+  - assets : 이미지 혹은 폰트와 같은 파일들이 저장, 컴포넌트 내부에서 사용하는 이미지 파일
+  - hooks : 커스텀 훅
+  - pages : router 등을 이요하여 라우팅 적용
+  - constants : 공통적으로 사용되는 상수들을 정의한 파일
+  - config : 
+  - styles : css 파일들이 포함되는 폴더
+  - services (= api) : 보통 api관련 로직의 모듈 파일
+  - utils : 정규표현식 패턴이나 공통함수 등 공통으로 사용하는 유틸 파일
+  - contexts : contextAPI를 사용할 때 관련 파일들이 위치하는곳으로 상태관리
+  - App.js
+  - index.js
