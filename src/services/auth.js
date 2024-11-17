@@ -1,16 +1,11 @@
-import { API_URL } from '../config/api';
+import { apiRequest } from "../utils/api";
 
+// 로그인 요청
 export const login = async ({ email, password }) => {
-    try {
-        const response = await fetch(`${API_URL}/members/login`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password }),
-        });
-        return await response.json();
-    } catch (error) {
-        throw new Error('Login failed');
-    }
+  return apiRequest("/members/login", "POST", { email, password });
+};
+
+// 회원가입 요청
+export const signup = async ({ email, password, name }) => {
+  return apiRequest("/members/signup", "POST", { email, password, name });
 };

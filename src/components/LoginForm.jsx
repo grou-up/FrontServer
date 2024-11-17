@@ -1,89 +1,108 @@
-import React, { useState } from 'react';
-import { Mail, Lock } from 'lucide-react';
-import Button from './Button';
-import { login } from '../services/auth';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Mail, Lock } from "lucide-react";
+import Button from "./Button";
+import { login } from "../services/auth";
+import { handleError } from "../utils/errorHandler"; // 공통 에러 처리 함수 가져오기
 
 const LoginForm = () => {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const navigate = useNavigate(); // 페이지 이동 훅
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        try {
-            await login({ email, password });
-        } catch (error) {
-            console.error('Login failed:', error);
-        }
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await login({ email, password }); // 로그인 API 호출
+      alert("로그인에 성공했습니다!");
+      navigate("/"); // 성공 시 홈 페이지로 이동
+    } catch (error) {
+      handleError(error); // 공통 에러 처리 함수 호출
+    }
+  };
 
-    return (
-        <div className="min-h-screen bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center p-4">
-            <div className="bg-white rounded-lg shadow-xl w-full max-w-md p-8 space-y-6">
-                <div className="text-center space-y-2">
-                    <h1 className="text-3xl font-bold text-gray-900">환영합니다</h1>
-                    <p className="text-gray-500">계정에 로그인해주세요</p>
-                </div>
-
-                <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700 block">이메일</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Mail className="h-5 w-5 text-gray-400" />
-                            </div>
-                            <input
-                                type="email"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                                placeholder="name@example.com"
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="text-sm font-medium text-gray-700 block">비밀번호</label>
-                        <div className="relative">
-                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <Lock className="h-5 w-5 text-gray-400" />
-                            </div>
-                            <input
-                                type="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
-                                placeholder="••••••••"
-                                required
-                            />
-                        </div>
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                            <input
-                                type="checkbox"
-                                className="h-4 w-4 text-purple-600 focus:ring-purple-500 border-gray-300 rounded"
-                            />
-                            <label className="ml-2 block text-sm text-gray-700">로그인 상태 유지</label>
-                        </div>
-                        <Button variant="link" type="button">
-                            비밀번호 찾기
-                        </Button>
-                    </div>
-
-                    <Button type="submit">로그인</Button>
-                </form>
-
-                <div className="text-center text-sm">
-                    <span className="text-gray-500">계정이 없으신가요? </span>
-                    <Button variant="link">
-                        회원가입
-                    </Button>
-                </div>
-            </div>
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center">
+      <div className="w-full max-w-screen-lg grid grid-cols-1 lg:grid-cols-2 bg-white rounded-lg shadow-xl overflow-hidden">
+        {/* Left Content */}
+        <div className="hidden lg:flex flex-col items-center justify-center bg-gradient-to-br from-purple-700 to-blue-600 text-white p-12">
+          <h1 className="text-5xl font-bold mb-6">환영합니다</h1>
+          <p className="text-lg mb-8 opacity-90">
+            우리의 서비스는 혁신적이고 신뢰할 수 있습니다.
+            <br />
+            지금 바로 경험해보세요!
+          </p>
+          <Button
+            type="button"
+            className="w-full"
+            onClick={() => navigate("/signup")} // 회원가입 페이지로 이동
+          >
+            회원가입
+          </Button>
         </div>
-    );
+
+        {/* Right Content - Login Form */}
+        <div className="flex flex-col items-center justify-center p-8">
+          <div className="w-full max-w-md">
+            <div className="text-center mb-6">
+              <h1 className="text-3xl font-bold text-gray-900">로그인</h1>
+              <p className="text-gray-500">계정에 로그인해주세요</p>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 block">
+                  이메일
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    placeholder="name@example.com"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700 block">
+                  비밀번호
+                </label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Lock className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+                    placeholder="••••••••"
+                    required
+                  />
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between">
+                <Button variant="link" type="button">
+                  비밀번호 찾기
+                </Button>
+              </div>
+
+              <Button type="submit" className="w-full">
+                로그인
+              </Button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default LoginForm;
