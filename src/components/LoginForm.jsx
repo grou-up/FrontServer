@@ -3,21 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { Mail, Lock } from "lucide-react";
 import Button from "./Button";
 import { login } from "../services/auth";
-import { handleError } from "../utils/errorHandler"; // 공통 에러 처리 함수 가져오기
+import { handleError } from "../utils/errorHandler"; 
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); // 페이지 이동 훅
+  const navigate = useNavigate(); 
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login({ email, password }); // 로그인 API 호출
+      await login({ email, password }); 
       alert("로그인에 성공했습니다!");
-      navigate("/"); // 성공 시 홈 페이지로 이동
+      navigate("/"); 
     } catch (error) {
-      handleError(error); // 공통 에러 처리 함수 호출
+      handleError(error);
     }
   };
 

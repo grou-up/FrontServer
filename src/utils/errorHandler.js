@@ -13,7 +13,7 @@ export const errorMessages = {
   
   // 공통 에러 처리 함수
   export const handleError = (error) => {
-    const message = errorMessages[error.message] || errorMessages.default; // 에러 메시지 매핑
-    alert(message); // 사용자 친화적인 메시지 표시
+    const message = errorMessages[error.message] || errorMessages.default;
+    alert(message); 
   };
   

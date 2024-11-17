@@ -8,16 +8,16 @@ export const apiRequest = async (endpoint, method, body) => {
       headers: {
         "Content-Type": "application/json",
       },
-      body: body ? JSON.stringify(body) : undefined, // body가 있을 때만 JSON으로 변환
+      body: body ? JSON.stringify(body) : undefined, 
     });
 
-    const data = await response.json(); // JSON 응답 파싱
+    const data = await response.json(); 
     if (!response.ok) {
       throw new Error(data.error_message || "Something went wrong");
     }
-    return data; // 성공적으로 데이터를 반환
+    return data; 
   } catch (error) {
-    throw new Error(error.message || "Something went wrong"); // 에러 메시지 전달
+    throw new Error(error.message || "Something went wrong"); 
   }
 };
 

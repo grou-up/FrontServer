@@ -1,7 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginForm from "./components/LoginForm"; // 로그인 폼 컴포넌트
-import SignupForm from "./components/SignupForm"; // 회원가입 폼 컴포넌트
+import LoginForm from "./components/LoginForm";
+import SignupForm from "./components/SignupForm";
 
 const App = () => {
   return (
