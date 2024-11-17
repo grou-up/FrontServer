@@ -11,7 +11,7 @@ const SignupForm = () => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [passwordError, setPasswordError] = useState(false);
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (password !== confirmPassword) {
@@ -23,7 +23,7 @@ const SignupForm = () => {
     try {
       const response = await signup({ email, password, name });
       alert("회원가입이 완료되었습니다!");
-      useNavigate.navigate("/"); 
+      navigate('/');
     } catch (error) {
       handleError(error)
     }

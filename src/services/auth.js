@@ -1,8 +1,14 @@
-import { apiRequest } from "../utils/api";
+import { setToken } from '../utils/tokenManager';
+import { apiRequest } from '../utils/apiClient';
 
 // 로그인 요청
 export const login = async ({ email, password }) => {
-  return apiRequest("/members/login", "POST", { email, password });
+  const data = await apiRequest('/members/login', 'POST', { email, password });
+
+  // accessToken 저장
+  setToken(data.result.accessToken);
+
+  return data; // 필요 시 추가 데이터 반환
 };
 
 // 회원가입 요청
