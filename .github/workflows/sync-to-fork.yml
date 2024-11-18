@@ -7,6 +7,7 @@ on:
 
 jobs:
   sync:
+    if: github.repository == 'grou-up/FrontServer'
     runs-on: ubuntu-latest
 
     steps:
