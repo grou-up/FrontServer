@@ -24,6 +24,8 @@ jobs:
         run: git remote add fork https://github.com/fa7271/FrontServer.git
 
       - name: Push changes to Fork
-        run: git push fork main
         env:
+          GITHUB_USERNAME: fa7271
           GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
+        run: |
+          git push https://$GITHUB_USERNAME:$GITHUB_TOKEN@github.com/fa7271/FrontServer.git main
