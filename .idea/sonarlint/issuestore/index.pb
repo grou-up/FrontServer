@@ -41,3 +41,7 @@ A
 src/setupTests.js,b/7/b7e8d8f421068b8d51c89805d2035e747be2ff17
 R
 ".github/workflows/sync-to-fork.yml,3/8/381f8edf9de6c7fbd5609e2bd35f76b86bb5b435
+A
+src/pages/main.js,f/0/f0f61222e530390fdbb5f8a7244c1e155e9667f8
+M
+src/components/SignupForm.jsx,f/4/f4fca4ba82eab27590f70a0fa4c5d18472a69426
