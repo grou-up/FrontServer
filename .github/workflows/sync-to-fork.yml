@@ -1,0 +1,29 @@
+name: Sync to Fork
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: Set up Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+
+      - name: Add Fork as Remote
+        run: git remote add fork https://github.com/fa7271/FrontServer.git
+
+      - name: Push changes to Fork
+        run: git push fork main
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT_TOKEN }}
