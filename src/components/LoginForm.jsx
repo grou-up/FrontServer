@@ -3,17 +3,17 @@ import { useNavigate } from "react-router-dom";
 import { Mail, Lock } from "lucide-react";
 import Button from "./Button";
 import { login } from "../services/auth";
-import { handleError } from "../utils/errorHandler"; 
+import { handleError } from "../utils/errorHandler";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await login({ email, password }); 
+      await login({ email, password });
       alert("로그인에 성공했습니다!");
       navigate('/main');
     } catch (error) {
@@ -24,8 +24,8 @@ const LoginForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center">
       <div className="w-full max-w-screen-lg grid grid-cols-1 lg:grid-cols-2 bg-white rounded-lg shadow-xl overflow-hidden">
-        {/* Left Content */}
-        <div className="hidden lg:flex flex-col items-center justify-center bg-gradient-to-br from-purple-700 to-blue-600 text-white p-12">
+        {/* 회원가입 섹션 - 작은 화면에서도 항상 보이도록 수정 */}
+        <div className="flex flex-col items-center justify-center bg-gradient-to-br from-purple-700 to-blue-600 text-white p-12">
           <h1 className="text-5xl font-bold mb-6">환영합니다</h1>
           <p className="text-lg mb-8 opacity-90">
             우리의 서비스는 혁신적이고 신뢰할 수 있습니다.
@@ -41,8 +41,8 @@ const LoginForm = () => {
           </Button>
         </div>
 
-        {/* Right Content - Login Form */}
-        <div className="flex flex-col items-center justify-center p-8">
+        {/* 로그인 폼 섹션 */}
+        <div className="flex flex-col items-center justify-center p-8 w-full">
           <div className="w-full max-w-md">
             <div className="text-center mb-6">
               <h1 className="text-3xl font-bold text-gray-900">로그인</h1>
