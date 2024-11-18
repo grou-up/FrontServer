@@ -26,7 +26,7 @@ jobs:
       - name: Fetch and Merge Fork Changes
         run: |
           git fetch fork
-          git merge fork/main --allow-unrelated-histories
+          git merge -X theirs fork/main || true
 
       - name: Push changes to Fork
         env:
