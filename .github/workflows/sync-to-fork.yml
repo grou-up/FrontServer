@@ -23,6 +23,11 @@ jobs:
       - name: Add Fork as Remote
         run: git remote add fork https://github.com/fa7271/FrontServer.git
 
+      - name: Fetch and Merge Fork Changes
+        run: |
+          git fetch fork
+          git merge fork/main --allow-unrelated-histories
+
       - name: Push changes to Fork
         env:
           GITHUB_USERNAME: fa7271
