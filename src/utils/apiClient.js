@@ -4,7 +4,7 @@ import { API_URL } from '../config/api';
 // 공통 API 요청 함수
 export const apiRequest = async (endpoint, method = 'GET', body = null) => {
   try {
-    // `accessToken` 가져오기
+    // accessToken 가져오기
     const token = getToken();
 
     // 기본 헤더 설정
