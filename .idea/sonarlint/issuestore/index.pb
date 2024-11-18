@@ -45,3 +45,5 @@ A
 src/pages/main.js,f/0/f0f61222e530390fdbb5f8a7244c1e155e9667f8
 M
 src/components/SignupForm.jsx,f/4/f4fca4ba82eab27590f70a0fa4c5d18472a69426
+K
+src/components/MainForm.jsx,b/a/ba4c661a158e2a413bafaeadfecc93ab3a1f1bd5

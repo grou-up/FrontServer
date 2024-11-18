@@ -14,7 +14,7 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       await login({ email, password });
-      alert("로그인에 성공했습니다!");
+      alert("꺄악!");
       navigate('/main');
     } catch (error) {
       handleError(error);
