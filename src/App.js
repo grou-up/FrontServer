@@ -1,20 +1,11 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginForm from "./components/LoginForm";
-import SignupForm from "./components/SignupForm"; 
-import MainForm from "./components/MainForm";
+import React from 'react';
+import AppRoutes from './Routes';
+
 const App = () => {
   return (
-    <Router>
-      <Routes>
-        {/* 로그인 페이지 */}
-        <Route path="/" element={<LoginForm />} />
-        {/* 회원가입 페이지 */}
-        <Route path="/signup" element={<SignupForm />} />
-        {/* 메인 페이지 */}
-        <Route path="/main" element={<MainForm />} />
-      </Routes>
-    </Router>
+    <div>
+      <AppRoutes /> {/* 라우팅 컴포넌트 렌더링 */}
+    </div>
   );
 };
 
