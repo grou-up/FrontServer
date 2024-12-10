@@ -4,6 +4,7 @@ import { Mail, Lock } from "lucide-react";
 import Button from "./Button";
 import { login } from "../services/auth";
 import { handleError } from "../utils/errorHandler";
+import KakaoLoginButton from "./KakaoLoginButton"; // 새로 추가된 버튼
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -98,6 +99,9 @@ const LoginForm = () => {
                 로그인
               </Button>
             </form>
+            <div className="text-center mt-4">
+              <KakaoLoginButton />
+            </div>
           </div>
         </div>
       </div>
