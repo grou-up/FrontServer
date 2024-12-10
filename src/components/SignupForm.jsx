@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Mail, Lock, User } from "lucide-react";
+import { Mail, Lock, User,ChevronLeft } from "lucide-react";
 import Button from "./Button";
 import { signup } from "../services/auth"; // signup API 호출
 import { useNavigate } from "react-router-dom";
@@ -32,11 +32,22 @@ const SignupForm = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center">
       <div className="w-full max-w-md bg-white rounded-lg shadow-xl p-8 space-y-6">
+        {/* Back Button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center text-gray-700 hover:text-gray-700 mb-4"
+        >
+          <ChevronLeft className="h-5 w-5" />
+          <span className="ml-1 text-sm font-medium">뒤로가기</span>
+        </button>
+
+        {/* Form Title */}
         <div className="text-center">
           <h1 className="text-3xl font-bold text-gray-900">회원가입</h1>
           <p className="text-gray-500">새 계정을 만들어보세요</p>
         </div>
 
+        {/* Signup Form */}
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Email Field */}
           <div className="space-y-2">
@@ -134,5 +145,4 @@ const SignupForm = () => {
     </div>
   );
 };
-
 export default SignupForm;
