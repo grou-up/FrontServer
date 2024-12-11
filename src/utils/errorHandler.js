@@ -6,6 +6,7 @@ export const errorMessages = {
     "email is essential" : "이메일을 작성해주세요",
     "Invalid password format" : "특수문자, 소문자 , 대문자 , 숫자중 3가지를 포함, 8글자 이상 20글자 이하로 비밀번호를 작성해주세요",
     "name is essential" : "이름을 작성해주세요",
+    "This account is registered with Kakao login." : "카카오 계정이 존재합니다.",
 
     default: "알 수 없는 오류가 발생했습니다. 관리자에게 문의해주세요.",
 
