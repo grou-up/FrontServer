@@ -1,20 +1,22 @@
 import React from "react";
 import Button from "./Button";
 
+// 환경 변수에서 REST API 키와 리다이렉트 URI 가져오기
 const REST_API_KEY = process.env.REACT_APP_REST_API_KEY;
-const REDIRECT_URI = 'http://localhost:3000/oauth/kakao/callback';
-
 
 const KakaoLoginButton = () => {
     const handleLogin = () => {
-      window.location.href = `https://kauth.kakao.com/oauth/authorize?client_id=${REST_API_KEY}&redirect_uri=${REDIRECT_URI}&response_type=code`;
+        console.log('REST_API_KEY:', REST_API_KEY);
+
+        // 카카오 로그인 페이지로 리다이렉트
+        window.location.href = `http://localhost:8080/oauth2/authorization/kakao`;
     };
-  
+
     return (
-      <Button onClick={handleLogin} variant="kakao">
-        카카오로 로그인
-      </Button>
+        <Button onClick={handleLogin} variant="kakao">
+            카카오로 로그인
+        </Button>
     );
-  };
-  
-  export default KakaoLoginButton;
+};
+
+export default KakaoLoginButton;
