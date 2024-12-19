@@ -1,0 +1,8 @@
+.main-content {
+    margin-top: 45px; /* Header 높이만큼 여백 */
+    margin-left: 256px; /* Sidebar 너비만큼 여백 */
+    padding: 16px;
+    height: calc(100vh - 60px); /* Header 높이 제거 */
+    overflow-y: auto; /* 스크롤 가능 */
+    background-color: #ffffff;
+}

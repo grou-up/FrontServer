@@ -1,0 +1,78 @@
+.sidebar {
+  position: fixed; /* 왼쪽 고정 */
+  top: 60px; /* Header 아래로 배치 */
+  left: 0;
+  width: 256px; /* Sidebar 너비 */
+  height: calc(100vh - 60px); /* 화면 전체 높이에서 Header 높이 제거 */
+  background-color: #f9f9f9;
+  border-right: 1px solid #e5e7eb;
+  overflow-y: auto; /* 내용 스크롤 가능 */
+  z-index: 900; /* Header 아래 */
+}
+  
+  .sidebar-nav {
+    padding: 16px;
+  }
+  
+  .sidebar-logo {
+    margin-bottom: 32px;
+  }
+  
+  .sidebar-logo-text {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #1f2937;
+  }
+  
+  .menu-container {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  
+  .menu-item {
+    color: #374151;
+  }
+  
+  .menu-item-content {
+    display: flex;
+    align-items: center;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+  }
+  
+  .menu-item-content:hover:not(.active) {
+    background-color: #f3f4f6;
+  }
+  
+  .menu-item-content.active {
+    background-color: #4880FF;
+    color: white;
+  }
+  
+  .menu-item-icon {
+    margin-right: 8px;
+  }
+  
+  .menu-item-text {
+    margin-left: 8px;
+  }
+  
+  .submenu-container {
+    margin-left: 16px;
+  }
+
+  .menu-divider {
+    border: 0;
+    height: 1px;
+    background: #ccc; /* 구분선 색상 */
+    margin: 0; /* 기본 여백 제거 */
+  }
+
+  .menu-item-description {
+    font-size: 12px; /* 설명 글씨 크기 */
+    color: #888; /* 설명 글씨 색상 */
+    margin-top: 8px; /* 제목과 설명 사이의 여백 */
+    margin-left: 24px; /* 제목과 설명을 왼쪽으로 약간 이동 */
+  }

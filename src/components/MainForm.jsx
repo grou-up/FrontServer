@@ -3,6 +3,7 @@ import FileUploadComponent from '../components/FileUploadComponent';
 import Button from './Button';
 import useFileUpload from '../hooks/useFileUpload';
 import { uploadFile1, uploadFile2 } from '../services/pythonapi';
+import '../styles/Mainform.css'; // 스타일 파일 추가
 
 const MainForm = () => {
   const [file1Data, setFile1Data] = useState([]);
@@ -23,13 +24,9 @@ const MainForm = () => {
   } = useFileUpload(uploadFile2, '파일 2 업로드 성공!', false, setFile2Data);
 
   return (
+    <div className="main-content">
     <div className="min-h-screen bg-gray-100">
-      {/* 네비게이션 바 */}
-      <nav className="bg-blue-600 p-4 shadow-lg">
-        <div className="container mx-auto">
-          <h1 className="text-white text-2xl font-bold">Grow Up</h1>
-        </div>
-      </nav>
+      {/* 네비게이션 바 삭제 */}
 
       {/* 메인 컨텐츠 */}
       <main className="container mx-auto p-6">
@@ -61,6 +58,7 @@ const MainForm = () => {
           {/* 결과 테이블 렌더링 */}
         </div>
       </main>
+    </div>
     </div>
   );
 };

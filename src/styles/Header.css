@@ -1,0 +1,121 @@
+/* src/styles/Header.css */
+.header {
+    position: fixed; /* 상단 고정 */
+    top: 0;
+    left: 0;
+    width: 100%; /* 화면 너비 전체 */
+    height: 70px; /* Header 높이 */
+    z-index: 1000; /* Sidebar 위에 표시 */
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 16px;
+    background-color: white;
+    border-bottom: 1px solid rgba(128, 128, 128, 0.5); /* 회색 테두리 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 약간의 그림자 추가 */
+}
+
+.header-title {
+    font-size: 24px;
+    font-weight: bold;
+    color: #007bff;
+    cursor: pointer; /* 클릭 가능한 커서 */
+}
+
+.user-info {
+    display: flex;
+    align-items: center; /* 세로 중앙 정렬 */
+    margin-left: auto; /* 오른쪽 끝으로 이동 */
+    padding-right: 30px; /* 오른쪽 패딩 추가 */
+}
+
+.user-details {
+    display: flex;
+    flex-direction: column; /* 가로 방향으로 배치 */
+    align-items: center; /* 세로 중앙 정렬 */
+    margin-right: 14px; /* 드롭다운 버튼과의 간격 */
+}
+
+.user-name {
+    font-size: 14px; /* 이름 크기 조정 */
+    font-weight: bold; /* 이름 굵게 */
+    margin-right: 4px; /* 이름과 역할 간격 */
+}
+
+.user-role {
+    font-size: 10px; /* 역할 크기 조정 */
+    color: gray; /* 역할 색상 */
+}
+
+.dropdown {
+    position: relative; /* 드롭다운을 위한 상대 위치 설정 */
+}
+
+.dropdown-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 14px; /* 드롭다운 버튼 크기 조정 */
+}
+
+/* 드롭다운 메뉴 스타일 */
+.dropdown-menu {
+    position: absolute; /* 절대 위치로 드롭다운 메뉴 설정 */
+    top: 130%; /* 버튼 바로 아래 위치 */
+    right: 0; /* 오른쪽 정렬 */
+    background-color: white;
+    border: 1px solid rgba(128, 128, 128, 0.5);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* 다른 요소 위에 표시 */
+    width: 150px; /* 드롭다운 너비 조정 */
+    border-radius: 8px; /* 모서리 둥글게 */
+}
+
+/* 드롭다운 항목 스타일 */
+.dropdown-item {
+    padding: 12px 16px; /* 항목 패딩 */
+    cursor: pointer;
+    transition: background-color 0.3s; /* 배경 색상 전환 효과 */
+}
+
+.dropdown-item:hover {
+    background-color: rgba(0, 123, 255, 0.1); /* 호버 효과 */
+    border-radius: 8px; /* 호버 시 모서리 둥글게 */
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+    .header {
+        padding: 0 8px; /* 패딩 조정 */
+    }
+
+    .header-title {
+        font-size: 20px; /* 제목 크기 조정 */
+    }
+
+    .user-name {
+        font-size: 12px; /* 이름 크기 조정 */
+    }
+
+    .user-role {
+        font-size: 8px; /* 역할 크기 조정 */
+    }
+}
+
+@media (max-width: 480px) {
+    .header-title {
+        font-size: 18px; /* 제목 크기 조정 */
+    }
+
+    .user-name {
+        font-size: 10px; /* 이름 크기 조정 */
+    }
+
+    .user-role {
+        font-size: 8px; /* 역할 크기 조정 */
+    }
+
+    .dropdown-button {
+        font-size: 12px; /* 드롭다운 버튼 크기 조정 */
+    }
+}
