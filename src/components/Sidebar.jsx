@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect  } from 'react';
 import { ChevronDown, ChevronRight, Upload, BarChart, Calculator, Home , Settings,LogOut} from 'lucide-react'; // 필요한 아이콘 추가
 import '../styles/Sidebar.css';
+import { getMyCampaigns } from "../services/campaign";
 
 const MenuItem = ({ item, activePath, onSelect, currentPath = [] }) => {
     const [isOpen, setIsOpen] = useState(false);
@@ -55,6 +56,20 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [] }) => {
 
 const Sidebar = () => {
   const [activePath, setActivePath] = useState([]);
+  const [campaigns, setCampaigns] = useState([]);
+
+  useEffect(() => {
+    const fetchCampaigns = async () => {
+      try {
+        const response = await getMyCampaigns();// 캠페인 데이터 가져오기
+        console.log(response);
+        setCampaigns(response.data || []); // response.data가 캠페인 리스트라고 가정
+      } catch (error) {
+        console.error('Error fetching campaigns:', error);
+      }
+    };
+    fetchCampaigns();
+  }, []);
   
   const menuData = [
     {
@@ -73,11 +88,11 @@ const Sidebar = () => {
     {
       title: "광고 캠패인",
       description: "광고 캠패인 분석",
-      icon: <BarChart size={16} />, // 아이콘 추가
-      children: [
-        { title: "캠패인 1", icon: <BarChart size={14} /> },
-        { title: "캠패인 2", icon: <BarChart size={14} /> },
-      ]
+      icon: <BarChart size={16} />,
+      children: campaigns.map((campaign, index) => ({ // 캠페인 데이터로 자식 요소 생성
+        title: campaign, // 각 캠페인의 이름을 사용
+        icon: <BarChart size={14} />
+      })),
     },
     {
         title: "마진 계산기",
