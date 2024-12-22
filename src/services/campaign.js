@@ -3,7 +3,7 @@ import { apiRequest } from '../utils/apiClient';
 // 캠패인 이름 조회
 export const getMyCampaigns = async() => {
   try {
-    const response = await apiRequest("/campaign/campaign/getMyCampaigns");
+    const response = await apiRequest("/campaign/getMyCampaigns");
     // console.log(response); // 응답값을 콘솔에 출력
     return response;
   } catch (error) {
