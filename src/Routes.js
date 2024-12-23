@@ -7,6 +7,7 @@ import KakaoLoginCallback from "./pages/KakaoLoginCallback";
 import PrivateRoute from "./components/PrivateRoute"; // PrivateRoute 추가
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
+import FileUploadForm from "./components/FileUploadForm";
 class AppRoutes extends React.Component {
     render() {
         return (
@@ -25,6 +26,16 @@ class AppRoutes extends React.Component {
                                 <Sidebar />
                                 <Header /> {/* Header 추가 */}
                                 <MainForm />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/upload"
+                        element={
+                            <PrivateRoute>
+                                <Sidebar />
+                                <Header />
+                                < FileUploadForm/>
                             </PrivateRoute>
                         }
                     />
