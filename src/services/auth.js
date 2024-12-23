@@ -14,3 +14,12 @@ export const login = async ({ email, password }) => {
 export const signup = async ({ email, password, name }) => {
   return apiRequest("/members/signup", "POST", { email, password, name });
 };
+
+// role + nickname 요청
+export const getMyEmailAndRole = async() =>{
+  const data = await apiRequest('/members/getMyEmailAndRole',"GET")
+  console.log(data)
+
+  return data;
+}
+
