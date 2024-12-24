@@ -8,6 +8,7 @@ import PrivateRoute from "./components/PrivateRoute"; // PrivateRoute 추가
 import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import FileUploadForm from "./components/FileUploadForm";
+import CampaignDetail from "./components/CampaignDetail";
 class AppRoutes extends React.Component {
     render() {
         return (
@@ -36,6 +37,16 @@ class AppRoutes extends React.Component {
                                 <Sidebar />
                                 <Header />
                                 < FileUploadForm/>
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/campaigns/:campaignId" // 캠페인 분석 경로 추가
+                        element={
+                            <PrivateRoute>
+                                <Sidebar />
+                                <Header />
+                                <CampaignDetail />
                             </PrivateRoute>
                         }
                     />

@@ -1,25 +1,40 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/KeywordComponent.css"; // 스타일 파일
 import { ArrowDownUp } from 'lucide-react';
+import { getKeywords } from '../services/keyword'; // API 요청 함수 임포트
 
-
-const KeywordComponent = () => {
+const KeywordComponent = ({ campaignId }) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedKeywords, setSelectedKeywords] = useState([]);
     const [isAllSelected, setIsAllSelected] = useState(false); // 전체 선택 상태
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" }); // 정렬 상태
+    const [keywords, setKeywords] = useState([]); // 키워드 데이터 상태
+    const [loading, setLoading] = useState(true); // 로딩 상태
+    const [error, setError] = useState(null); // 에러 상태
 
-    const keywords = [
-        { keyword: "안경케이스", impressions: 8665, clicks: 146, clickRate: 1.7, orders: 12, conversionRate: 8.2, cpc: 356, adCost: 51968, adRevenue: 114800, roas: 221 },
-        { keyword: "휴대용안경케이스", impressions: 2011, clicks: 47, clickRate: 2.3, orders: 3, conversionRate: 6.4, cpc: 423, adCost: 19879, adRevenue: 32800, roas: 165 },
-        { keyword: "선글라스케이스", impressions: 1305, clicks: 32, clickRate: 2.5, orders: 2, conversionRate: 6.3, cpc: 346, adCost: 11058, adRevenue: 16400, roas: 148 },
-        { keyword: "안경집케이스", impressions: 834, clicks: 23, clickRate: 2.8, orders: 2, conversionRate: 8.7, cpc: 448, adCost: 10302, adRevenue: 16400, roas: 159 },
-    ];
+    useEffect(() => {
+        const fetchKeywords = async () => {
+            setLoading(true);
+            try {
+                const start = "2024-11-01";
+                const end = "2024-11-30";
+                const response = await getKeywords({ start, end, campaignId });
+                setKeywords(response.data || []); // API 응답에서 키워드 데이터 설정
+            } catch (error) {
+                setError("키워드를 가져오는 데 실패했습니다.");
+                console.error(error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchKeywords();
+    }, [campaignId]); // campaignId가 변경될 때마다 호출
 
     const filteredKeywords = keywords
-        .filter((item) => item.keyword.includes(searchTerm))
+        .filter((item) => item.keyKeyword.includes(searchTerm))
         .sort((a, b) => {
-            if (!sortConfig.key) return 0;
+            if (!sortConfig.key) return 0; // 정렬 키가 없으면 정렬하지 않음
             const order = sortConfig.direction === "asc" ? 1 : -1;
             return a[sortConfig.key] > b[sortConfig.key]
                 ? order
@@ -48,7 +63,7 @@ const KeywordComponent = () => {
         if (isAllSelected) {
             setSelectedKeywords([]);
         } else {
-            setSelectedKeywords(filteredKeywords.map((item) => item.keyword));
+            setSelectedKeywords(filteredKeywords.map((item) => item.keyKeyword));
         }
         setIsAllSelected(!isAllSelected);
     };
@@ -59,6 +74,9 @@ const KeywordComponent = () => {
             alert("복사 완료: " + keywordsToCopy);
         });
     };
+
+    if (loading) return <div>Loading...</div>; // 로딩 상태 표시
+    if (error) return <div>{error}</div>; // 에러 상태 표시
 
     return (
         <div className="keyword-component">
@@ -79,76 +97,75 @@ const KeywordComponent = () => {
                 </div>
             </div>
             <table>
-            <thead>
-                <tr>
-                    <th onClick={() => handleSort("keyword")} >
-                        키워드
-                        <ArrowDownUp />
-                    </th>
-                    <th onClick={() => handleSort("impressions")} >
-                        노출
-                        <ArrowDownUp />
-                    </th>
-                    <th onClick={() => handleSort("clicks")}>
-                        클릭
-                        <ArrowDownUp />
-                    </th>
-                    <th onClick={() => handleSort("clickRate")} >
-                        클릭률
-                        <ArrowDownUp />
-                    </th>
-                    <th onClick={() => handleSort("orders")} >
-                        주문
-                        <ArrowDownUp />
-                    </th>
-                    <th onClick={() => handleSort("conversionRate")} >
-                        전환율
-                        <ArrowDownUp />
-                    </th>
-                    <th onClick={() => handleSort("cpc")} >
-                        CPC
-                        <ArrowDownUp />
-                    </th>
-                    <th onClick={() => handleSort("adCost")} >
-                        광고비
-                        <ArrowDownUp />
-                    </th>
-                    <th onClick={() => handleSort("adRevenue")} >
-                        광고매출
-                        <ArrowDownUp />
-                    </th>
-                    <th onClick={() => handleSort("roas")} >
-                        ROAS
-                        <ArrowDownUp />
-                    </th>
-                    <th>
-                        <input
-                            type="checkbox"
-                            checked={isAllSelected && selectedKeywords.length === filteredKeywords.length}
-                            onChange={handleSelectAll}
-                        />
-                    </th>
-                </tr>
-            </thead>
+                <thead>
+                    <tr>
+                        <th onClick={() => handleSort("keyKeyword")}>
+                            키워드
+                            <ArrowDownUp />
+                        </th>
+                        <th onClick={() => handleSort("keyImpressions")}>
+                            노출
+                            <ArrowDownUp />
+                        </th>
+                        <th onClick={() => handleSort("keyClicks")}>
+                            클릭
+                            <ArrowDownUp />
+                        </th>
+                        <th onClick={() => handleSort("keyClickRate")}>
+                            클릭률
+                            <ArrowDownUp />
+                        </th>
+                        <th onClick={() => handleSort("keyTotalSales")}>
+                            주문
+                            <ArrowDownUp />
+                        </th>
+                        <th onClick={() => handleSort("keyCvr")}>
+                            전환율
+                            <ArrowDownUp />
+                        </th>
+                        <th onClick={() => handleSort("keyCpc")}>
+                            CPC
+                            <ArrowDownUp />
+                        </th>
+                        <th onClick={() => handleSort("keyAdcost")}>
+                            광고비
+                            <ArrowDownUp />
+                        </th>
+                        <th onClick={() => handleSort("keyAdsales")}>
+                            광고매출
+                            <ArrowDownUp />
+                        </th>
+                        <th onClick={() => handleSort("keyRoas")}>
+                            ROAS
+                            <ArrowDownUp />
+                        </th>
+                        <th>
+                            <input
+                                type="checkbox"
+                                checked={isAllSelected && selectedKeywords.length === filteredKeywords.length}
+                                onChange={handleSelectAll}
+                            />
+                        </th>
+                    </tr>
+                </thead>
                 <tbody>
                     {filteredKeywords.map((item, index) => (
                         <tr key={index}>
-                            
-                            <td>{item.keyword}</td>
-                            <td>{item.impressions}</td>
-                            <td>{item.clicks}</td>
-                            <td>{item.clickRate}%</td>
-                            <td>{item.orders}</td>
-                            <td>{item.conversionRate}%</td>
-                            <td>{item.cpc}</td>
-                            <td>{item.adCost}</td>
-                            <td>{item.adRevenue}</td>
-                            <td>{item.roas}%</td>
+                            <td>{item.keyKeyword}</td>
+                            <td>{item.keyImpressions}</td>
+                            <td>{item.keyClicks}</td>
+                            <td>{item.keyClickRate}%</td>
+                            <td>{item.keyTotalSales}</td>
+                            <td>{item.keyCvr}%</td>
+                            <td>{item.keyCpc}</td>
+                            <td>{item.keyAdcost}</td>
+                            <td>{item.keyAdsales}</td>
+                            <td>{item.keyRoas}%</td>
                             <td>
                                 <input
                                     type="checkbox"
-                                    checked={selectedKeywords.includes(item.keyword)}
-                                    onChange={() => handleCheckboxChange(item.keyword)}
+                                    checked={selectedKeywords.includes(item.keyKeyword)}
+                                    onChange={() => handleCheckboxChange(item.keyKeyword)}
                                 />
                             </td>
                         </tr>

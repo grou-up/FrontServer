@@ -1,12 +1,34 @@
 import React, { useState } from 'react';
 import '../styles/Totalsearchbar.css'; // 스타일을 위해 CSS 파일을 임포트합니다.
 
-const Totalsearchbar = () => {
+const Totalsearchbar = ({ onComponentChange }) => { // 부모 컴포넌트에서 전달받을 prop 추가
     const [activeButton, setActiveButton] = useState(null); // 클릭된 버튼 상태 관리
 
     const handleButtonClick = (buttonName) => {
         console.log(`${buttonName} 버튼 클릭됨`);
         setActiveButton(buttonName); // 클릭한 버튼의 이름 저장
+        
+        // 버튼에 따라 특정 컴포넌트를 활성화
+        switch (buttonName) {
+            case '기본 통계':
+                // onComponentChange('component1');
+                break;
+            case '옵션':
+                // onComponentChange('component2');
+                break;
+            case '키워드':
+                onComponentChange('Keywordcomponent');
+                break;
+            case '제외 키워드':
+                // onComponentChange('component4');
+                break;
+            case '입력자 관리':
+                // onComponentChange('component5');
+                break;
+            default:
+                onComponentChange(null);
+                break;
+        }
     };
 
     return (

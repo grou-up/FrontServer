@@ -2,29 +2,49 @@ import React, { useState,useEffect  } from 'react';
 import { ChevronDown, ChevronRight, Upload, BarChart, Calculator, Home , Settings,LogOut} from 'lucide-react'; // 필요한 아이콘 추가
 import '../styles/Sidebar.css';
 import { getMyCampaigns } from "../services/campaign";
+import { useNavigate } from 'react-router-dom';
 
 const MenuItem = ({ item, activePath, onSelect, currentPath = [] }) => {
     const [isOpen, setIsOpen] = useState(false);
     const hasChildren = item.children && item.children.length > 0;
-  
+    const navigate = useNavigate(); // useNavigate 훅 사용
+
     const itemPath = [...currentPath, item.title];
     const isActive = activePath.join('/') === itemPath.join('/');
-  
+
+    const handleClick = () => {
+        if (hasChildren) {
+            setIsOpen(!isOpen);
+        } else {
+            onSelect(itemPath);
+            // URL로 이동
+            if (item.title === "대시보드") {
+                navigate("/main");
+            } else if (item.title === "액셀 업로드") {
+                navigate("/upload");
+            } else if (item.campaignId) {
+                console.log(item.campaignId);
+                navigate(`/campaigns/${item.campaignId}?title=${encodeURIComponent(item.title)}`);
+            } else if (item.title === "마진 계산기") {
+                navigate("/margin-calculator");
+            } else if (item.title === "설정") {
+                navigate("/settings");
+            } else if (item.title === "로그아웃") {
+                navigate("/logout");
+            }
+        }
+    };
+
     return (
       <div className="menu-item">
-        {item.description && ( // 설명이 있을 경우에만 표시
+        {item.description && (
           <div className="menu-item-description">
-            {item.description} {/* 설명 추가 */}
+            {item.description}
           </div>
         )}
         <div 
           className={`menu-item-content ${isActive ? 'active' : ''}`}
-          onClick={() => {
-            if (hasChildren) {
-              setIsOpen(!isOpen);
-            }
-            onSelect(itemPath);
-          }}
+          onClick={handleClick} // 클릭 시 handleClick 호출
         >
           {hasChildren && (
             <span className="menu-item-icon">
@@ -41,19 +61,18 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [] }) => {
           <div className="submenu-container">
             {item.children.map((child, index) => (
               <MenuItem 
-                key={index} 
-                item={child} 
-                activePath={activePath}
-                onSelect={onSelect}
-                currentPath={itemPath}
+                  key={index} 
+                  item={child} 
+                  activePath={activePath}
+                  onSelect={onSelect}
+                  currentPath={itemPath}
               />
             ))}
-          </div>
-        )}
+        </div>  
+      )}
       </div>
     );
-  };
-
+};
 const Sidebar = () => {
   const [activePath, setActivePath] = useState([]);
   const [campaigns, setCampaigns] = useState([]);
@@ -90,7 +109,8 @@ const Sidebar = () => {
       description: "광고 캠패인 분석",
       icon: <BarChart size={16} />,
       children: campaigns.map((campaign, index) => ({ // 캠페인 데이터로 자식 요소 생성
-        title: campaign, // 각 캠페인의 이름을 사용
+        title: campaign.title,
+        campaignId: campaign.campaignId, // 각 캠페인의 이름을 사용
         icon: <BarChart size={14} />
       })),
     },

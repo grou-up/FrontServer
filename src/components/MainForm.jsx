@@ -12,12 +12,12 @@ const MainForm = () => {
     <div className="main-content">
       <div className="min-h-screen bg-gray-100">
         <div className="mt-8">
-          <h2 className="text-xl font-bold mb-4">키워드 분석</h2>
+          <h2 className="text-xl font-bold mb-4">대시보드</h2>
         </div>
         <main className="container mx-auto p-6">
-          <Totalsearchbar />
+          {/* <Totalsearchbar /> */}
           <div className="mt-8">
-            <KeywordComponent />
+            {/* <KeywordComponent /> */}
           </div>
         </main>
       </div>
