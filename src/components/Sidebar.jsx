@@ -66,6 +66,7 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [] }) => {
                   activePath={activePath}
                   onSelect={onSelect}
                   currentPath={itemPath}
+                  className="campaign-child" // 캠페인 자식 요소에 클래스 추가
               />
             ))}
         </div>  

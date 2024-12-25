@@ -43,7 +43,8 @@
   }
   
   .menu-item-content:hover:not(.active) {
-    background-color: #f3f4f6;
+    background-color: rgba(72, 128, 255,1);
+    color: white;
   }
   
   .menu-item-content.active {
@@ -76,3 +77,11 @@
     margin-top: 8px; /* 제목과 설명 사이의 여백 */
     margin-left: 24px; /* 제목과 설명을 왼쪽으로 약간 이동 */
   }
+  .campaign-child:hover {
+      background-color: rgba(72, 128, 255,1); /*캠페인 자식 요소 hover 색상*/
+  }
+
+  .submenu-container {
+    background-color: rgba(72, 128, 255, 0.5); /* 배경색 */
+    border-radius: 8px; 
+}
