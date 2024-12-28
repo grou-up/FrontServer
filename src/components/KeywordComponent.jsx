@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from "react";
 import "../styles/KeywordComponent.css"; // 스타일 파일
-import { ArrowDownUp } from 'lucide-react';
 import { getKeywords } from '../services/keyword'; // API 요청 함수 임포트
+
+import "../styles/Table.css";
+import SortableHeader from '../components/SortableHeader'; 
 
 const KeywordComponent = ({ campaignId }) => {
     const [searchTerm, setSearchTerm] = useState("");
@@ -97,57 +99,27 @@ const KeywordComponent = ({ campaignId }) => {
                 </div>
             </div>
             <table>
-                <thead>
-                    <tr>
-                        <th onClick={() => handleSort("keyKeyword")}>
-                            키워드
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyImpressions")}>
-                            노출
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyClicks")}>
-                            클릭
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyClickRate")}>
-                            클릭률
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyTotalSales")}>
-                            주문
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyCvr")}>
-                            전환율
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyCpc")}>
-                            CPC
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyAdcost")}>
-                            광고비
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyAdsales")}>
-                            광고매출
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyRoas")}>
-                            ROAS
-                            <ArrowDownUp />
-                        </th>
-                        <th>
-                            <input
-                                type="checkbox"
-                                checked={isAllSelected && selectedKeywords.length === filteredKeywords.length}
-                                onChange={handleSelectAll}
-                            />
-                        </th>
-                    </tr>
-                </thead>
+            <thead>
+                <tr>
+                    <SortableHeader label="키워드" sortKey="keyKeyword" onSort={handleSort} />
+                    <SortableHeader label="노출" sortKey="keyImpressions" onSort={handleSort} />
+                    <SortableHeader label="클릭" sortKey="keyClicks" onSort={handleSort} />
+                    <SortableHeader label="클릭률" sortKey="keyClickRate" onSort={handleSort} />
+                    <SortableHeader label="주문" sortKey="keyTotalSales" onSort={handleSort} />
+                    <SortableHeader label="전환율" sortKey="keyCvr" onSort={handleSort} />
+                    <SortableHeader label="CPC" sortKey="keyCpc" onSort={handleSort} />
+                    <SortableHeader label="광고비" sortKey="keyAdcost" onSort={handleSort} />
+                    <SortableHeader label="광고매출" sortKey="keyAdsales" onSort={handleSort} />
+                    <SortableHeader label="ROAS" sortKey="keyRoas" onSort={handleSort} />
+                    <th>
+                        <input
+                            type="checkbox"
+                            checked={isAllSelected && selectedKeywords.length === filteredKeywords.length}
+                            onChange={handleSelectAll}
+                        />
+                    </th>
+                </tr>
+            </thead>
                 <tbody>
                     {filteredKeywords.map((item, index) => (
                         <tr key={index}>
