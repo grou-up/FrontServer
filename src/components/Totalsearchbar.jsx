@@ -14,7 +14,7 @@ const Totalsearchbar = ({ onComponentChange }) => { // 부모 컴포넌트에서
                 // onComponentChange('component1');
                 break;
             case '옵션':
-                // onComponentChange('component2');
+                onComponentChange('CampaignOptionDetailsComponent');
                 break;
             case '키워드':
                 onComponentChange('Keywordcomponent');
