@@ -1,0 +1,10 @@
+.sortable-header {
+    display: inline-flex; /* 텍스트와 아이콘을 같은 줄에 배치 */
+    align-items: center; /* 텍스트와 아이콘의 세로 정렬을 중앙으로 */
+    gap: 5px; /* 텍스트와 아이콘 사이의 간격 */
+}
+
+.sortable-header svg {
+    width: 14px; /* 아이콘 크기 조정 (필요시 변경 가능) */
+    height: 14px;
+}
