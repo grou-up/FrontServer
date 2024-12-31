@@ -1,9 +1,11 @@
 // src/components/Header.jsx
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles/Header.css'; // 스타일 파일을 임포트
 import { useNavigate } from 'react-router-dom'; // useNavigate 임포트
 import { ChevronDown, ChevronRight } from 'lucide-react'; // 필요한 아이콘 추가
 import { getMyEmailAndRole } from '../services/auth';
+import { removeToken } from '../utils/tokenManager'; // 토큰 삭제 함수 임포트
+
 const Header = () => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false); // 드롭다운 상태 관리
@@ -32,6 +34,10 @@ const Header = () => {
     const toggleDropdown = () => {
         setIsOpen(!isOpen); // 드롭다운 열기/닫기
     };
+    const handleLogout = () => {
+        removeToken(); // 토큰 삭제
+        navigate('/'); // 로그인 페이지로 리다이렉트
+    };
 
     return (
         <div className="header">
@@ -39,7 +45,7 @@ const Header = () => {
                 GrouUP
             </h1>
             <div className="user-info">
-            <div className="user-details">
+                <div className="user-details">
                     <span className="user-name">{userInfo.email || 'Loading...'}</span>
                     <span className="user-role">{userInfo.role || 'Loading...'}</span>
                 </div>
@@ -52,7 +58,7 @@ const Header = () => {
                             <div className="dropdown-item" onClick={() => navigate('/mypage')}>
                                 마이페이지
                             </div>
-                            <div className="dropdown-item" onClick={() => navigate('/logout')}>
+                            <div className="dropdown-item" onClick={handleLogout}>
                                 로그아웃
                             </div>
                         </div>

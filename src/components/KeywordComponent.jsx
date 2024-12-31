@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "../styles/KeywordComponent.css"; // 스타일 파일
-import { ArrowDownUp } from 'lucide-react';
 import { getKeywords } from '../services/keyword'; // API 요청 함수 임포트
+import { getCampaignDetails } from "../services/capaigndetails";
+import "../styles/Table.css";
+import SortableHeader from '../components/SortableHeader';
 
-const KeywordComponent = ({ campaignId }) => {
+const KeywordComponent = ({ campaignId, startDate, endDate }) => {
     const [searchTerm, setSearchTerm] = useState("");
     const [selectedKeywords, setSelectedKeywords] = useState([]);
     const [isAllSelected, setIsAllSelected] = useState(false); // 전체 선택 상태
@@ -11,15 +13,20 @@ const KeywordComponent = ({ campaignId }) => {
     const [keywords, setKeywords] = useState([]); // 키워드 데이터 상태
     const [loading, setLoading] = useState(true); // 로딩 상태
     const [error, setError] = useState(null); // 에러 상태
-
+    console.log(campaignId, startDate, endDate)
     useEffect(() => {
         const fetchKeywords = async () => {
+            if (!startDate || !endDate) {
+                setError("시작 날짜와 종료 날짜를 설정해주세요.");
+                setLoading(false);
+                return;
+            }
+
             setLoading(true);
             try {
-                const start = "2024-11-01";
-                const end = "2024-11-30";
-                const response = await getKeywords({ start, end, campaignId });
+                const response = await getKeywords({ start: startDate, end: endDate, campaignId });
                 setKeywords(response.data || []); // API 응답에서 키워드 데이터 설정
+                setError(null); // 에러 초기화
             } catch (error) {
                 setError("키워드를 가져오는 데 실패했습니다.");
                 console.error(error);
@@ -29,7 +36,7 @@ const KeywordComponent = ({ campaignId }) => {
         };
 
         fetchKeywords();
-    }, [campaignId]); // campaignId가 변경될 때마다 호출
+    }, [campaignId, startDate, endDate]);
 
     const filteredKeywords = keywords
         .filter((item) => item.keyKeyword.includes(searchTerm))
@@ -39,8 +46,8 @@ const KeywordComponent = ({ campaignId }) => {
             return a[sortConfig.key] > b[sortConfig.key]
                 ? order
                 : a[sortConfig.key] < b[sortConfig.key]
-                ? -order
-                : 0;
+                    ? -order
+                    : 0;
         });
 
     const handleSort = (key) => {
@@ -99,46 +106,16 @@ const KeywordComponent = ({ campaignId }) => {
             <table>
                 <thead>
                     <tr>
-                        <th onClick={() => handleSort("keyKeyword")}>
-                            키워드
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyImpressions")}>
-                            노출
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyClicks")}>
-                            클릭
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyClickRate")}>
-                            클릭률
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyTotalSales")}>
-                            주문
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyCvr")}>
-                            전환율
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyCpc")}>
-                            CPC
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyAdcost")}>
-                            광고비
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyAdsales")}>
-                            광고매출
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyRoas")}>
-                            ROAS
-                            <ArrowDownUp />
-                        </th>
+                        <SortableHeader label="키워드" sortKey="keyKeyword" onSort={handleSort} />
+                        <SortableHeader label="노출" sortKey="keyImpressions" onSort={handleSort} />
+                        <SortableHeader label="클릭" sortKey="keyClicks" onSort={handleSort} />
+                        <SortableHeader label="클릭률" sortKey="keyClickRate" onSort={handleSort} />
+                        <SortableHeader label="주문" sortKey="keyTotalSales" onSort={handleSort} />
+                        <SortableHeader label="전환율" sortKey="keyCvr" onSort={handleSort} />
+                        <SortableHeader label="CPC" sortKey="keyCpc" onSort={handleSort} />
+                        <SortableHeader label="광고비" sortKey="keyAdcost" onSort={handleSort} />
+                        <SortableHeader label="광고매출" sortKey="keyAdsales" onSort={handleSort} />
+                        <SortableHeader label="ROAS" sortKey="keyRoas" onSort={handleSort} />
                         <th>
                             <input
                                 type="checkbox"
