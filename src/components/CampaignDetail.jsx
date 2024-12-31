@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import '../styles/Mainform.css'; // 스타일 파일 추가
 import KeywordComponent from '../components/KeywordComponent'; // 추가
+import ExclusionKeywordComponent from '../components/ExclusionKeywordComponent';
 import Totalsearchbar from './Totalsearchbar';
 import { useParams, useLocation } from 'react-router-dom';
 
@@ -28,6 +29,7 @@ const CampaignDetail = () => {
         <Totalsearchbar onComponentChange={handleComponentChange} /> {/* props로 함수 전달 */}
           <div className="mt-8">
             {activeComponent === 'Keywordcomponent' && <KeywordComponent campaignId={campaignId} />}
+            {activeComponent === 'ExclusionKeywordComponent' && <ExclusionKeywordComponent campaignId={campaignId} />}
             {/* <KeywordComponent2 campaignId={campaignId} /> campaignId 전달 */}
             {/* <KeywordComponent3 campaignId={campaignId} /> campaignId 전달 */}
           </div>
