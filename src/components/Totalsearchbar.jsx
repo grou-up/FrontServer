@@ -27,7 +27,7 @@ const Totalsearchbar = ({ onComponentChange, onSearch }) => { // 부모 컴포�
                 onComponentChange('Keywordcomponent');
                 break;
             case '제외 키워드':
-                // onComponentChange('component4');
+                onComponentChange('ExclusionKeywordComponent');
                 break;
             case '입력자 관리':
                 // onComponentChange('component5');

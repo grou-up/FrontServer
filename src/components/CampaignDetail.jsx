@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "../styles/Mainform.css"; // 스타일 파일 추가
 import KeywordComponent from "../components/KeywordComponent"; // 추가
 import CampaignOptionDetailsComponent from "../components/CampaignOptionDetailsComponent";
+import ExclusionKeywordComponent from '../components/ExclusionKeywordComponent';
 import Totalsearchbar from "./Totalsearchbar";
 import { useParams, useLocation } from "react-router-dom";
 
@@ -55,6 +56,7 @@ const CampaignDetail = () => {
                 endDate={endDate}
               />
             )}
+            {activeComponent === 'ExclusionKeywordComponent' && <ExclusionKeywordComponent campaignId={campaignId} />}
             {activeComponent === "CampaignOptionDetailsComponent" && (
               <CampaignOptionDetailsComponent
                 campaignId={campaignId}
