@@ -152,19 +152,26 @@ const KeywordComponent = ({ campaignId, startDate, endDate }) => {
                 <tbody>
                     {filteredKeywords.map((item, index) => (
                         <tr key={index}>
-                        {["keyKeyword", "keyImpressions", "keyClicks", "keyClickRate", "keyTotalSales", "keyCvr", "keyCpc", "keyAdcost", "keyAdsales", "keyRoas"].map((key) => (
-                            <td key={key} style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>
-                                {item[key]} {/* 각 td에 해당하는 값을 표시 */}
+                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyKeyword}</td>
+                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyImpressions}</td>
+                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyClicks}</td>
+                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>
+                                {item.keyClickRate}% {/* 클릭률에 % 추가 */}
                             </td>
-                        ))}
-                        <td>
-                            <input
-                                type="checkbox"
-                                checked={selectedKeywords.includes(item.keyKeyword)}
-                                onChange={() => handleCheckboxChange(item.keyKeyword)}
-                                disabled={item.keyExcludeFlag} // keyExcludeFlag가 true일 경우 체크박스 비활성화
-                            />
-                        </td>
+                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyTotalSales}</td>
+                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyCvr}%</td>
+                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyCpc}</td>
+                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyAdcost}</td>
+                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyAdsales}</td>
+                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyRoas}%</td>
+                            <td>
+                                <input
+                                    type="checkbox"
+                                    checked={selectedKeywords.includes(item.keyKeyword)}
+                                    onChange={() => handleCheckboxChange(item.keyKeyword)}
+                                    disabled={item.keyExcludeFlag} // keyExcludeFlag가 true일 경우 체크박스 비활성화
+                                />
+                            </td>
                         </tr>
                     ))}
                 </tbody>
