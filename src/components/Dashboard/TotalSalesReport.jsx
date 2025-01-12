@@ -6,7 +6,7 @@ import "../../styles/SalesReport.css";
 import DatePicker from "react-datepicker";
 import { formatNumber } from "../../utils/formatUtils";
 
-const TotalSalesReport = () => {
+const TotalSalesReport = ({ setTotalSalesData }) => {
     const [date, setDate] = useState(() => {
         const yesterday = new Date();
         yesterday.setDate(yesterday.getDate() - 1);
@@ -24,14 +24,20 @@ const TotalSalesReport = () => {
                 const response = await getTotalSales({ date: date.toISOString().split("T")[0] });
                 const fetchedData = response.data || [];
                 const sortedData = fetchedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+                const processedData = fetchedData.map((item) => ({
+                    date: item.marDate,
+                    totalSales: item.marSales,
+                    totalAdCost: item.marAdCost,
+                    roas: Math.round((item.marSales / item.marAdCost) * 100) || 0,
+                }));
                 setData(sortedData);
-
+                setTotalSalesData(processedData); // 부모 컴포넌트로 데이터 전달
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
         };
         fetchData();
-    }, [date]);
+    }, [date, setTotalSalesData]);
 
     // 날짜를 하루 전으로 이동
     const handlePrevDay = () => {
