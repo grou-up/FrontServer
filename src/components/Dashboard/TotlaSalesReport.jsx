@@ -1,0 +1,109 @@
+import React, { useEffect, useState } from "react";
+import { getTotalSales } from "../../services/margin";
+import usePaginationAndSorting from "../../hooks/usePaginationAndSorting";
+import { ArrowRight, ArrowLeft } from "lucide-react";
+import "../../styles/SalesReport.css";
+import DatePicker from "react-datepicker";
+import { formatNumber } from "../../utils/formatUtils";
+
+const TotalSalesReport = () => {
+    const [date, setDate] = useState(() => {
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        return yesterday; // 기본값: 어제 날짜
+    });
+
+    const [data, setData] = useState([]);
+    const { paginatedData, changeSort, sortConfig } =
+        usePaginationAndSorting({ data, itemsPerPage: 7 });
+
+    // API 데이터 호출
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await getTotalSales({ date: date.toISOString().split("T")[0] });
+                const fetchedData = response.data || [];
+                const sortedData = fetchedData.sort((a, b) => new Date(a.date) - new Date(b.date));
+                setData(sortedData);
+
+            } catch (error) {
+                console.error("Error fetching data:", error);
+            }
+        };
+        fetchData();
+    }, [date]);
+
+    // 날짜를 하루 전으로 이동
+    const handlePrevDay = () => {
+        const newDate = new Date(date);
+        newDate.setDate(newDate.getDate() - 1);
+        setDate(newDate);
+    };
+
+    // 날짜를 하루 후로 이동
+    const handleNextDay = () => {
+        const newDate = new Date(date);
+        newDate.setDate(newDate.getDate() + 1);
+        setDate(newDate);
+    };
+
+    return (
+        <div className="sales-report">
+            <div className="report-header">
+                <h3 className="report-title">종합 보고서</h3>
+                <div className="date-controls">
+                    <button className="date-button" onClick={handlePrevDay}>
+                        <ArrowLeft />
+                    </button>
+                    <DatePicker
+                        selected={date}
+                        onChange={(date) => setDate(date)}
+                        dateFormat="yyyy-MM-dd"
+                        className="date-picker"
+                    />
+                    <button className="date-button" onClick={handleNextDay}>
+                        <ArrowRight />
+                    </button>
+                </div>
+            </div>
+            <table className="sales-table">
+                <thead>
+                    <tr>
+                        <th onClick={() => changeSort("marDate")}>
+                            날짜 {sortConfig?.key === "marDate" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                        </th>
+                        <th onClick={() => changeSort("marAdCost")}>
+                            총 광고비 {sortConfig?.key === "marAdCost" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                        </th>
+                        <th onClick={() => changeSort("marSales")}>
+                            총 매출 {sortConfig?.key === "marSales" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                        </th>
+                        <th onClick={() => changeSort("marRoas")}>
+                            ROAS {sortConfig?.key === "marRoas" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {paginatedData.length > 0 ? (
+                        paginatedData.map((item, index) => (
+                            <tr key={index}>
+                                <td>{item.marDate}</td>
+                                <td>{formatNumber(item.marAdCost)}</td>
+                                <td>{formatNumber(item.marSales)}</td>
+                                <td>{item.marRoas}%</td>
+                            </tr>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
+                                데이터가 없습니다
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+        </div>
+    );
+};
+
+export default TotalSalesReport;

@@ -8,3 +8,11 @@ export const getMargin = async ({ date }) => {
         throw error;
     }
 }
+export const getTotalSales = async ({ date }) => {
+    try {
+        const response = await apiRequest(`/margin/getDailyAdSummary?date=${date}`)
+        return response;
+    } catch (error) {
+        throw error
+    }
+}
