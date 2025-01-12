@@ -2,15 +2,20 @@
 
 /* 메인 컨텐츠 */
 .main-content {
-    margin-top: 45px;
-    /* Header 높이만큼 여백 */
+    margin-top: 60px;
+    /* Header 높이 */
     margin-left: 256px;
-    /* Sidebar 너비만큼 여백 */
-    height: calc(100vh - 60px - 60px);
-    /* 화면 전체 높이에서 Header와 Footer 높이 제거 */
-    overflow: hidden;
-    /* 스크롤 제거 */
+    /* Sidebar 너비 */
+    height: calc(100vh - 60px);
+    /* 화면 전체 높이에서 Header 높이 제거 */
+    overflow: auto;
+    /* 스크롤 허용 */
     background-color: #ffffff;
+    display: flex;
+    justify-content: center;
+    /* 수평 정렬 */
+    align-items: center;
+    /* 수직 정렬 */
 }
 
 /* 고정된 전체 화면 */
@@ -24,9 +29,16 @@
 
 /* 대시보드 컨테이너 */
 .dashboard-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100% - 60px);
-    /* 푸터 높이를 제외한 영역 차지 */
+    gap: 20px;
+    /* 카드 간격 */
+    /* 컨테이너 너비 */
+    height: 100%;
+    /* 부모 높이 */
+    background-color: #f8f9fa;
+    /* 배경 색상 */
+    border-radius: 10px;
+    /* 부드러운 모서리 */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    /* 그림자 */
+    overflow: hidden;
 }
