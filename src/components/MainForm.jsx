@@ -1,6 +1,5 @@
 import React from "react";
 import DashboardGrid from "../components/Dashboard/DashboardGrid";
-import "../styles/Mainform.css";
 
 const MainForm = () => {
   return (
