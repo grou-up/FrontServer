@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from "react";
 import { getMargin } from "../../services/margin";
 import usePaginationAndSorting from "../../hooks/usePaginationAndSorting";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import "../../styles/SalesReport.css";
-import { ArrowRight, ArrowLeft } from "lucide-react";
+import Pagination from "../Date/Pagination";
+import { formatNumber } from "../../utils/formatUtils";
+import DateControls from "../Date/DateControls";
 
 const SalesReport = () => {
     const [date, setDate] = useState(() => {
@@ -30,7 +30,6 @@ const SalesReport = () => {
         fetchData();
     }, [date]);
 
-    // 날짜를 하루 전으로 이동
     const handlePrevDay = () => {
         const newDate = new Date(date);
         newDate.setDate(newDate.getDate() - 1);
@@ -46,21 +45,17 @@ const SalesReport = () => {
 
     return (
         <div className="sales-report">
-            <h3 className="report-title">매출 보고서</h3>
-            <div className="date-controls">
-                <button className="date-button" onClick={handlePrevDay}>
-                    <ArrowLeft />
-                </button>
-                <DatePicker
-                    selected={date}
-                    onChange={(date) => setDate(date)}
-                    dateFormat="yyyy-MM-dd"
-                    className="date-picker"
+            {/* 제목과 날짜 선택기를 한 줄로 배치 */}
+            <div className="report-header">
+                <h3 className="report-title">매출 보고서</h3>
+                <DateControls
+                    date={date}
+                    onPrevDay={handlePrevDay}
+                    onNextDay={handleNextDay}
+                    onDateChange={(date) => setDate(date)}
                 />
-                <button className="date-button" onClick={handleNextDay}>
-                    <ArrowRight />
-                </button>
             </div>
+            {/* 매출 테이블 */}
             <table className="sales-table">
                 <thead>
                     <tr>
@@ -82,32 +77,18 @@ const SalesReport = () => {
                     {paginatedData.map((item, index) => (
                         <tr key={index}>
                             <td>{item.campaignName}</td>
-                            <td>{item.yesterdaySales}</td>
-                            <td>{item.todaySales}</td>
-                            <td>{item.differentSales}</td>
+                            <td>{formatNumber(item.yesterdaySales)}</td>
+                            <td>{formatNumber(item.todaySales)}</td>
+                            <td>{formatNumber(item.differentSales)}</td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-            <div className="pagination-controls">
-                <button
-                    className="pagination-button"
-                    onClick={() => changePage(page - 1)}
-                    disabled={page <= 1}
-                >
-                    이전
-                </button>
-                <span className="pagination-display">
-                    {page} / {totalPages}
-                </span>
-                <button
-                    className="pagination-button"
-                    onClick={() => changePage(page + 1)}
-                    disabled={page >= totalPages}
-                >
-                    다음
-                </button>
-            </div>
+            <Pagination
+                currentPage={page}
+                totalPages={totalPages}
+                onPageChange={changePage}
+            />
         </div>
     );
 };
