@@ -4,6 +4,7 @@ import '../styles/Sidebar.css';
 import { getMyCampaigns } from "../services/campaign";
 import { useNavigate } from 'react-router-dom';
 import { removeToken } from '../utils/tokenManager';
+import SidebarFooter from './SidebarFooter';
 const MenuItem = ({ item, activePath, onSelect, currentPath = [] }) => {
   const [isOpen, setIsOpen] = useState(false);
   const hasChildren = item.children && item.children.length > 0;
@@ -152,6 +153,7 @@ const Sidebar = () => {
           ))}
         </div>
       </nav>
+      <SidebarFooter />
     </aside>
   );
 };
