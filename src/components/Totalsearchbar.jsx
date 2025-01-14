@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 import { useParams, useLocation } from "react-router-dom";
 import CampaignOptionDetailsComponent from "./CampaignOptionDetailsComponent";
-import ExclusionKeywordComponent from "./ExclusionKeywordComponent";
+import KeytotalComponent from "./KeyTotalComponent";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import "../styles/TabComponent.css";
+import { useParams } from "react-router-dom";
 
 const Totalsearchbar = () => {
     const [activeTab, setActiveTab] = useState("campaign");
@@ -119,7 +120,10 @@ const Totalsearchbar = () => {
                     />
                 )}
                 {activeTab === "keywords" && (
-                    <ExclusionKeywordComponent campaignId={campaignId} />
+                    <KeytotalComponent
+                        campaignId={campaignId}
+                        startDate={startDate.toISOString().split("T")[0]}
+                        endDate={endDate.toISOString().split("T")[0]} />
                 )}
             </div>
         </div>

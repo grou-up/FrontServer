@@ -7,15 +7,7 @@ html {
     display: inline-flex;
     align-items: center;
     gap: 5px;
-    font-size: 1rem;
-    /* 기본 글꼴 크기 (16px) */
-}
-
-.sortable-header {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    font-size: 1rem;
+    font-size: 12px;
     /* 기본 글꼴 크기 (16px) */
     white-space: nowrap;
     /* 텍스트를 한 줄로 유지 */
