@@ -66,8 +66,8 @@ const TotalGraph = ({ data }) => {
             tooltip: {
                 callbacks: {
                     label: (context) =>
-                        `${context.dataset.label}: ${context.raw
-                        }${context.dataset.label === "ROAS" ? "%" : ""}`, // ROAS에 % 추가
+                        `${context.dataset.label}: ${context.raw}${context.dataset.label === "ROAS" ? "%" : ""
+                        }`, // ROAS에 % 추가
                 },
             },
         },
@@ -89,7 +89,7 @@ const TotalGraph = ({ data }) => {
     };
 
     return (
-        <div style={{ width: "100%", height: "400px" }}>
+        <div className="graph-container">
             <Line data={chartData} options={options} />
         </div>
     );

@@ -13,20 +13,22 @@
 }
 
 /* 카드 스타일 */
+/* 대시보드 카드 스타일 */
 .dashboard-item {
     background-color: #ffffff;
     border: 1px solid #ddd;
     border-radius: 8px;
     display: flex;
+    /* Flexbox 활성화 */
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: stretch;
+    justify-content: center;
+    /* 수직 중앙 정렬 */
+    align-items: center;
+    /* 수평 중앙 정렬 */
     padding: 10px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     height: 100%;
-    /* 카드가 셀 크기를 가득 채움 */
     overflow: hidden;
-    /* 카드 내부 콘텐츠가 넘치지 않도록 설정 */
 }
 
 /* 테이블 스타일 */
