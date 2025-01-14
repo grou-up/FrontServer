@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { useParams, useLocation } from "react-router-dom";
 import CampaignOptionDetailsComponent from "./CampaignOptionDetailsComponent";
 import KeytotalComponent from "./KeyTotalComponent";
 import DatePicker from "react-datepicker";
@@ -16,6 +15,7 @@ const Totalsearchbar = () => {
     const handleTabChange = (tabName) => {
         setActiveTab(tabName);
     };
+    const tabs = ["stats", "campaign", "keywords"];
 
     const handleDateRangeChange = (range) => {
         const today = new Date();
@@ -52,31 +52,32 @@ const Totalsearchbar = () => {
         }
     };
 
+
     return (
         <div className="tab-container">
             {/* 상단 영역 */}
             <div className="tabs-and-dates">
                 <div className="tabs">
-                    <button
-                        className={`tab ${activeTab === "stats" ? "active" : ""}`}
-                        onClick={() => handleTabChange("stats")}
-                    >
-                        통계
-                    </button>
-                    <button
-                        className={`tab ${activeTab === "campaign" ? "active" : ""}`}
-                        onClick={() => handleTabChange("campaign")}
-                    >
-                        옵션
-                    </button>
-                    <button
-                        className={`tab ${activeTab === "keywords" ? "active" : ""}`}
-                        onClick={() => handleTabChange("keywords")}
-                    >
-                        키워드
-                    </button>
+                    {tabs.map((tab, index) => {
+                        let tabClass = "tab";
+                        if (activeTab === tab) tabClass += " active";
+                        if (index === 0 && activeTab === tab) tabClass += " left";
+                        if (index === tabs.length - 1 && activeTab === tab) tabClass += " right";
+                        if (index > 0 && index < tabs.length - 1 && activeTab === tab) tabClass += " middle";
+
+                        return (
+                            <button
+                                key={tab}
+                                className={tabClass}
+                                onClick={() => handleTabChange(tab)}
+                            >
+                                {tab === "stats" ? "통계" : tab === "campaign" ? "옵션" : "키워드"}
+                            </button>
+                        );
+                    })}
                 </div>
 
+                {/* 날짜 선택기 */}
                 <div className="date-picker-container">
                     <select
                         className="dropdown"
@@ -88,7 +89,6 @@ const Totalsearchbar = () => {
                         <option value="last1month">최근 1달</option>
                     </select>
                     <div className="date-range">
-
                         <DatePicker
                             selected={startDate}
                             onChange={(date) => setStartDate(date)}
@@ -110,8 +110,15 @@ const Totalsearchbar = () => {
             </div>
 
             {/* 콘텐츠 */}
-            <div className="tab-content">
-                {activeTab === "stats" && <div>통계 콘텐츠</div>}
+            <div
+                className={`tab-content ${activeTab === "stats" ? "stats-active" :
+                    activeTab === "campaign" ? "campaign-active" :
+                        "keywords-active"
+                    }`}
+            >
+                {activeTab === "stats" && (
+                    <div>통계 콘텐츠</div>
+                )}
                 {activeTab === "campaign" && (
                     <CampaignOptionDetailsComponent
                         campaignId={campaignId}
@@ -123,7 +130,8 @@ const Totalsearchbar = () => {
                     <KeytotalComponent
                         campaignId={campaignId}
                         startDate={startDate.toISOString().split("T")[0]}
-                        endDate={endDate.toISOString().split("T")[0]} />
+                        endDate={endDate.toISOString().split("T")[0]}
+                    />
                 )}
             </div>
         </div>
