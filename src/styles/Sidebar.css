@@ -111,7 +111,7 @@
   /* 좌우 및 위아래 여백 */
   margin-top: auto;
   /* 위쪽 공간 자동 확보 */
-  margin-bottom: 70px;
+  margin-bottom: 20px;
   /* 바닥에서 띄우기 */
   display: flex;
   flex-direction: column;
