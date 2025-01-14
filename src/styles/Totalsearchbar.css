@@ -1,173 +1,88 @@
 /* TestComponent.css */
 @import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap');
 
-.my-component {
-    display: flex;
-    flex-direction: column;
-    max-height: 100px;
-    /* 최대 높이를 늘림 */
+.tab-container {
+    width: 100%;
+    border-radius: 16px;
+    background-color: #ffffff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
     overflow: hidden;
-    /* 내용이 넘칠 경우 숨김 */
 }
 
-.flex-container {
+/* 상단 탭과 날짜 선택기 영역 */
+.tabs-and-dates {
     display: flex;
-    /* Flexbox 설정 */
     align-items: center;
-    /* 수직 정렬 */
     justify-content: space-between;
-    /* 공간을 균등하게 배치 */
-    height: 100%;
-    /* 부모 요소의 전체 높이를 사용 */
+    padding: 16px;
+    border-bottom: 1px solid #ddd;
 }
 
-.left-buttons {
+/* 탭 버튼 영역 */
+.tabs {
     display: flex;
-    gap: 5px;
+    gap: 12px;
 }
 
-.left-buttons button {
-    background-color: rgba(72, 128, 255, 0.4);
-    /* 기본 색상 설정 */
-    color: black;
-    /* 글자색 */
+.tab {
+    padding: 10px 24px;
+    background-color: #f0f0f0;
     border: none;
-    /* 테두리 없음 */
-    padding: 5px 10px;
-    /* 패딩을 줄여서 높이 조정 */
-    border-radius: 5px;
-    /* 둥근 모서리 */
     cursor: pointer;
-    /* 커서 모양 */
-    /* transition: background-color 0.3s; 배경색 전환 효과 */
-    font-weight: 600;
-    /* 버튼 글꼴 두께를 볼드체로 설정 */
-}
-
-.left-buttons button.active {
-    background-color: rgba(72, 128, 255, 1);
-    /* 클릭된 버튼 색상 (50% 투명도) */
-    color: white;
-}
-
-.left-buttons button:hover {
-    background-color: rgba(72, 128, 255, 1);
-    /* 호버 시 색상 (70% 투명도) */
-
-}
-
-.right-controls {
-    display: flex;
-    /* Flexbox 설정으로 수평 정렬 */
-    align-items: center;
-    /* 수직 정렬 */
-    height: 100%;
-    /* 부모 요소의 100% 높이로 설정 */
-}
-
-.button-container {
-    margin: 0 5px;
-    /* 버튼 간격 */
-    padding: 5px;
-    /* 패딩을 줄여서 높이 조정 */
-    border: 1px solid #ccc;
-    /* 테두리 */
-    border-radius: 5px;
-    /* 둥근 모서리 */
-    background-color: #f9f9f9;
-    /* 배경색 */
-}
-
-.button-container button {
-    background: none;
-    /* 배경 제거 */
-    border: none;
-    /* 기본 버튼 테두리 제거 */
-    cursor: pointer;
-    /* 커서 모양 */
-    font-family: 'Nunito Sans', sans-serif;
-    /* 폰트 설정 */
-    font-weight: 700;
-    /* 볼드체 */
-    font-size: 15px;
-    /* 폰트 크기 */
-}
-
-.button-container button:hover {
-    color: #4880FF;
-    /* 호버 시 글자색 변경 */
-}
-
-/* select 및 input 스타일 */
-.right-controls select,
-.right-controls input {
-    margin: 0 5px;
-    /* 간격 추가 */
-    padding: 5px;
-    /* 패딩 */
-    font-family: 'Nunito Sans', sans-serif;
-    /* 폰트 설정 */
-    font-weight: 700;
-    /* 볼드체 */
-    font-size: 15px;
-    /* 폰트 크기 */
-    height: 30px;
-    /* 높이를 명시적으로 설정 */
-}
-
-/* 날짜 텍스트 부분 스타일 */
-.datepicker-container input {
-    border: 1px solid #d3d3d3;
-    /* 회색 테두리 */
-    border-radius: 5px;
-    /* 둥근 모서리 */
-    padding: 5px 10px;
-    /* 내부 여백 */
-    font-size: 16px;
-    /* 텍스트 크기 */
+    font-weight: bold;
+    color: #888;
     text-align: center;
-    /* 가운데 정렬 */
-    width: 150px;
-    /* 고정된 너비 */
-    box-sizing: border-box;
-    /* 패딩 포함 크기 조정 */
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
-/* 입력 필드 간 간격 줄이기 */
-.datepicker-container {
-    margin-right: 8px;
-    /* 컨테이너 간 간격 */
+.tab.active {
+    background-color: #4880ff;
+    color: #ffffff;
+    font-weight: bold;
 }
 
-/* 검색 버튼 스타일 */
-.search-button {
+/* 날짜 선택 영역 */
+.date-picker-container {
+    position: relative;
+    /* 부모 요소의 위치 기준 */
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.date-picker {
     padding: 8px 12px;
-    font-size: 16px;
-    border-radius: 5px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+    z-index: 10;
+    /* 드롭다운이 위로 표시되도록 */
+}
+
+/* React DatePicker 드롭다운 위치 조정 */
+.react-datepicker-popper {
+    z-index: 20;
+    /* 드롭다운이 다른 요소 위로 표시되도록 */
+}
+
+.dropdown {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    font-size: 14px;
     cursor: pointer;
 }
 
-.search-button:hover {
-    background-color: #0056b3;
-    /* 호버 시 색상 */
-}
-
-/* 반응형 조정 */
-@media (max-width: 768px) {
-    .datepicker-container {
-        display: block;
-        /* 세로 정렬 */
-        margin-bottom: 10px;
-        /* 간격 추가 */
-    }
-
-    .search-button {
-        width: 100%;
-        /* 검색 버튼 전체 너비 */
-        margin-top: 10px;
-        /* 위와 간격 추가 */
-    }
+/* 콘텐츠 */
+.tab-content {
+    padding: 16px;
+    background-color: #ffffff;
+    border-radius: 0 0 16px 16px;
 }

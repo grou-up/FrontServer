@@ -1,0 +1,96 @@
+/* 탭 컨테이너 */
+.tab-container {
+    width: 100%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 16px;
+    border-radius: 16px;
+    overflow: hidden;
+    /* 컨테이너 밖으로 콘텐츠 넘침 방지 */
+}
+
+/* 탭 및 날짜 선택기 영역 */
+.tabs-and-dates {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* 탭 버튼 영역 */
+.tabs {
+    display: flex;
+    gap: 12px;
+    /* 탭 버튼 간 간격 */
+    margin: 0;
+    /* 상단 여백 제거 */
+}
+
+/* 개별 탭 버튼 */
+.tab {
+    padding: 10px 50px;
+    background-color: #f0f0f0;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    color: #888;
+    text-align: center;
+    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* 활성화된 탭 스타일 */
+.tab.active {
+    background-color: #ffffff;
+    color: #0022ff;
+    border-radius: 16px 16px 0 0;
+}
+
+/* 콘텐츠 영역 */
+.tab-content {
+    padding: 0;
+    /* 내부 패딩 제거 */
+    background-color: #ffffff;
+    border-radius: 0 0 16px 16px;
+    /* 아래쪽 둥근 모서리 */
+}
+
+/* 좌측 활성화 탭 */
+.tab.active.left {
+    border-radius: 0 20px 0 0;
+}
+
+/* 우측 활성화 탭 */
+.tab.active.right {
+    border-radius: 0 50px 0 0;
+}
+
+/* 중간 활성화 탭 */
+.tab.active.middle {
+    border-radius: 0 50px 0 0;
+}
+
+/* 콘텐츠 영역 */
+.tab-content {
+    padding: 16px;
+    background-color: #ffffff;
+    border-radius: 0 0 16px 16px;
+}
+
+.date-picker-container {
+    /* 부모 요소 기준으로 위치 설정 */
+    margin-right: 50px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.date-picker {
+    padding: 8px 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 14px;
+    color: #333;
+    /* 드롭다운이 다른 요소 위로 표시되도록 */
+}
