@@ -24,14 +24,6 @@
     justify-content: space-between;
 }
 
-/* 대시보드 컨테이너 */
-.dashboard-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: calc(100% - 60px);
-}
-
 /* 메인 컨텐츠 */
 .form-main-content {
     /* Sidebar 너비만큼 여백 */

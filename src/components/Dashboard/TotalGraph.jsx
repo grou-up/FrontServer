@@ -89,9 +89,7 @@ const TotalGraph = ({ data }) => {
     };
 
     return (
-        <div className="graph-container">
-            <Line data={chartData} options={options} />
-        </div>
+        <Line data={chartData} options={options} />
     );
 };
 
