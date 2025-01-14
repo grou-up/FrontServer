@@ -98,22 +98,6 @@ const ExclusionKeywordComponent = ({ campaignId }) => {
 
     return (
         <div className="keyword-component">
-            <div className="search-bar">
-                <input
-                    type="text"
-                    placeholder="키워드를 입력하세요"
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                />
-                <button className="search-button">검색</button>
-                <div className="button-group">
-                    <button className="action-button" onClick={handleCopy}>
-                        복사하기
-                    </button>
-                    <button className="action-button" onClick={removeKeyword}>제외 키워드 삭제</button>
-                </div>
-            </div>
-            {successMessage && <div className="success-message">{successMessage}</div>} {/* 성공 메시지 표시 */}
             <table>
                 <thead>
                     <tr>
