@@ -98,37 +98,62 @@ const Sidebar = () => {
       title: "대시보드",
       description: "대시보드",
       icon: <Home size={16} />,
-
-      children: []
+      children: [],
+      showDivider: true, // 구분선 표시 여부
     },
     {
       title: "액셀 업로드",
       description: "파일 업로드",
-      icon: <Upload size={16} />, // 아이콘 추가
-      children: []
+      icon: <Upload size={16} />,
+      children: [],
+      showDivider: true,
+    },
+    {
+      title: "메출 최적화",
+      description: "광고 캠패인 분석",
+      icon: <BarChart size={16} />,
+      children: campaigns.map((campaign) => ({
+        title: campaign.title,
+        campaignId: campaign.campaignId,
+        icon: <BarChart size={14} />,
+      })),
+      showDivider: false, // 구분선 제거
+    },
+    {
+      title: "수동 성과형",
+      icon: <BarChart size={16} />,
+      children: campaigns.map((campaign) => ({
+        title: campaign.title,
+        campaignId: campaign.campaignId,
+        icon: <BarChart size={14} />,
+      })),
+      showDivider: false,
     },
     {
       title: "광고 캠패인",
-      description: "광고 캠패인 분석",
       icon: <BarChart size={16} />,
-      children: campaigns.map((campaign, index) => ({ // 캠페인 데이터로 자식 요소 생성
+      children: campaigns.map((campaign) => ({
         title: campaign.title,
-        campaignId: campaign.campaignId, // 각 캠페인의 이름을 사용
-        icon: <BarChart size={14} />
+        campaignId: campaign.campaignId,
+        icon: <BarChart size={14} />,
       })),
+      showDivider: true,
     },
     {
       title: "마진 계산기",
       description: "마진 계산기",
-      icon: <Calculator size={16} /> // 아이콘 추가
+      icon: <Calculator size={16} />,
+      showDivider: true,
     },
     {
       title: "설정",
-      icon: <Settings size={16} />, // 아이콘 추가
+      icon: <Settings size={16} />,
+      showDivider: true,
     },
     {
       title: "로그아웃",
-      icon: <LogOut size={16} /> // 아이콘 추가
+      icon: <LogOut size={16} />,
+      showDivider: true, // 구분선 제거
     },
   ];
 
@@ -148,7 +173,7 @@ const Sidebar = () => {
                 activePath={activePath}
                 onSelect={handleSelect}
               />
-              {index < menuData.length - 1 && <hr className="menu-divider" />} {/* 구분선 추가 */}
+              {item.showDivider && index < menuData.length - 1 && <hr className="menu-divider" />} {/* 구분선 추가 */}
             </div>
           ))}
         </div>
