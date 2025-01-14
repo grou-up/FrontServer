@@ -1,20 +1,16 @@
 import React from "react";
 import DashboardGrid from "../components/Dashboard/DashboardGrid";
-import "../styles/Mainform.css";
+import "../styles/Mainform.css"; // 메인 폼 전용 스타일
 
 const MainForm = () => {
   return (
-    <div className="main-content">
-      <div className="fixed-screen bg-gray-100">
-        <div className="mt-8">
-          <h2 className="text-xl font-bold mb-4">대시보드</h2>
-        </div>
-        <main className="dashboard-container">
+    <div className="form-main-content">
+      <div className="form-fixed-screen bg-gray-100">
+        <main className="form-dashboard-container">
           <DashboardGrid />
         </main>
       </div>
     </div>
   );
 };
-
 export default MainForm;

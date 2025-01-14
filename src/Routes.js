@@ -5,11 +5,9 @@ import SignupForm from "./components/SignupForm";
 import MainForm from "./components/MainForm";
 import KakaoLoginCallback from "./pages/KakaoLoginCallback";
 import PrivateRoute from "./components/PrivateRoute"; // PrivateRoute 추가
-import Header from "./components/Header";
 import Sidebar from "./components/Sidebar";
 import FileUploadForm from "./components/FileUploadForm";
 import CampaignDetail from "./components/CampaignDetail";
-import Footer from "./components/Footer"; // Footer 추가
 class AppRoutes extends React.Component {
     render() {
         return (
@@ -26,9 +24,7 @@ class AppRoutes extends React.Component {
                         element={
                             <PrivateRoute>
                                 <Sidebar />
-                                <Header /> {/* Header 추가 */}
                                 <MainForm />
-                                <Footer /> {/* 푸터 추가 */}
                             </PrivateRoute>
                         }
                     />
@@ -37,9 +33,7 @@ class AppRoutes extends React.Component {
                         element={
                             <PrivateRoute>
                                 <Sidebar />
-                                <Header />
                                 < FileUploadForm />
-                                <Footer /> {/* 푸터 추가 */}
                             </PrivateRoute>
                         }
                     />
@@ -48,9 +42,7 @@ class AppRoutes extends React.Component {
                         element={
                             <PrivateRoute>
                                 <Sidebar />
-                                <Header />
                                 <CampaignDetail />
-                                <Footer /> {/* 푸터 추가 */}
                             </PrivateRoute>
                         }
                     />

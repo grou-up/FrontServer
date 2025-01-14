@@ -1,7 +1,6 @@
 .sidebar {
   position: fixed;
   /* 왼쪽 고정 */
-  top: 60px;
   /* Header 아래로 배치 */
   left: 0;
   width: 256px;
@@ -99,4 +98,61 @@
   background-color: rgba(72, 128, 255, 0.5);
   /* 배경색 */
   border-radius: 8px;
+}
+
+.sidebar-footer {
+  height: 100px;
+  /* 박스 높이 */
+  background-color: #e8eaff;
+  /* 연한 배경색 */
+  border-radius: 16px;
+  /* 둥근 모서리 */
+  margin: 16px;
+  /* 좌우 및 위아래 여백 */
+  margin-top: auto;
+  /* 위쪽 공간 자동 확보 */
+  margin-bottom: 20px;
+  /* 바닥에서 띄우기 */
+  display: flex;
+  flex-direction: column;
+  /* 세로 정렬 */
+  justify-content: center;
+  /* 수직 가운데 정렬 */
+  align-items: center;
+  /* 가로 가운데 정렬 */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /* 약간의 그림자 */
+  color: #374151;
+  /* 텍스트 색상 */
+  font-size: 14px;
+  /* 기본 텍스트 크기 */
+  font-weight: bold;
+  /* 텍스트 굵기 */
+  text-align: center;
+  /* 텍스트 중앙 정렬 */
+  gap: 4px;
+  /* 두 줄 간격 */
+}
+
+.user-name {
+  font-size: 14px;
+  /* 이메일 텍스트 크기 */
+  font-weight: bold;
+  /* 이메일 텍스트 강조 */
+}
+
+.user-role {
+  font-size: 12px;
+  /* 역할 텍스트 크기 */
+  color: #6b7280;
+  /* 연한 회색 텍스트 색상 */
+}
+
+@media (max-width: 768px) {
+  .sidebar-footer {
+    height: 100px;
+    /* 높이 축소 */
+    margin-bottom: 40px;
+    /* 여백 축소 */
+  }
 }
