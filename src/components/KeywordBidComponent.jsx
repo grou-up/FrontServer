@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import "../styles/KeywordComponent.css"; // 스타일 파일
 import "../styles/Table.css";
 import SortableHeader from '../components/SortableHeader';
 
 const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loading, error }) => {
+    const [editableBids, setEditableBids] = useState({}); // 각 키워드에 대한 입찰가 상태 관리
     const filteredKeywords = keywords; // 필터링 로직은 필요에 따라 추가
 
     const handleSort = (key) => {
@@ -13,7 +14,7 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
     const handleCheckboxChange = (item) => {
         const keywordData = {
             keyword: item.keyKeyword,
-            bid: item.keyCpc // keyBid를 keyCpc로 설정
+            bid: editableBids[item.keyKeyword] || item.keyCpc // 사용자가 입력한 값 또는 기본값 사용
         };
 
         setSelectedKeywords((prev) => {
@@ -25,18 +26,11 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
         });
     };
 
-    const handleSelectAll = () => {
-        if (selectedKeywords.length === filteredKeywords.length) {
-            // 전체 선택 해제
-            setSelectedKeywords([]);
-        } else {
-            // 전체 선택
-            const allKeywords = filteredKeywords.map(item => ({
-                keyword: item.keyKeyword,
-                bid: item.keyCpc
-            }));
-            setSelectedKeywords(allKeywords);
-        }
+    const handleBidChange = (keyword, value) => {
+        setEditableBids((prev) => ({
+            ...prev,
+            [keyword]: value // 키워드에 대한 입찰가 업데이트
+        }));
     };
 
     if (loading) return <div>Loading...</div>; // 로딩 상태 표시
@@ -53,15 +47,22 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
                         <SortableHeader label="클릭률" sortKey="keyClickRate" onSort={handleSort} />
                         <SortableHeader label="주문" sortKey="keyTotalSales" onSort={handleSort} />
                         <SortableHeader label="전환율" sortKey="keyCvr" onSort={handleSort} />
-                        <SortableHeader label="CPC" sortKey="keyCpc" onSort={handleSort} />
-                        <SortableHeader label="광고비" sortKey="keyAdcost" onSort={handleSort} />
                         <SortableHeader label="광고매출" sortKey="keyAdsales" onSort={handleSort} />
+                        <SortableHeader label="광고비" sortKey="keyAdcost" onSort={handleSort} />
                         <SortableHeader label="ROAS" sortKey="keyRoas" onSort={handleSort} />
+                        <SortableHeader label="CPC" sortKey="keyCpc" onSort={handleSort} />
+                        <SortableHeader label="설정 입찰가" sortKey="bid" onSort={handleSort} />
                         <th>
                             <input
                                 type="checkbox"
                                 checked={selectedKeywords.length === filteredKeywords.length}
-                                onChange={handleSelectAll} // 전체 선택/해제 로직
+                                onChange={() => {
+                                    const allKeywords = filteredKeywords.map(item => ({
+                                        keyword: item.keyKeyword,
+                                        bid: editableBids[item.keyKeyword] || item.keyCpc // 사용자가 입력한 값 또는 기본값 사용
+                                    }));
+                                    setSelectedKeywords(allKeywords);
+                                }}
                             />
                         </th>
                     </tr>
@@ -69,19 +70,31 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
                 <tbody>
                     {filteredKeywords.map((item, index) => (
                         <tr key={index}>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>
-                                {item.keyKeyword}
-                                {item.keyBidFlag && <span className="badge">Bid</span>} {/* 뱃지 추가 */}
+                            <td>{item.keyKeyword}</td>
+                            <td>{item.keyImpressions}</td>
+                            <td>{item.keyClicks}</td>
+                            <td>{item.keyClickRate}%</td>
+                            <td>{item.keyTotalSales}</td>
+                            <td>{item.keyCvr}%</td>
+                            <td>{item.keyAdsales}</td>
+                            <td>{item.keyAdcost}</td>
+                            <td>{item.keyRoas}%</td>
+                            <td>{item.keyCpc}</td>
+                            <td>
+                                <input
+                                    type="number" // 숫자 입력 필드로 변경
+                                    style={{
+                                        border: '1px solid #007bff', // 테두리 색상
+                                        borderRadius: '4px', // 테두리 둥글게
+                                        padding: '4px', // 여백 추가
+                                        width: '100%', // 너비 100%로 설정
+                                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // 그림자 추가
+                                        transition: 'border-color 0.3s, box-shadow 0.3s', // 부드러운 변화 효과
+                                    }}
+                                    value={editableBids[item.keyKeyword] !== undefined ? editableBids[item.keyKeyword] : item.bid} // 사용자가 입력한 값 또는 기본값 사용
+                                    onChange={(e) => handleBidChange(item.keyKeyword, e.target.value)} // 입력값 변경 시 상태 업데이트
+                                />
                             </td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyImpressions}</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyClicks}</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyClickRate}%</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyTotalSales}</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyCvr}%</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyCpc}</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyAdcost}</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyAdsales}</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyRoas}%</td>
                             <td>
                                 <input
                                     type="checkbox"
@@ -98,3 +111,4 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
 };
 
 export default KeywordComponent;
+
