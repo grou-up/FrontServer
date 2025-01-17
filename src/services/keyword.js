@@ -1,7 +1,7 @@
 import { apiRequest } from '../utils/apiClient';
 
 // 해당 캠패인의 키워드 조회
-export const getKeywords = async({start,end,campaignId}) => {
+export const getKeywords = async ({ start, end, campaignId }) => {
   try {
     const response = await apiRequest(`/keyword/getKeywordsAboutCampaign?start=${start}&end=${end}&campaignId=${campaignId}`);
     // console.log(response); // 응답값을 콘솔에 출력
@@ -13,7 +13,7 @@ export const getKeywords = async({start,end,campaignId}) => {
 }
 
 // 해당 캠패인의 제와 키워드 조회
-export const getExclusionKeywords = async({campaignId}) => {
+export const getExclusionKeywords = async ({ campaignId }) => {
   try {
     const response = await apiRequest(`/exclusionKeyword/getExclusionKeywords?campaignId=${campaignId}`);
     console.log(response); // 응답값을 콘솔에 출력
@@ -30,9 +30,8 @@ export const registerExclusionKeywords = async ({ selectedKeywords, campaignId }
     // 요청할 데이터 객체 생성
     const requestData = {
       campaignId: campaignId, // 캠페인 ID 추가
-      exclusionKeyword: selectedKeywords // 제외 키워드를 포함하는 배열
+      exclusionKeyword: selectedKeywords.map(keyword => keyword.keyword)
     };
-
     // API 요청
     const response = await apiRequest(`/exclusionKeyword/addExclusionKeyword`, 'POST', requestData);
     console.log(response); // 응답값을 콘솔에 출력
@@ -43,20 +42,89 @@ export const registerExclusionKeywords = async ({ selectedKeywords, campaignId }
   }
 }
 
-export const removeExclsuionKeywords = async ({selectedKeywords, campaignId}) =>{
+export const removeExclsuionKeywords = async ({ selectedKeywords, campaignId }) => {
   try {
     // 요청할 데이터 객체 생성
     const requestData = {
       campaignId: campaignId, // 캠페인 ID 추가
-      exclusionKeyword: selectedKeywords // 제외 키워드를 포함하는 배열
+      exclusionKeyword: selectedKeywords
     };
-
     // API 요청
     const response = await apiRequest(`/exclusionKeyword/remove`, 'DELETE', requestData);
     console.log(response); // 응답값을 콘솔에 출력
     return response;
   } catch (error) {
     console.error("Error fetching campaigns:", error); // 에러 핸들링
+    throw error; // 에러를 다시 던져서 호출한 곳에서 처리할 수 있게 함
+  }
+}
+
+// 입찰가 조회
+export const registerKeywordBid = async ({ selectedKeywords, campaignId }) => {
+  try {
+    const requestData = {
+      campaignId: campaignId,
+      data: selectedKeywords.map(keyword => ({
+        keyword: keyword.keyword, // 각 keyword의 keyKeyword
+        bid: keyword.bid, // 각 keyword의 bid
+        keyInfo: null // keyInfo는 비워둡니다
+      }))
+    };
+    const response = await apiRequest('/bid/adds', 'POST', requestData);
+    return response;
+  } catch (error) {
+
+  }
+}
+
+// 입찰가 조회
+export const getBidKeywords = async ({ start, end, campaignId }) => {
+  try {
+    const response = await apiRequest(`/bid/gets?start=${start}&end=${end}&campaignId=${campaignId}`);
+    console.log(response); // 응답값을 콘솔에 출력
+    return response;
+  } catch (error) {
+    console.error("Error fetching campaigns:", error); // 에러 핸들링
+    throw error; // 에러를 다시 던져서 호출한 곳에서 처리할 수 있게 함
+  }
+}
+
+// 입찰가 수정
+export const updateBidKeyword = async ({ selectedKeywords, campaignId }) => {
+  try {
+    const requestData = {
+      campaignId: campaignId,
+      data: selectedKeywords.map(keyword => ({
+        keyword: keyword.keyword, // 각 keyword의 keyKeyword
+        bid: keyword.bid, // 각 keyword의 bid
+        keyInfo: null // keyInfo는 비워둡니다
+      }))
+    };
+    const response = await apiRequest(`/bid/update`, "PATCH", requestData);
+    console.log(response); // 응답값을 콘솔에 출력
+    return response;
+  } catch (error) {
+    console.error("Error fetching bid:", error); // 에러 핸들링
+    throw error; // 에러를 다시 던져서 호출한 곳에서 처리할 수 있게 함
+  }
+}
+
+//입찰가 삭제
+export const deleteBodKeywords = async ({ selectedKeywords, campaignId }) => {
+  try {
+    const requestData = {
+      campaignId: campaignId,
+      data: selectedKeywords.map(keyword => ({
+        keyword: keyword.keyword, // 각 keyword의 keyKeyword
+        bid: keyword.bid, // 각 keyword의 bid
+        keyInfo: null // keyInfo는 비워둡니다
+      }))
+    };
+    const response = await apiRequest(`/bid/delete`, "DELETE", requestData);
+    console.log(response); // 응답값을 콘솔에 출력
+    return response;
+  } catch (error) {
+    console.error("Error delete bid:", error); // 에러 핸들링
     throw error; // 에러를 다시 던져서 호출한 곳에서 처리할 수 있게 함
   }
 }

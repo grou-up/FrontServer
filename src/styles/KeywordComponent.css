@@ -102,3 +102,14 @@ th svg {
     /* 아이콘 크기 */
     height: 16px;
 }
+
+.badge {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 2px 5px;
+    background-color: #007bff;
+    /* 또는 원하는 색상 */
+    color: white;
+    border-radius: 3px;
+    font-size: 0.8em;
+}
