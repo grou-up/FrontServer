@@ -34,7 +34,6 @@ const MarginCalculatorForm = () => {
         fetchCampaigns();
     }, []);
 
-    // 선택한 캠페인의 옵션 데이터 가져오기
     const fetchOptionsForCampaign = async (campaignId) => {
         try {
             const response = await getMyExecutionData({ campaignId });
@@ -50,6 +49,59 @@ const MarginCalculatorForm = () => {
         }
     };
 
+    const handleRowChange = (index, field, value) => {
+        const updatedOptions = [...calculatedOptions];
+        const newValue = Number(value);
+
+        if (selectedOptions.length > 0 && activeFields.length === 0) {
+            updatedOptions.forEach((option) => {
+                if (selectedOptions.includes(option.exeId)) {
+                    Object.keys(option).forEach((key) => {
+                        if (["exeSalePrice", "exeTotalPrice", "exeCostPrice"].includes(key)) {
+                            option[key] = newValue;
+                        }
+                    });
+                }
+            });
+        } else if (selectedOptions.length > 0 && activeFields.length > 0) {
+            updatedOptions.forEach((option) => {
+                if (selectedOptions.includes(option.exeId)) {
+                    activeFields.forEach((activeField) => {
+                        option[activeField] = newValue;
+                    });
+                }
+            });
+        } else if (activeFields.length > 0 && selectedOptions.length === 0) {
+            updatedOptions.forEach((option) => {
+                activeFields.forEach((activeField) => {
+                    option[activeField] = newValue;
+                });
+            });
+        } else {
+            updatedOptions[index][field] = newValue;
+        }
+
+        setCalculatedOptions(updatedOptions);
+    };
+
+    const calculateMargins = () => {
+        const updatedOptions = calculatedOptions.map((option) => {
+            if (selectedOptions.includes(option.exeId)) {
+                const margin =
+                    option.exeSalePrice - 1.1 * option.exeTotalPrice - option.exeCostPrice || 0;
+                const zeroROAS = (option.exeSalePrice / margin) * 1.1 * 100 || 0;
+                return {
+                    ...option,
+                    margin: margin.toFixed(2),
+                    zeroROAS: zeroROAS.toFixed(2),
+                };
+            }
+            return option;
+        });
+        setCalculatedOptions(updatedOptions);
+    };
+
+
     // 캠페인 카드 클릭 시 확장/축소
     const toggleExpandCampaign = (campaignId) => {
         if (expandedCampaignId === campaignId) {
@@ -60,21 +112,6 @@ const MarginCalculatorForm = () => {
             setExpandedCampaignId(campaignId);
             fetchOptionsForCampaign(campaignId);
         }
-    };
-
-    const calculateMargins = () => {
-        // 옵션 데이터를 기준으로 마진을 계산
-        const updatedOptions = options.map((option) => {
-            const margin = option.exeSalePrice - option.exeTotalPrice; // 판매가 - 총비용
-            const zeroROAS = margin !== 0 ? (margin / option.exeSalePrice) * 100 : 0; // 제로 ROAS 계산
-            return {
-                ...option,
-                margin: margin.toFixed(2), // 소수점 2자리로 제한
-                zeroROAS: zeroROAS.toFixed(2),
-            };
-        });
-
-        setCalculatedOptions(updatedOptions);
     };
 
     return (
@@ -164,11 +201,7 @@ const MarginCalculatorForm = () => {
                                     options={calculatedOptions}
                                     selectedOptions={selectedOptions}
                                     activeFields={activeFields}
-                                    handleRowChange={(index, field, value) => {
-                                        const updatedOptions = [...calculatedOptions];
-                                        updatedOptions[index][field] = Number(value);
-                                        setCalculatedOptions(updatedOptions);
-                                    }}
+                                    handleRowChange={handleRowChange}
                                     handleCheckboxChange={(exeId) =>
                                         setSelectedOptions((prev) =>
                                             prev.includes(exeId)
@@ -181,7 +214,7 @@ const MarginCalculatorForm = () => {
                                             prev.includes(field) ? prev.filter((f) => f !== field) : [...prev, field]
                                         )
                                     }
-                                    calculateMargins={calculateMargins} // 함수 전달
+                                    calculateMargins={calculateMargins}
                                     saveOptions={() => alert("저장 기능은 아직 구현되지 않았습니다.")}
                                 />
                             </div>

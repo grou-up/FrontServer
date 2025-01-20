@@ -1,7 +1,6 @@
 import React from "react";
 import "../../../styles/MarginCalculatorForm.css"; // CSS 연결
-import ActionButtons from "./ActionButtons"; // ActionButtons 컴포넌트 import
-
+import ActionButtons from './ActionButtons'
 function OptionsTable({
     options,
     selectedOptions,
@@ -70,9 +69,9 @@ function OptionsTable({
                                     <input
                                         type="number"
                                         value={option[field]}
-                                        onChange={(e) =>
-                                            handleRowChange(index, field, e.target.value)
-                                        }
+                                        onChange={(e) => {
+                                            handleRowChange(index, field, e.target.value); // 이 부분이 핵심
+                                        }}
                                         disabled={
                                             activeFields.length > 0 &&
                                             !activeFields.includes(field) &&
