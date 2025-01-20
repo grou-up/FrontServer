@@ -166,8 +166,17 @@
 .action-buttons {
     margin-top: 20px;
     display: flex;
-    justify-content: flex-end;
+    justify-content: space-between;
+    /* 양쪽 끝으로 정렬 */
+    align-items: center;
+    /* 수직 중앙 정렬 */
+}
+
+.right-buttons {
+    display: flex;
+    /* 오른쪽 버튼들을 flex로 정렬 */
     gap: 10px;
+    /* 버튼 간 간격 */
 }
 
 .action-buttons button {
@@ -180,14 +189,19 @@
     color: #fff;
 }
 
-.action-buttons button:first-child {
+.action-buttons .save-default {
     background-color: #007bff;
-    /* 계산하기 버튼 */
+    /* 기본값 저장하기 버튼 스타일 */
 }
 
-.action-buttons button:last-child {
+.action-buttons .calculate {
+    background-color: #ffc107;
+    /* 계산하기 버튼 스타일 (노란색 예시) */
+}
+
+.action-buttons .save {
     background-color: #28a745;
-    /* 저장 버튼 */
+    /* 저장 버튼 스타일 */
 }
 
 .action-buttons button:hover {

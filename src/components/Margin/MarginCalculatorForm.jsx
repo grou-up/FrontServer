@@ -215,6 +215,7 @@ const MarginCalculatorForm = () => {
                                         )
                                     }
                                     calculateMargins={calculateMargins}
+                                    saveDefalutOptions={() => alert("저장 기능은 아직 구현되지 않았습니다.")}
                                     saveOptions={() => alert("저장 기능은 아직 구현되지 않았습니다.")}
                                 />
                             </div>
