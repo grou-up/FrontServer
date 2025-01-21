@@ -221,6 +221,9 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
             </div>
             {activeComponent === "keyword" && (
                 <KeywordComponent
+                    campaignId={campaignId}
+                    startDate={startDate}
+                    endDate={endDate}
                     selectedKeywords={selectedKeywords}
                     setSelectedKeywords={setSelectedKeywords}
                     keywords={keywords}
