@@ -1,26 +1,25 @@
 import React, { useState, useEffect } from "react";
 import OptionsTable from "./MarginCalulatorComponets/OptionsTable";
 import { getMyCampaigns } from "../../services/campaign";
-import { getMyExecutionData } from "../../services/execution";
-import DatePicker from "react-datepicker";
+import { getExecutionAboutCampaign, deleteExecutionAboutCampaign } from "../../services/marginforcampaign";
+import ActionButtons from "./MarginCalulatorComponets/ActionButtons";
 import "../../styles/MarginCalculatorForm.css";
 
 const MarginCalculatorForm = () => {
-    const getYesterday = () => {
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        return yesterday;
-    };
-
     const [campaigns, setCampaigns] = useState([]); // 모든 캠페인
     const [expandedCampaignId, setExpandedCampaignId] = useState(null); // 확장된 캠페인 ID
-    const [options, setOptions] = useState([]); // 옵션 데이터
-    const [calculatedOptions, setCalculatedOptions] = useState([]);
-    const [selectedOptions, setSelectedOptions] = useState([]);
-    const [activeFields, setActiveFields] = useState([]);
-    const [startDate, setStartDate] = useState(getYesterday());
-    const [endDate, setEndDate] = useState(getYesterday());
+    const [calculatedOptions, setCalculatedOptions] = useState([]); // 옵션 데이터
+    const [selectedOptions, setSelectedOptions] = useState([]); // 선택된 옵션 상태
 
+    const allSelected = calculatedOptions.length > 0 && selectedOptions.length === calculatedOptions.length;
+
+    const handleSelectAll = () => {
+        if (allSelected) {
+            setSelectedOptions([]); // 모든 선택 해제
+        } else {
+            setSelectedOptions(calculatedOptions.map((_, index) => index)); // 모든 선택
+        }
+    };
     // 캠페인 데이터 가져오기
     useEffect(() => {
         const fetchCampaigns = async () => {
@@ -36,187 +35,153 @@ const MarginCalculatorForm = () => {
 
     const fetchOptionsForCampaign = async (campaignId) => {
         try {
-            const response = await getMyExecutionData({ campaignId });
-            const data = response.data.map((option) => ({
-                ...option,
-                margin: 0,
-                zeroROAS: 0,
+            const response = await getExecutionAboutCampaign({ campaignId });
+            const optionsWithDefaults = (response.data || []).map(option => ({
+                id: option.id,
+                mfcProductName: option.mfcProductName,
+                mfcSalePrice: option.mfcSalePrice || 0,
+                mfcTotalPrice: option.mfcTotalPrice || 0,
+                mfcCostPrice: option.mfcCostPrice || 0,
+                mfcPerPiece: option.mfcPerPiece || 0,
+                mfcZeroRoas: option.mfcZeroRoas || 0,
+                // 다른 속성도 필요에 따라 초기화
             }));
-            setOptions(data);
-            setCalculatedOptions(data);
+            setCalculatedOptions(optionsWithDefaults);
         } catch (error) {
             console.error("옵션 데이터를 가져오는 중 오류 발생:", error);
         }
     };
 
-    const handleRowChange = (index, field, value) => {
-        const updatedOptions = [...calculatedOptions];
-        const newValue = Number(value);
-
-        if (selectedOptions.length > 0 && activeFields.length === 0) {
-            updatedOptions.forEach((option) => {
-                if (selectedOptions.includes(option.exeId)) {
-                    Object.keys(option).forEach((key) => {
-                        if (["exeSalePrice", "exeTotalPrice", "exeCostPrice"].includes(key)) {
-                            option[key] = newValue;
-                        }
-                    });
-                }
-            });
-        } else if (selectedOptions.length > 0 && activeFields.length > 0) {
-            updatedOptions.forEach((option) => {
-                if (selectedOptions.includes(option.exeId)) {
-                    activeFields.forEach((activeField) => {
-                        option[activeField] = newValue;
-                    });
-                }
-            });
-        } else if (activeFields.length > 0 && selectedOptions.length === 0) {
-            updatedOptions.forEach((option) => {
-                activeFields.forEach((activeField) => {
-                    option[activeField] = newValue;
-                });
-            });
-        } else {
-            updatedOptions[index][field] = newValue;
-        }
-
-        setCalculatedOptions(updatedOptions);
-    };
-
-    const calculateMargins = () => {
-        const updatedOptions = calculatedOptions.map((option) => {
-            if (selectedOptions.includes(option.exeId)) {
-                const margin =
-                    option.exeSalePrice - 1.1 * option.exeTotalPrice - option.exeCostPrice || 0;
-                const zeroROAS = (option.exeSalePrice / margin) * 1.1 * 100 || 0;
-                return {
-                    ...option,
-                    margin: margin.toFixed(2),
-                    zeroROAS: zeroROAS.toFixed(2),
-                };
-            }
-            return option;
-        });
-        setCalculatedOptions(updatedOptions);
-    };
-
-
-    // 캠페인 카드 클릭 시 확장/축소
     const toggleExpandCampaign = (campaignId) => {
         if (expandedCampaignId === campaignId) {
-            // 이미 확장된 캠페인 클릭 시 축소
             setExpandedCampaignId(null);
         } else {
-            // 다른 캠페인 클릭 시 확장
             setExpandedCampaignId(campaignId);
             fetchOptionsForCampaign(campaignId);
         }
     };
 
+    const addEmptyRow = (campaignId) => {
+        if (expandedCampaignId !== campaignId) {
+            toggleExpandCampaign(campaignId);
+        }
+        setCalculatedOptions(prevOptions => [
+            ...prevOptions,
+            { mfcProductName: "", mfcTotalPrice: "", mfcCostPrice: "", mfcPerPiece: "", mfcZeroRoas: "" }
+        ]);
+    };
+
+    const handleInputChange = (index, field, value) => {
+        const updatedOptions = [...calculatedOptions];
+        updatedOptions[index] = {
+            ...updatedOptions[index],
+            [field]: value,
+        };
+        setCalculatedOptions(updatedOptions);
+    };
+
+    const handleCheckboxChange = (index) => {
+        setSelectedOptions(prev => {
+            const newSelectedOptions = [...prev];
+            if (newSelectedOptions.includes(index)) {
+                newSelectedOptions.splice(newSelectedOptions.indexOf(index), 1);
+            } else {
+                newSelectedOptions.push(index);
+            }
+            return newSelectedOptions;
+        });
+    };
+
+    const handleCalculate = () => {
+        console.log("버튼 클릭됨");
+        const updatedOptions = [...calculatedOptions];
+
+        selectedOptions.forEach(index => {
+            if (index < 0 || index >= updatedOptions.length) {
+                console.warn(`Invalid index: ${index}`);
+                return; // 유효하지 않은 인덱스는 무시
+            }
+
+            const option = updatedOptions[index];
+            console.log(option);
+
+            // 필요한 값이 존재하는지 확인
+            if (option && option.mfcSalePrice && option.mfcTotalPrice && option.mfcCostPrice) {
+                const margin = option.mfcSalePrice - 1.1 * option.mfcTotalPrice - option.mfcCostPrice || 0;
+                const zeroROAS = margin !== 0 ? ((option.mfcSalePrice / margin) * 1.1 * 100).toFixed(2) : "0.00";
+                console.log(margin, zeroROAS);
+
+                updatedOptions[index] = {
+                    ...option,
+                    mfcPerPiece: margin,
+                    mfcZeroRoas: parseFloat(zeroROAS), // 문자열로 변환된 값을 다시 숫자로 변환
+                };
+            } else {
+                console.warn(`Missing data for option at index ${index}:`, option);
+            }
+        });
+
+        setCalculatedOptions(updatedOptions);
+    };
+
+    const handleDeleteOption = async (indexToDelete) => {
+        const optionToDelete = calculatedOptions[indexToDelete];
+        const id = optionToDelete.id; // 삭제할 ID (옵션 객체에 ID가 있다고 가정)
+        console.log(id)
+        try {
+            await deleteExecutionAboutCampaign({ id }); // API 호출
+            setCalculatedOptions(prevOptions =>
+                prevOptions.filter((_, index) => index !== indexToDelete)
+            );
+            setSelectedOptions(prevSelected =>
+                prevSelected.filter(selectedIndex => selectedIndex !== indexToDelete)
+            );
+        } catch (error) {
+            console.error("삭제 중 오류 발생:", error);
+            // 오류 처리 로직 추가 가능 (예: 사용자에게 알림)
+        }
+    };
+
     return (
         <div className="margin-calculator">
-            {/* 날짜 선택 */}
-            <div className="date-picker-container">
-                <div className="date-range">
-                    <DatePicker
-                        selected={startDate}
-                        onChange={(date) => setStartDate(date)}
-                        dateFormat="yyyy-MM-dd"
-                        maxDate={new Date()}
-                        className="date-picker"
-                    />
-                    <span className="date-separator">~</span>
-                    <DatePicker
-                        selected={endDate}
-                        onChange={(date) => setEndDate(date)}
-                        dateFormat="yyyy-MM-dd"
-                        minDate={startDate}
-                        maxDate={new Date()}
-                        className="date-picker"
-                    />
-                </div>
-            </div>
-
-            {/* 캠페인 리스트 */}
             <div className="campaign-list">
                 {campaigns.map((campaign) => (
                     <div
                         key={campaign.campaignId}
                         className={`campaign-card ${expandedCampaignId === campaign.campaignId ? "expanded" : ""}`}
                     >
-                        {/* 캠페인 제목과 설명 */}
                         <div
                             className="campaign-header"
                             onClick={() => toggleExpandCampaign(campaign.campaignId)}
                         >
                             <h3>{campaign.title}</h3>
-                            <div
-                                className="campaign-inputs"
-                                onClick={(e) => e.stopPropagation()}
+                            <button
+                                className="add-button"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    addEmptyRow(campaign.campaignId);
+                                }}
                             >
-                                <input
-                                    type="number"
-                                    placeholder="판매가"
-                                    onChange={(e) => {
-                                        const updatedOptions = options.map((option) => ({
-                                            ...option,
-                                            exeSalePrice: Number(e.target.value),
-                                        }));
-                                        setOptions(updatedOptions);
-                                        setCalculatedOptions(updatedOptions);
-                                    }}
-                                />
-                                <input
-                                    type="number"
-                                    placeholder="총비용"
-                                    onChange={(e) => {
-                                        const updatedOptions = options.map((option) => ({
-                                            ...option,
-                                            exeTotalPrice: Number(e.target.value),
-                                        }));
-                                        setOptions(updatedOptions);
-                                        setCalculatedOptions(updatedOptions);
-                                    }}
-                                />
-                                <input
-                                    type="number"
-                                    placeholder="원가"
-                                    onChange={(e) => {
-                                        const updatedOptions = options.map((option) => ({
-                                            ...option,
-                                            exeCostPrice: Number(e.target.value),
-                                        }));
-                                        setOptions(updatedOptions);
-                                        setCalculatedOptions(updatedOptions);
-                                    }}
-                                />
-                            </div>
+                                추가하기
+                            </button>
                         </div>
-
-                        {/* 확장된 캠페인의 데이터 */}
                         {expandedCampaignId === campaign.campaignId && (
                             <div className="campaign-details">
                                 <OptionsTable
                                     options={calculatedOptions}
+                                    handleInputChange={handleInputChange}
+                                    handleCheckboxChange={handleCheckboxChange}
                                     selectedOptions={selectedOptions}
-                                    activeFields={activeFields}
-                                    handleRowChange={handleRowChange}
-                                    handleCheckboxChange={(exeId) =>
-                                        setSelectedOptions((prev) =>
-                                            prev.includes(exeId)
-                                                ? prev.filter((id) => id !== exeId)
-                                                : [...prev, exeId]
-                                        )
-                                    }
-                                    handleFieldSelection={(field) =>
-                                        setActiveFields((prev) =>
-                                            prev.includes(field) ? prev.filter((f) => f !== field) : [...prev, field]
-                                        )
-                                    }
-                                    calculateMargins={calculateMargins}
-                                    saveDefalutOptions={() => alert("저장 기능은 아직 구현되지 않았습니다.")}
-                                    saveOptions={() => alert("저장 기능은 아직 구현되지 않았습니다.")}
+                                    handleDeleteOption={handleDeleteOption} // 삭제 핸들러 전달
+                                    handleSelectAll={handleSelectAll} // 전체 선택 핸들러 전달
+                                    allSelected={allSelected} // 전체 선택 상태 전달
+                                />
+                                <ActionButtons
+                                    selectedOptions={selectedOptions}
+                                    options={calculatedOptions}
+                                    campaignId={campaign.campaignId}
+                                    handleCalculate={handleCalculate} // 계산하기 핸들러 전달
+                                    handleDeleteOption={handleDeleteOption} // 삭제 핸들러 전달
                                 />
                             </div>
                         )}

@@ -14,35 +14,13 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    /* 제목과 인풋 박스를 양쪽에 배치 */
     gap: 10px;
-    /* 제목과 인풋 박스 사이 간격 */
 }
 
 .campaign-header h3 {
     margin: 0;
     font-size: 18px;
-    /* 제목 크기 */
     flex-shrink: 0;
-    /* 제목이 줄어들지 않도록 고정 */
-}
-
-.campaign-inputs {
-    display: flex;
-    gap: 10px;
-    /* 인풋 간 간격 */
-    /* 남는 공간을 차지해 제목과 여백 확보 */
-}
-
-.campaign-inputs input {
-    padding: 5px;
-    font-size: 14px;
-    width: 100px;
-    /* 인풋 박스 크기 */
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    text-align: right;
-    /* 숫자 정렬 */
 }
 
 .campaign-card {
@@ -66,85 +44,53 @@
     border-radius: 8px;
 }
 
+.action-buttons {
+    margin-top: 20px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
 
-
-.date-separator {
+.calculate,
+.add-button,
+.save {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    color: white;
     font-size: 16px;
     font-weight: bold;
-    margin: 0 10px;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-.campaign-select {
-    display: flex;
-    align-items: center;
-    /* 드롭다운의 높이를 수직 정렬 */
-    margin-right: 20px;
-    /* 오른쪽 여백 추가 */
+.calculate {
+    background-color: #ffc107;
 }
 
-.campaign-select select {
-    padding: 10px;
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    font-size: 14px;
-    height: 40px;
-    /* 높이를 고정해 높낮이를 통일 */
-    box-sizing: border-box;
-    /* 패딩 포함 높이 계산 */
+.calculate:hover {
+    background-color: #e0a800;
+    transform: translateY(-2px);
 }
 
-/* 날짜 입력 필드 */
-.date-picker {
-    font-size: 14px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    padding: 8px;
-    text-align: center;
-    cursor: pointer;
-    transition: border-color 0.2s;
-    height: 40px;
-    /* 캠페인 선택 드롭다운과 높이 통일 */
-    box-sizing: border-box;
-    /* 패딩 포함 높이 계산 */
+.add-button {
+    background-color: #007bff;
 }
 
-.date-picker:hover {
-    border-color: #007bff;
+.add-button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
 }
 
-.date-picker:focus {
-    outline: none;
-    border-color: #0056b3;
-    box-shadow: 0 0 4px rgba(0, 91, 187, 0.5);
+.save {
+    background-color: #28a745;
 }
 
-.options-table-wrapper {
-    overflow-x: auto;
-    /* 작은 화면에서 스크롤 가능 */
+.save:hover {
+    background-color: #218838;
+    transform: translateY(-2px);
 }
 
-.options-table input[type="number"] {
-    width: 100%;
-    padding: 8px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    text-align: right;
-    /* 숫자 정렬 */
-    background-color: #f9f9f9;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    box-sizing: border-box;
-    /* 패딩 포함 */
-}
-
-/* 입력 필드에 포커스 시 */
-.options-table input[type="number"]:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
-    background-color: #fff;
-}
-
-.options-table table {
+.options-table {
     width: 100%;
     border-collapse: collapse;
 }
@@ -152,92 +98,80 @@
 .options-table th,
 .options-table td {
     padding: 10px;
-    text-align: center;
-    border: 1px solid #ddd;
+    text-align: left;
 }
 
-/* 원가와 마진 사이 선 두께 지정 */
-.options-table th:nth-child(6),
-.options-table td:nth-child(6) {
-    border-right: 4px solid #000;
-    /* 원가 오른쪽 선 두껍게 */
+.options-table th {
+    background-color: #f2f2f2;
+    border-bottom: 2px solid #ccc;
 }
 
-.action-buttons {
-    margin-top: 20px;
-    display: flex;
-    justify-content: space-between;
-    /* 양쪽 끝으로 정렬 */
-    align-items: center;
-    /* 수직 중앙 정렬 */
+.options-table td {
+    border-bottom: 1px solid #ccc;
 }
 
-.right-buttons {
-    display: flex;
-    /* 오른쪽 버튼들을 flex로 정렬 */
-    gap: 10px;
-    /* 버튼 간 간격 */
-}
-
-.action-buttons button {
-    padding: 10px 20px;
-    border: none;
+.option-input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
     border-radius: 4px;
-    cursor: pointer;
-    font-size: 14px;
-    font-weight: bold;
-    color: #fff;
+    transition: border-color 0.3s;
 }
 
-.action-buttons .save-default {
-    background-color: #007bff;
-    /* 기본값 저장하기 버튼 스타일 */
+.option-input:focus {
+    border-color: #007bff;
+    outline: none;
 }
 
-.action-buttons .calculate {
-    background-color: #ffc107;
-    /* 계산하기 버튼 스타일 (노란색 예시) */
+.option-input::placeholder {
+    color: #aaa;
 }
 
-.action-buttons .save {
-    background-color: #28a745;
-    /* 저장 버튼 스타일 */
-}
-
-.action-buttons button:hover {
-    opacity: 0.9;
+.option-text {
+    font-size: 25px;
+    color: #571487;
 }
 
 /* 반응형 디자인 */
 @media (max-width: 768px) {
-    .date-picker-container {
+    .campaign-header h3 {
+        font-size: 16px;
+        /* 폰트 크기 조정 */
+    }
+
+    .campaign-card {
+        padding: 10px;
+        /* 패딩 조정 */
+    }
+
+    .action-buttons {
         flex-direction: column;
+        /* 버튼을 세로로 배치 */
         align-items: flex-start;
-        gap: 10px;
+        /* 왼쪽 정렬 */
     }
 
-    .options-table th,
-    .options-table td {
-        font-size: 12px;
-        padding: 8px;
-    }
-
-    .action-buttons button {
-        padding: 8px 16px;
-        font-size: 12px;
+    .calculate,
+    .add-button,
+    .save {
+        width: 100%;
+        /* 버튼의 너비를 100%로 */
+        margin-bottom: 10px;
+        /* 버튼 간 간격 */
     }
 }
 
 @media (max-width: 480px) {
+    .campaign-header h3 {
+        font-size: 14px;
+        /* 더 작은 화면에서 폰트 크기 조정 */
+    }
 
     .options-table th,
     .options-table td {
-        font-size: 10px;
-        padding: 6px;
-    }
-
-    .action-buttons button {
-        padding: 6px 12px;
-        font-size: 10px;
+        font-size: 12px;
+        /* 폰트 크기 조정 */
+        padding: 8px;
+        /* 패딩 조정 */
     }
 }

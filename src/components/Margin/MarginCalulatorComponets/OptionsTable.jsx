@@ -1,15 +1,14 @@
 import React from "react";
 import "../../../styles/MarginCalculatorForm.css"; // CSS 연결
-import ActionButtons from './ActionButtons'
+
 function OptionsTable({
     options,
-    selectedOptions,
-    activeFields,
-    handleRowChange,
-    handleFieldSelection,
+    handleInputChange,
     handleCheckboxChange,
-    calculateMargins, // 계산하기 함수
-    saveOptions, // 저장하기 함수
+    selectedOptions,
+    handleDeleteOption, // 삭제 핸들러 추가
+    handleSelectAll, // 전체 선택 핸들러 추가
+    allSelected // 전체 선택 상태
 }) {
     return (
         <div className="options-table-wrapper">
@@ -19,76 +18,83 @@ function OptionsTable({
                         <th>
                             <input
                                 type="checkbox"
-                                onChange={(e) =>
-                                    handleCheckboxChange(
-                                        e.target.checked
-                                            ? options.map((option) => option.exeId)
-                                            : []
-                                    )
-                                }
-                                checked={
-                                    selectedOptions.length === options.length &&
-                                    selectedOptions.length > 0
-                                }
+                                checked={allSelected} // 전체 선택 상태에 따라 체크박스 상태 결정
+                                onChange={handleSelectAll} // 전체 선택 핸들러 호출
                             />
                         </th>
-                        <th>옵션 ID</th>
-                        <th>상세 카테고리</th>
-                        {["exeSalePrice", "exeTotalPrice", "exeCostPrice"].map((field) => (
-                            <th key={field}>
-                                {field === "exeSalePrice"
-                                    ? "판매가"
-                                    : field === "exeTotalPrice"
-                                        ? "총 비용"
-                                        : "원가"}
-                                <input
-                                    type="checkbox"
-                                    checked={activeFields.includes(field)}
-                                    onChange={() => handleFieldSelection(field)}
-                                />
-                            </th>
-                        ))}
+                        <th>옵션명</th>
+                        <th>판매가</th>
+                        <th>총 비용</th>
+                        <th>원가</th>
                         <th>마진</th>
                         <th>제로 ROAS</th>
+                        <th>삭제</th> {/* 삭제 열 추가 */}
                     </tr>
                 </thead>
                 <tbody>
                     {options.map((option, index) => (
-                        <tr key={option.exeId}>
+                        <tr key={index}>
                             <td>
                                 <input
                                     type="checkbox"
-                                    checked={selectedOptions.includes(option.exeId)}
-                                    onChange={() => handleCheckboxChange(option.exeId)}
+                                    checked={selectedOptions.includes(index)}
+                                    onChange={() => handleCheckboxChange(index)}
                                 />
                             </td>
-                            <td>{option.exeId}</td>
-                            <td>{option.exeDetailCategory}</td>
-                            {["exeSalePrice", "exeTotalPrice", "exeCostPrice"].map((field) => (
-                                <td key={field}>
-                                    <input
-                                        type="number"
-                                        value={option[field]}
-                                        onChange={(e) => {
-                                            handleRowChange(index, field, e.target.value); // 이 부분이 핵심
-                                        }}
-                                        disabled={
-                                            activeFields.length > 0 &&
-                                            !activeFields.includes(field) &&
-                                            selectedOptions.length > 0
-                                        }
-                                    />
-                                </td>
-                            ))}
-                            <td>{option.margin}</td>
-                            <td>{option.zeroROAS}</td>
+                            <td>
+                                <input
+                                    type="text"
+                                    value={option.mfcProductName || ""}
+                                    onChange={(e) => handleInputChange(index, 'mfcProductName', e.target.value)}
+                                    className="option-input"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    value={option.mfcSalePrice || ""}
+                                    onChange={(e) => handleInputChange(index, 'mfcSalePrice', e.target.value)}
+                                    className="option-input"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    value={option.mfcTotalPrice || ""}
+                                    onChange={(e) => handleInputChange(index, 'mfcTotalPrice', e.target.value)}
+                                    className="option-input"
+                                />
+                            </td>
+                            <td>
+                                <input
+                                    type="number"
+                                    value={option.mfcCostPrice || ""}
+                                    onChange={(e) => handleInputChange(index, 'mfcCostPrice', e.target.value)}
+                                    className="option-input"
+                                />
+                            </td>
+                            <td>
+                                <span className="option-text">
+                                    {option.mfcPerPiece !== "" ? option.mfcPerPiece.toFixed(2) : ""}
+                                </span>
+                            </td>
+                            <td>
+                                <span className="option-text">
+                                    {option.mfcZeroRoas !== "" ? option.mfcZeroRoas.toFixed(2) : ""}
+                                </span>
+                            </td>
+                            <td>
+                                <button
+                                    onClick={() => handleDeleteOption(index)} // 삭제 핸들러 호출
+                                    className="delete-button"
+                                >
+                                    삭제하기
+                                </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
             </table>
-
-            {/* ActionButtons 추가 */}
-            <ActionButtons calculateMargins={calculateMargins} saveOptions={saveOptions} />
         </div>
     );
 }
