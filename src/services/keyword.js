@@ -128,3 +128,14 @@ export const deleteBodKeywords = async ({ selectedKeywords, campaignId }) => {
     throw error; // 에러를 다시 던져서 호출한 곳에서 처리할 수 있게 함
   }
 }
+
+export const getCampaignStats = async ({ campaignId, start, end }) => {
+  try {
+    const response = await apiRequest(`/keyword/getCampaignStat?campaignId=${campaignId}&start=${start}&end=${end}`);
+    // console.log(response); // 응답값을 콘솔에 출력
+    return response;
+  } catch (error) {
+    console.error("Error fetching campaigns:", error); // 에러 핸들링
+    throw error; // 에러를 다시 던져서 호출한 곳에서 처리할 수 있게 함
+  }
+}

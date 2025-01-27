@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import CampaignOptionDetailsComponent from "./CampaignOptionDetailsComponent";
 import KeytotalComponent from "./KeyTotalComponent";
 import DatePicker from "react-datepicker";
+import StatisticGrid from "./CampaignStatistics/StatisticGrid"
 import "react-datepicker/dist/react-datepicker.css";
 import "../styles/TabComponent.css";
 import { useParams } from "react-router-dom";
@@ -117,7 +118,11 @@ const Totalsearchbar = () => {
                     }`}
             >
                 {activeTab === "stats" && (
-                    <div>통계 콘텐츠</div>
+                    <StatisticGrid
+                        campaignId={campaignId}
+                        startDate={startDate.toISOString().split("T")[0]}
+                        endDate={endDate.toISOString().split("T")[0]}
+                    />
                 )}
                 {activeTab === "campaign" && (
                     <CampaignOptionDetailsComponent
