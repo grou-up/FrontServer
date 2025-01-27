@@ -8,6 +8,7 @@ import PrivateRoute from "./components/PrivateRoute"; // PrivateRoute 추가
 import Sidebar from "./components/Sidebar";
 import FileUploadForm from "./components/FileUploadForm";
 import CampaignDetail from "./components/CampaignDetail";
+import MarginTabNavigation from "./components/Margin/MarginTabNavigation";
 class AppRoutes extends React.Component {
     render() {
         return (
@@ -34,6 +35,15 @@ class AppRoutes extends React.Component {
                             <PrivateRoute>
                                 <Sidebar />
                                 < FileUploadForm />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/margin-calculator"
+                        element={
+                            <PrivateRoute>
+                                <Sidebar />
+                                < MarginTabNavigation />
                             </PrivateRoute>
                         }
                     />
