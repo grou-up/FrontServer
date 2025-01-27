@@ -7,7 +7,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "../styles/TabComponent.css";
 import { useParams } from "react-router-dom";
 
-const Totalsearchbar = () => {
+const Totalsearchbar = ({ title }) => {
     const [activeTab, setActiveTab] = useState("campaign");
     const [startDate, setStartDate] = useState(new Date());
     const { campaignId } = useParams(); // URL 파라미터에서 campaignId를 가져옴
@@ -77,7 +77,7 @@ const Totalsearchbar = () => {
                         );
                     })}
                 </div>
-
+                <h2 className="text-xl font-bold mb-4">{title}</h2>
                 {/* 날짜 선택기 */}
                 <div className="date-picker-container">
                     <select

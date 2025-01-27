@@ -40,13 +40,11 @@ const CampaignDetail = () => {
   return (
     <div className="main-content">
       <div className="min-h-screen bg-gray-100">
-        <div className="mt-8">
-          <h2 className="text-xl font-bold mb-4">{title}</h2>
-        </div>
         <main className="container mx-auto p-6">
           <Totalsearchbar
             onComponentChange={handleComponentChange}
             onSearch={handleSearch} // 검색 함수 전달
+            title={title}
           />
           <div className="mt-8">
             {activeComponent === "Keywordcomponent" && (
