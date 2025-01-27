@@ -37,10 +37,10 @@ export const uploadFile3 = (file) => {
   // 토큰 가져오기
   const token = getToken();
 
-  // return axios.post('http://localhost:8000/upload_excel/', formData, {
-  //   headers: {
-  //     'Content-Type': 'multipart/form-data',
-  //     'Authorization': `Bearer ${token}`  // Authorization 헤더에 토큰 추가
-  //   },
-  // });
+  return axios.post('http://localhost:8000/upload_margin/', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+      'Authorization': `Bearer ${token}`  // Authorization 헤더에 토큰 추가
+    },
+  });
 };

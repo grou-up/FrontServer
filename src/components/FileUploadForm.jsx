@@ -23,7 +23,7 @@ const FileUploadForm = () => {
     },
     상품정보: {
       // imageSrc: ,
-      description: '상품 정보를 업로드하세요. 상품명, 옵션명, 가격 등의 데이터가 포함됩니다.',
+      description: ' 하루 마진 데이터를 업로드 해주세요.',
     },
   };
 
@@ -115,7 +115,7 @@ const FileUploadForm = () => {
 
           </button>
           <FileUploadComponent
-            label="상품 정보를 업로드 해주세요."
+            label="하루 마진 데이터 업로드 해주세요"
             file={file3}
             setFile={setFile3}
           />
