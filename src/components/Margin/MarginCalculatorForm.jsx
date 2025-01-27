@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import OptionsTable from "./MarginCalulatorComponets/OptionsTable";
-import { getMyCampaigns } from "../../services/campaign";
 import { getExecutionAboutCampaign, deleteExecutionAboutCampaign } from "../../services/marginforcampaign";
 import ActionButtons from "./MarginCalulatorComponets/ActionButtons";
 import "../../styles/MarginCalculatorForm.css";
 
-const MarginCalculatorForm = () => {
-    const [campaigns, setCampaigns] = useState([]); // 모든 캠페인
+const MarginCalculatorForm = ({ campaigns }) => {
     const [expandedCampaignId, setExpandedCampaignId] = useState(null); // 확장된 캠페인 ID
     const [calculatedOptions, setCalculatedOptions] = useState([]); // 옵션 데이터
     const [selectedOptions, setSelectedOptions] = useState([]); // 선택된 옵션 상태
@@ -20,18 +18,6 @@ const MarginCalculatorForm = () => {
             setSelectedOptions(calculatedOptions.map((_, index) => index)); // 모든 선택
         }
     };
-    // 캠페인 데이터 가져오기
-    useEffect(() => {
-        const fetchCampaigns = async () => {
-            try {
-                const response = await getMyCampaigns();
-                setCampaigns(response.data || []);
-            } catch (error) {
-                console.error("캠페인 데이터를 가져오는 중 오류 발생:", error);
-            }
-        };
-        fetchCampaigns();
-    }, []);
 
     const fetchOptionsForCampaign = async (campaignId) => {
         try {
