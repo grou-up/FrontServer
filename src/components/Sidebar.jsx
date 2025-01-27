@@ -93,6 +93,10 @@ const Sidebar = () => {
     fetchCampaigns();
   }, []);
 
+  const optimizedCampaigns = campaigns.filter(campaign => campaign.camAdType === "매출 최적화");
+  const manualCampaigns = campaigns.filter(campaign => campaign.camAdType === "수동 성과형");
+  const generalCampaigns = campaigns.filter(campaign => campaign.camAdType === "간편 매출 스타트");
+
   const menuData = [
     {
       title: "대시보드",
@@ -109,10 +113,10 @@ const Sidebar = () => {
       showDivider: true,
     },
     {
-      title: "메출 최적화",
+      title: "매출 최적화",
       description: "광고 캠패인 분석",
       icon: <BarChart size={16} />,
-      children: campaigns.map((campaign) => ({
+      children: optimizedCampaigns.map((campaign) => ({
         title: campaign.title,
         campaignId: campaign.campaignId,
         icon: <BarChart size={14} />,
@@ -122,7 +126,7 @@ const Sidebar = () => {
     {
       title: "수동 성과형",
       icon: <BarChart size={16} />,
-      children: campaigns.map((campaign) => ({
+      children: manualCampaigns.map((campaign) => ({
         title: campaign.title,
         campaignId: campaign.campaignId,
         icon: <BarChart size={14} />,
@@ -130,9 +134,9 @@ const Sidebar = () => {
       showDivider: false,
     },
     {
-      title: "광고 캠패인",
+      title: "간편 매출 스타트",
       icon: <BarChart size={16} />,
-      children: campaigns.map((campaign) => ({
+      children: generalCampaigns.map((campaign) => ({
         title: campaign.title,
         campaignId: campaign.campaignId,
         icon: <BarChart size={14} />,

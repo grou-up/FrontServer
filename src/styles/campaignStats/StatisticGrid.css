@@ -1,0 +1,29 @@
+.grid-container {
+    display: grid;
+    gap: 20px;
+    /* 각 그리드 아이템 간의 간격 */
+    padding: 20px;
+    /* 부모 요소에 padding 추가 */
+    /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    반응형 그리드 설정 */
+}
+
+.grid-item {
+    background-color: #f9f9f9;
+    /* 배경색 */
+    padding: 20px;
+    /* 내부 여백 */
+    border-radius: 8px;
+    /* 모서리 둥글게 */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* 그림자 추가 */
+    overflow: hidden;
+    /* 내용이 넘칠 경우 숨김 처리 */
+}
+
+.grid-item table {
+    width: 100%;
+    /* 테이블 너비를 100%로 설정 */
+    border-collapse: collapse;
+    /* 테이블 경계 합치기 */
+}
