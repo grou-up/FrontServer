@@ -36,8 +36,6 @@
     /* 수직 정렬 */
     justify-content: space-between;
     /* 버튼과 날짜 선택기를 양쪽 끝으로 배치 */
-    margin-bottom: 20px;
-    /* 아래 여백 */
 }
 
 .date-picker-group {
