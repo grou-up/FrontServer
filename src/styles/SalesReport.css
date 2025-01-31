@@ -1,5 +1,16 @@
 /* SalesReport.css */
 
+/* 데이터 없는경우 */
+.empty-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 200px;
+    font-size: 18px;
+    font-weight: bold;
+    color: #555;
+}
+
 /* 카드 스타일 */
 .sales-report {
     display: flex;

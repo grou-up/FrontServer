@@ -78,7 +78,7 @@ const FileUploadForm = () => {
           </div>
         </div>
 
-        {/* 판매 내역 업로드 */}
+        {/* 판매 내역 업로드
         <div className="bg-white rounded-lg shadow-md p-6 relative">
           <h2 className="text-xl font-semibold mb-4">판매 내역</h2>
           <button
@@ -99,7 +99,7 @@ const FileUploadForm = () => {
           <div className="mt-4 text-center">
             <Button onClick={handleUploadFile2}>업로드</Button>
           </div>
-        </div>
+        </div> */}
 
         {/* 상품 정보 업로드 */}
         <div className="bg-white rounded-lg shadow-md p-6 relative">
