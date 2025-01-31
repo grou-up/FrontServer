@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import CampaignDataTable from "./MarginDataTable"; // 새로 만든 테이블 컴포넌트 가져오기
 import MarginResultModal from "./MarginResultModal"; // 모달 컴포넌트 가져오기
 
@@ -48,7 +48,9 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
                             onClick={() => toggleExpandCampaign(campaign.campaignId)}
                         >
                             <h3>{campaign.title}</h3>
-                            <button onClick={() => handleOptionMarginClick(campaign)}>
+                            <button
+                                className="add-button"
+                                onClick={() => handleOptionMarginClick(campaign)}>
                                 옵션마진 설정
                             </button>
                         </div>
@@ -58,6 +60,7 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
                                     data={tableData}
                                     startDate={startDate}
                                     endDate={endDate}
+                                    campaignId={campaign.campaignId}
                                 />
                             </div>
                         )}
@@ -66,11 +69,13 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
             </div>
 
             {/* 모달 추가 */}
-            <MarginResultModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-                <h2>옵션 마진 설정 - {selectedCampaign ? selectedCampaign.title : ''}</h2>
-                {/* 여기에 필요한 추가 입력 필드나 내용을 추가 */}
-                <p>여기에 옵션 마진 설정 폼을 추가하세요.</p>
-            </MarginResultModal>
+            {selectedCampaign && ( // selectedCampaign이 존재할 때만 모달을 렌더링
+                <MarginResultModal
+                    isOpen={isModalOpen}
+                    onClose={() => setIsModalOpen(false)}
+                    campaignId={selectedCampaign.campaignId} // campaignId 전달
+                />
+            )}
         </div>
     );
 }

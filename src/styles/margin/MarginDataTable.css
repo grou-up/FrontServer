@@ -73,3 +73,23 @@
     padding-left: 0;
     /* 왼쪽 패딩 제거 */
 }
+
+/* 마진 음수일경우 */
+.negative-profit {
+    color: red;
+    /* 음수일 때 빨간색 */
+    font-weight: bold;
+    /* 글씨 두껍게 */
+    font-size: 1.2em;
+    /* 글씨 크기 증가 */
+}
+
+/* 마진 양수일경우 */
+.positive-profit {
+    color: blue;
+    /* 양수일 때 파란색 */
+    font-weight: bold;
+    /* 글씨 두껍게 */
+    font-size: 1.2em;
+    /* 글씨 크기 증가 */
+}

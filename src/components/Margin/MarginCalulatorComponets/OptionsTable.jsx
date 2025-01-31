@@ -75,7 +75,7 @@ function OptionsTable({
                             </td>
                             <td>
                                 <span className="option-text">
-                                    {option.mfcPerPiece !== "" ? option.mfcPerPiece.toFixed(2) : ""}
+                                    {option.mfcPerPiece !== "" ? option.mfcPerPiece : ""}
                                 </span>
                             </td>
                             <td>

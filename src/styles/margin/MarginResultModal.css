@@ -16,7 +16,7 @@
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    width: 900px;
+    width: 1200px;
     /* 모달 너비 조정 */
 }
 
@@ -68,4 +68,78 @@
 .date-picker {
     margin-right: 8px;
     /* 오른쪽 날짜 선택기와 간격 */
+}
+
+.data-table input[type="number"] {
+    border: 1px solid #ccc;
+    /* 테두리 색상 */
+    border-radius: 4px;
+    /* 모서리 둥글기 */
+    padding: 5px;
+    /* 내부 여백 */
+    width: 100%;
+    /* 너비를 100%로 설정 */
+    box-sizing: border-box;
+    /* 패딩과 테두리를 포함하여 크기 계산 */
+}
+
+.data-table input[type="number"]:focus {
+    border-color: #007bff;
+    /* 포커스 시 테두리 색상 */
+    outline: none;
+    /* 기본 아웃라인 제거 */
+}
+
+
+/* 날짜 컨트롤 컨테이너 */
+.date-controls {
+    display: flex;
+    justify-content: center;
+    /* 중앙 정렬 */
+    align-items: center;
+    /* 아래 여백 */
+    gap: 8px;
+    /* 화살표와 날짜 간격 */
+}
+
+/* 날짜 화살표 버튼 */
+.date-button {
+    background: none;
+    border: none;
+    font-size: 18px;
+    /* 화살표 크기 */
+    color: #333;
+    cursor: pointer;
+    padding: 4px 8px;
+    /* 버튼 크기 */
+    transition: color 0.2s, transform 0.2s;
+}
+
+.date-button:hover {
+    color: #007bff;
+    /* 호버 시 색상 변경 */
+    transform: scale(1.5);
+    /* 약간 커지는 효과 */
+}
+
+.date-button:active {
+    transform: scale(0.95);
+    /* 눌리는 효과 */
+    color: #1f04b5;
+    /* 더 어두운 색으로 변경 */
+}
+
+
+/* 날짜 입력 스타일 */
+.date-picker {
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    padding: 4px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    width: 120px;
+    /* 입력 필드의 너비 */
+    text-align: center;
 }

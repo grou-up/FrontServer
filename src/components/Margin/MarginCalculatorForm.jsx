@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import OptionsTable from "./MarginCalulatorComponets/OptionsTable";
 import { getExecutionAboutCampaign, deleteExecutionAboutCampaign } from "../../services/marginforcampaign";
 import ActionButtons from "./MarginCalulatorComponets/ActionButtons";
@@ -93,7 +93,7 @@ const MarginCalculatorForm = ({ campaigns }) => {
 
             // 필요한 값이 존재하는지 확인
             if (option && option.mfcSalePrice && option.mfcTotalPrice && option.mfcCostPrice) {
-                const margin = option.mfcSalePrice - 1.1 * option.mfcTotalPrice - option.mfcCostPrice || 0;
+                const margin = Math.round(option.mfcSalePrice - (1.1 * option.mfcTotalPrice) - option.mfcCostPrice) || 0;
                 const zeroROAS = margin !== 0 ? ((option.mfcSalePrice / margin) * 1.1 * 100).toFixed(2) : "0.00";
                 console.log(margin, zeroROAS);
 
@@ -113,7 +113,6 @@ const MarginCalculatorForm = ({ campaigns }) => {
     const handleDeleteOption = async (indexToDelete) => {
         const optionToDelete = calculatedOptions[indexToDelete];
         const id = optionToDelete.id; // 삭제할 ID (옵션 객체에 ID가 있다고 가정)
-        console.log(id)
         try {
             await deleteExecutionAboutCampaign({ id }); // API 호출
             setCalculatedOptions(prevOptions =>
@@ -129,51 +128,49 @@ const MarginCalculatorForm = ({ campaigns }) => {
     };
 
     return (
-        <div className="margin-calculator">
-            <div className="campaign-list">
-                {campaigns.map((campaign) => (
+        <div className="campaign-list">
+            {campaigns.map((campaign) => (
+                <div
+                    key={campaign.campaignId}
+                    className={`campaign-card ${expandedCampaignId === campaign.campaignId ? "expanded" : ""}`}
+                >
                     <div
-                        key={campaign.campaignId}
-                        className={`campaign-card ${expandedCampaignId === campaign.campaignId ? "expanded" : ""}`}
+                        className="campaign-header"
+                        onClick={() => toggleExpandCampaign(campaign.campaignId)}
                     >
-                        <div
-                            className="campaign-header"
-                            onClick={() => toggleExpandCampaign(campaign.campaignId)}
+                        <h3>{campaign.title}</h3>
+                        <button
+                            className="add-button"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                addEmptyRow(campaign.campaignId);
+                            }}
                         >
-                            <h3>{campaign.title}</h3>
-                            <button
-                                className="add-button"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    addEmptyRow(campaign.campaignId);
-                                }}
-                            >
-                                추가하기
-                            </button>
-                        </div>
-                        {expandedCampaignId === campaign.campaignId && (
-                            <div className="campaign-details">
-                                <OptionsTable
-                                    options={calculatedOptions}
-                                    handleInputChange={handleInputChange}
-                                    handleCheckboxChange={handleCheckboxChange}
-                                    selectedOptions={selectedOptions}
-                                    handleDeleteOption={handleDeleteOption} // 삭제 핸들러 전달
-                                    handleSelectAll={handleSelectAll} // 전체 선택 핸들러 전달
-                                    allSelected={allSelected} // 전체 선택 상태 전달
-                                />
-                                <ActionButtons
-                                    selectedOptions={selectedOptions}
-                                    options={calculatedOptions}
-                                    campaignId={campaign.campaignId}
-                                    handleCalculate={handleCalculate} // 계산하기 핸들러 전달
-                                    handleDeleteOption={handleDeleteOption} // 삭제 핸들러 전달
-                                />
-                            </div>
-                        )}
+                            추가하기
+                        </button>
                     </div>
-                ))}
-            </div>
+                    {expandedCampaignId === campaign.campaignId && (
+                        <div className="campaign-details">
+                            <OptionsTable
+                                options={calculatedOptions}
+                                handleInputChange={handleInputChange}
+                                handleCheckboxChange={handleCheckboxChange}
+                                selectedOptions={selectedOptions}
+                                handleDeleteOption={handleDeleteOption} // 삭제 핸들러 전달
+                                handleSelectAll={handleSelectAll} // 전체 선택 핸들러 전달
+                                allSelected={allSelected} // 전체 선택 상태 전달
+                            />
+                            <ActionButtons
+                                selectedOptions={selectedOptions}
+                                options={calculatedOptions}
+                                campaignId={campaign.campaignId}
+                                handleCalculate={handleCalculate} // 계산하기 핸들러 전달
+                                handleDeleteOption={handleDeleteOption} // 삭제 핸들러 전달
+                            />
+                        </div>
+                    )}
+                </div>
+            ))}
         </div>
     );
 };
