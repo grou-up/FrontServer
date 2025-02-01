@@ -113,6 +113,13 @@ const MarginCalculatorForm = ({ campaigns }) => {
     const handleDeleteOption = async (indexToDelete) => {
         const optionToDelete = calculatedOptions[indexToDelete];
         const id = optionToDelete.id; // 삭제할 ID (옵션 객체에 ID가 있다고 가정)
+
+        // 삭제 확인
+        const confirmDelete = window.confirm("삭제하시겠습니까?");
+        if (!confirmDelete) {
+            return; // 사용자가 "아니오"를 선택하면 함수를 종료
+        }
+
         try {
             await deleteExecutionAboutCampaign({ id }); // API 호출
             setCalculatedOptions(prevOptions =>
@@ -122,7 +129,7 @@ const MarginCalculatorForm = ({ campaigns }) => {
                 prevSelected.filter(selectedIndex => selectedIndex !== indexToDelete)
             );
         } catch (error) {
-            console.error("삭제 중 오류 발생:", error);
+            alert("삭제 실패");
             // 오류 처리 로직 추가 가능 (예: 사용자에게 알림)
         }
     };

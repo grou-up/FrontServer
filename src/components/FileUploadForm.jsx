@@ -55,7 +55,7 @@ const FileUploadForm = () => {
   return (
     <div className="upload-content min-h-screen bg-gray-100">
       <h1 className="text-3xl font-bold text-lfet mb-8">파일 업로드</h1>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* 광고 보고서 업로드 */}
         <div className="bg-white rounded-lg shadow-md p-6 relative">
           <h2 className="text-xl font-semibold mb-4">광고 보고서</h2>
