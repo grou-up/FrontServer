@@ -55,7 +55,7 @@ const FileUploadForm = () => {
   return (
     <div className="upload-content min-h-screen bg-gray-100">
       <h1 className="text-3xl font-bold text-lfet mb-8">파일 업로드</h1>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* 광고 보고서 업로드 */}
         <div className="bg-white rounded-lg shadow-md p-6 relative">
           <h2 className="text-xl font-semibold mb-4">광고 보고서</h2>
@@ -78,28 +78,6 @@ const FileUploadForm = () => {
           </div>
         </div>
 
-        {/* 판매 내역 업로드 */}
-        <div className="bg-white rounded-lg shadow-md p-6 relative">
-          <h2 className="text-xl font-semibold mb-4">판매 내역</h2>
-          <button
-            className="absolute top-4 right-4 text-sm text-blue-500 underline"
-            onClick={() => handleDescriptionChange('판매내역')}
-          >
-
-            <div className="icon-next-to">
-              <CircleHelp />
-              도움말
-            </div>
-          </button>
-          <FileUploadComponent
-            label="판매 내역을 업로드 해주세요."
-            file={file2}
-            setFile={setFile2}
-          />
-          <div className="mt-4 text-center">
-            <Button onClick={handleUploadFile2}>업로드</Button>
-          </div>
-        </div>
 
         {/* 상품 정보 업로드 */}
         <div className="bg-white rounded-lg shadow-md p-6 relative">

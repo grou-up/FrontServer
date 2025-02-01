@@ -53,6 +53,7 @@
 
 .calculate,
 .add-button,
+.delete-button,
 .save {
     padding: 10px 20px;
     border: none;
@@ -94,6 +95,11 @@
     width: 100%;
     border-collapse: collapse;
 }
+
+.delete-button {
+    background-color: red;
+}
+
 
 .options-table th,
 .options-table td {
