@@ -35,3 +35,12 @@ export const marginUpdatesByPeriod = async (data) => {
     }
 };
 
+export const getDailyMarginSummary = async ({ date }) => {
+    try {
+        const response = await apiRequest(`/margin/getDailyMarginSummary?date=${date}`)
+        console.log(response)
+        return response;
+    } catch (error) {
+        throw error
+    }
+}

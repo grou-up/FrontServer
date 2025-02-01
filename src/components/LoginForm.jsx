@@ -33,13 +33,13 @@ const LoginForm = () => {
             <br />
             지금 바로 경험해보세요!
           </p>
-          <Button
+          {/* <Button
             type="button"
             className="w-full"
             onClick={() => navigate("/signup")} // 회원가입 페이지로 이동
           >
             회원가입
-          </Button>
+          </Button> */}
         </div>
 
         {/* 로그인 폼 섹션 */}
@@ -50,7 +50,7 @@ const LoginForm = () => {
               <p className="text-gray-500">계정에 로그인해주세요</p>
             </div>
 
-            <form onSubmit={handleSubmit} className="space-y-6">
+            {/* <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
                 <label className="text-sm font-medium text-gray-700 block">
                   이메일
@@ -98,7 +98,7 @@ const LoginForm = () => {
               <Button type="submit" className="w-full">
                 로그인
               </Button>
-            </form>
+            </form> */}
             <div className="text-center mt-4">
               <KakaoLoginButton />
             </div>

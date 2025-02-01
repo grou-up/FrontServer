@@ -3,6 +3,7 @@ import SalesReport from "./SalesReport";
 import "../../styles/Dashboard.css";
 import TotalSalesReport from "./TotalSalesReport";
 import TotalGraph from "./TotalGraph";
+import MarginReport from "./MarginReport";
 
 const DashboardGrid = () => {
     const [totalSalesData, setTotalSalesData] = useState([]);
@@ -19,7 +20,7 @@ const DashboardGrid = () => {
                 <SalesReport />
             </div>
             <div className="dashboard-item">
-                <SalesReport />
+                <MarginReport />
             </div>
         </div>
     );

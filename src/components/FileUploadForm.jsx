@@ -78,6 +78,28 @@ const FileUploadForm = () => {
           </div>
         </div>
 
+        {/* 판매 내역 업로드
+        <div className="bg-white rounded-lg shadow-md p-6 relative">
+          <h2 className="text-xl font-semibold mb-4">판매 내역</h2>
+          <button
+            className="absolute top-4 right-4 text-sm text-blue-500 underline"
+            onClick={() => handleDescriptionChange('판매내역')}
+          >
+
+            <div className="icon-next-to">
+              <CircleHelp />
+              도움말
+            </div>
+          </button>
+          <FileUploadComponent
+            label="판매 내역을 업로드 해주세요."
+            file={file2}
+            setFile={setFile2}
+          />
+          <div className="mt-4 text-center">
+            <Button onClick={handleUploadFile2}>업로드</Button>
+          </div>
+        </div> */}
 
         {/* 상품 정보 업로드 */}
         <div className="bg-white rounded-lg shadow-md p-6 relative">
