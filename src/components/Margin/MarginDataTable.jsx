@@ -35,7 +35,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId }) => {
         { optionName: "목표효율", key: "marTargetEfficiency" },
         { optionName: "광고예산", key: "marAdBudget" },
         { optionName: "광고수익률", key: "marAdRevenue" },
-        { optionName: "집행광고비*10%", key: "marAdCost" },
+        { optionName: "집행광고비 * 1.1", key: "marAdCost" },
         { optionName: "CPC 단가", key: "marCpcUnitCost" },
         { optionName: "노출수", key: "marImpressions" },
         { optionName: "클릭률", key: "marClicks" },

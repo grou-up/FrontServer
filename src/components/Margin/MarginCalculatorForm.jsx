@@ -153,7 +153,7 @@ const MarginCalculatorForm = ({ campaigns }) => {
                                 addEmptyRow(campaign.campaignId);
                             }}
                         >
-                            추가하기
+                            마진입력
                         </button>
                     </div>
                     {expandedCampaignId === campaign.campaignId && (

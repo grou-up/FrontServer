@@ -6,7 +6,7 @@
 .campaign-list {
     display: flex;
     flex-direction: column;
-    gap: 20px;
+    gap: 8px;
     margin-top: 20px;
 }
 
@@ -14,6 +14,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+    margin-left: 2%;
+    margin-right: 1%;
     gap: 10px;
 }
 
@@ -24,24 +26,37 @@
 }
 
 .campaign-card {
-    border: 2px solid #1f70b8;
-    border-radius: 8px;
+    background-color: #ffffff;
+    border: 2px solid #5C62b8;
+    border-radius: 50px;
     padding: 15px;
     cursor: pointer;
     transition: all 0.3s;
 }
+
 
 .campaign-card.expanded {
     background-color: #f9f9f9;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+.campaign-card.expanded {
+    padding-top: 2%;
+    /* 전체적으로 아래로 내리기 */
+}
+
+.campaign-card.expanded .campaign-details {
+    margin-top: 1%;
+    margin-bottom: 2%;
+    /* 테이블 위 여백 추가 */
+}
+
+
 .campaign-details {
     margin-top: 15px;
     padding: 10px;
-    background-color: #ffffff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    border: none;
+    border-radius: 30px;
 }
 
 .action-buttons {
@@ -55,56 +70,58 @@
 .add-button,
 .delete-button,
 .save {
-    padding: 10px 20px;
+    padding: 5px 25px;
     border: none;
-    border-radius: 4px;
+    border-radius: 30px;
     color: white;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: bold;
     transition: background-color 0.3s, transform 0.2s;
 }
 
 .calculate {
-    background-color: #ffc107;
-}
-
-.calculate:hover {
-    background-color: #e0a800;
-    transform: translateY(-2px);
+    background-color: #efcb35;
 }
 
 .add-button {
-    background-color: #007bff;
+    background-color: #5C62b8;
 }
 
-.add-button:hover {
-    background-color: #0056b3;
-    transform: translateY(-2px);
-}
 
 .save {
-    background-color: #28a745;
-}
-
-.save:hover {
-    background-color: #218838;
-    transform: translateY(-2px);
+    background-color: #28a575;
 }
 
 .options-table {
     width: 100%;
     border-collapse: collapse;
+    table-layout: fixed;
+}
+
+.options-table th:first-child,
+.options-table td:first-child {
+    width: 3%;
+    /* 왼쪽 열은 자동 너비 */
+    text-align: left;
+    /* 왼쪽 정렬 */
+}
+
+.options-table th:nth-child(2),
+.options-table td:nth-child(2) {
+    width: 350px;
+    /* 옵션명 열 고정 너비 */
 }
 
 .delete-button {
-    background-color: red;
+    background-color: #d3264f;
+    /* 블록 요소로 설정하여 중앙 정렬 */
 }
 
 
 .options-table th,
 .options-table td {
     padding: 10px;
-    text-align: left;
+    text-align: center;
 }
 
 .options-table th {
@@ -117,11 +134,17 @@
 }
 
 .option-input {
+    width: 90%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.option-input-name {
     width: 100%;
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    transition: border-color 0.3s;
 }
 
 .option-input:focus {
@@ -129,13 +152,10 @@
     outline: none;
 }
 
-.option-input::placeholder {
-    color: #aaa;
-}
-
 .option-text {
-    font-size: 25px;
-    color: #571487;
+    font-size: 20px;
+    font-weight: bold;
+    color: #4d5499;
 }
 
 /* 반응형 디자인 */

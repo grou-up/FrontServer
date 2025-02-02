@@ -43,18 +43,19 @@
   display: flex;
   align-items: center;
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: 20px;
   cursor: pointer;
 }
 
 .menu-item-content:hover:not(.active) {
-  background-color: rgba(72, 128, 255, 1);
+  background-color: #9da7d3;
   color: white;
 }
 
 .menu-item-content.active {
-  background-color: #4880FF;
+  background-color: #5C62B8;
   color: white;
+  font-weight: bold;
 }
 
 .menu-item-icon {
@@ -74,7 +75,7 @@
   height: 1px;
   background: #020000;
   /* 구분선 색상 */
-  margin: 0;
+  margin: 8px;
   /* 기본 여백 제거 */
 }
 
