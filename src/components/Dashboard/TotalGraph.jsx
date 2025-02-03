@@ -22,7 +22,9 @@ ChartJS.register(
 
 const TotalGraph = ({ data }) => {
     if (!data || data.length === 0) {
-        return <p style={{ textAlign: "center", padding: "20px" }}>시각화할 데이터가 없습니다.</p>;
+        return <div className="empty-message">
+            시각화할 데이터가 없습니다.</div>
+            ;
     }
 
     // 차트 데이터 구성

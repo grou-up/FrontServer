@@ -9,7 +9,194 @@
     /* 자동으로 높이 설정 */
     overflow: hidden;
     /* 스크롤 제거 */
-    background-color: #e6e4f8;
+    background-color: #f3f4f6;
     display: flex;
     flex-direction: column;
+}
+
+/* 카드 스타일 */
+.upload-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 24px;
+    position: relative;
+}
+
+/* 제목 스타일 */
+.upload-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+/* 버튼 스타일 */
+.upload-button {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    font-size: 0.875rem;
+    text-decoration: underline;
+    color: #4c547b;
+    /* 버튼 글자 색상 변경 */
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.upload-button:hover {
+    color: #5c62b8;
+}
+
+/* 아이콘과 텍스트 정렬 */
+.icon-next-to {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.icon-next-to:hover {
+    color: #5c62b8;
+    transform: scale(1.1);
+    /* 10% 커지게 */
+}
+
+/* 아이콘 색상 변경 */
+.icon-next-to svg {
+    color: #4c547b;
+    /* 아이콘 색상 */
+    width: 20px;
+    height: 20px;
+}
+
+/* 도움말 박스 스타일 */
+.help-box {
+    margin-top: 32px;
+    background-color: #dbeafe;
+    /* bg-blue-100 */
+    color: #1e3a8a;
+    /* text-blue-800 */
+    padding: 16px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* 도움말 이미지 스타일 */
+.help-box img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 16px;
+}
+
+.upload-label {
+    color: #4c547b;
+    /* 파란색 */
+    font-weight: bold;
+    font-size: 16px;
+}
+
+/* 파일 업로드 카드 내부 */
+.file-upload-container {
+    background-color: white;
+    padding: 24px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.file-upload-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+}
+
+.file-upload-label {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 32px;
+    background-color: white;
+    border-radius: 8px;
+    border: 2px solid #4c547b;
+    /* 파란색 테두리 */
+    cursor: pointer;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.file-upload-label:hover {
+    background-color: #eff6ff;
+    /* 연한 파란색 */
+    border-color: #2563eb;
+    /* 더 진한 파란색 */
+}
+
+.file-upload-icon {
+    width: 32px;
+    height: 32px;
+    color: #4c547b;
+    /* 아이콘 색상 */
+}
+
+.file-upload-text {
+    margin-top: 8px;
+    font-size: 16px;
+    color: #1e3a8a;
+    /* 진한 파란색 */
+    font-weight: bold;
+}
+
+.file-upload-input {
+    display: none;
+}
+
+.file-upload-selected {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #6b7280;
+    /* 회색 */
+}
+
+.overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    /* 반투명 배경 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-top: 5px solid #fff;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 20px;
+    /* grouup 텍스트와 간격 */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.overlay-text {
+    font-size: 2rem;
+    font-weight: bold;
+    color: white;
+    text-align: center;
 }

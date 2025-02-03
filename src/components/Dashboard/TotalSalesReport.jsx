@@ -101,8 +101,10 @@ const TotalSalesReport = ({ setTotalSalesData }) => {
                         ))
                     ) : (
                         <tr>
-                            <td colSpan="4" style={{ textAlign: "center", padding: "20px" }}>
-                                데이터가 없습니다
+                            <td colSpan="4" >
+                                <div className="empty-message">
+                                    종합 보고서를 업로드 해주세요
+                                </div>
                             </td>
                         </tr>
                     )}
