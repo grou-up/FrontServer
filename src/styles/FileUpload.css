@@ -89,13 +89,6 @@
     margin-bottom: 16px;
 }
 
-.upload-label {
-    color: #4c547b;
-    /* 파란색 */
-    font-weight: bold;
-    font-size: 16px;
-}
-
 /* 파일 업로드 카드 내부 */
 .file-upload-container {
     background-color: white;

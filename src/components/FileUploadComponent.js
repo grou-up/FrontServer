@@ -2,11 +2,10 @@ import React from 'react';
 import { Upload } from 'lucide-react';
 import '../styles/FileUpload.css';
 
-
-const FileUploadComponent = ({ label, file, setFile }) => {
+const FileUploadComponent = ({ label, files, setFiles, multiple = false }) => {
   const handleFileUpload = (event) => {
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
+    const selectedFiles = Array.from(event.target.files);
+    setFiles(multiple ? (prevFiles) => [...prevFiles, ...selectedFiles] : selectedFiles);
   };
 
   return (
@@ -20,13 +19,19 @@ const FileUploadComponent = ({ label, file, setFile }) => {
             className="file-upload-input"
             accept=".xlsx, .xls"
             onChange={handleFileUpload}
+            multiple={multiple} // multiple 속성 반영
           />
         </label>
       </div>
-      {file && <p className="file-upload-selected">선택된 파일: {file.name}</p>}
+      {files.length > 0 && (
+        <div className="file-upload-selected">
+          {files.map((file, index) => (
+            <p key={index}>선택된 파일: {file.name}</p>
+          ))}
+        </div>
+      )}
     </div>
   );
 };
 
 export default FileUploadComponent;
-
