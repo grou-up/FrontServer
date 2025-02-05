@@ -36,6 +36,8 @@
     /* 수직 정렬 */
     justify-content: space-between;
     /* 버튼과 날짜 선택기를 양쪽 끝으로 배치 */
+    padding-left: 20px;
+    /* 왼쪽 여백 추가 */
 }
 
 .date-picker-group {
@@ -61,14 +63,10 @@
 }
 
 .date-separator {
-    margin: 0 8px;
+    margin: 0 4px;
     /* 날짜 사이의 간격 */
 }
 
-.date-picker {
-    margin-right: 8px;
-    /* 오른쪽 날짜 선택기와 간격 */
-}
 
 .data-table input[type="number"] {
     border: 1px solid #ccc;
@@ -98,7 +96,7 @@
     /* 중앙 정렬 */
     align-items: center;
     /* 아래 여백 */
-    gap: 8px;
+    gap: px;
     /* 화살표와 날짜 간격 */
 }
 
@@ -129,8 +127,25 @@
     /* 더 어두운 색으로 변경 */
 }
 
-
 /* 날짜 입력 스타일 */
+.date-picker-tab {
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 12px;
+    padding: 4px 8px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.2s;
+    width: 120px;
+    /* 입력 필드의 너비 */
+    text-align: center;
+}
+
+/* 년월 선택기만 간격 추가 */
+.month-picker-group {
+    margin-right: 20px;
+}
+
 .date-picker {
     font-size: 16px;
     border: 2px solid #ddd;

@@ -46,7 +46,7 @@ function OptionsTable({
                                     type="text"
                                     value={option.mfcProductName || ""}
                                     onChange={(e) => handleInputChange(index, 'mfcProductName', e.target.value)}
-                                    className="option-input"
+                                    className="option-input-name"
                                 />
                             </td>
                             <td>
@@ -88,7 +88,7 @@ function OptionsTable({
                                     onClick={() => handleDeleteOption(index)} // 삭제 핸들러 호출
                                     className="delete-button"
                                 >
-                                    삭제하기
+                                    삭제
                                 </button>
                             </td>
                         </tr>

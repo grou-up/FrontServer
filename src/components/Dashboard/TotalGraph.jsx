@@ -22,7 +22,9 @@ ChartJS.register(
 
 const TotalGraph = ({ data }) => {
     if (!data || data.length === 0) {
-        return <p style={{ textAlign: "center", padding: "20px" }}>시각화할 데이터가 없습니다.</p>;
+        return <div className="empty-message">
+            시각화할 데이터가 없습니다.</div>
+            ;
     }
 
     // 차트 데이터 구성
@@ -52,6 +54,7 @@ const TotalGraph = ({ data }) => {
                 backgroundColor: "rgba(0, 0, 0, 0.2)", // 검정색 배경
                 fill: false, // 배경 없음
                 tension: 0.4,
+                yAxisID: 'roas-y', // ROAS를 오른쪽 Y축에 연결
             },
         ],
     };
@@ -76,7 +79,18 @@ const TotalGraph = ({ data }) => {
                 beginAtZero: true,
                 title: {
                     display: true,
-                    text: "값",
+                    text: "총 매출",
+                },
+            },
+            'roas-y': { // ROAS를 위한 오른쪽 Y축
+                position: 'right', // 오른쪽 위치
+                beginAtZero: true,
+                title: {
+                    display: true,
+                    text: "ROAS (%)",
+                },
+                ticks: {
+                    callback: (value) => value + '%' // Y축 값에 % 추가
                 },
             },
             x: {

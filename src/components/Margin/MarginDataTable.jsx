@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../../styles/margin/MarginDataTable.css";
 import { getMarginByCampaignId } from "../../services/margin";
 import { formatNumber } from "../../utils/formatUtils";
+
 const MarginDataTable = ({ startDate, endDate, campaignId }) => {
     const [data, setData] = useState([]); // 데이터 상태
 
@@ -11,7 +12,10 @@ const MarginDataTable = ({ startDate, endDate, campaignId }) => {
     const end = new Date(endDate);
 
     while (currentDate <= end) {
-        dateRange.push(currentDate.toISOString().split('T')[0]); // YYYY-MM-DD 형식으로 추가
+        const yearMonthDay = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD 형식
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // 월을 2자리로 포맷
+        const day = String(currentDate.getDate()).padStart(2, '0'); // 일을 2자리로 포맷
+        dateRange.push({ fullDate: yearMonthDay, displayDate: `${month}-${day}` }); // 객체로 저장
         currentDate.setDate(currentDate.getDate() + 1); // 하루씩 증가
     }
 
@@ -20,7 +24,6 @@ const MarginDataTable = ({ startDate, endDate, campaignId }) => {
         const fetchData = async () => {
             try {
                 const response = await getMarginByCampaignId({ startDate, endDate, campaignId });
-                // response.data[0].data에 접근하여 상태 설정
                 setData(response.data[0].data); // API 응답에서 데이터 설정
             } catch (error) {
                 console.error("데이터를 가져오는 중 오류 발생:", error);
@@ -35,7 +38,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId }) => {
         { optionName: "목표효율", key: "marTargetEfficiency" },
         { optionName: "광고예산", key: "marAdBudget" },
         { optionName: "광고수익률", key: "marAdRevenue" },
-        { optionName: "집행광고비*10%", key: "marAdCost" },
+        { optionName: "집행광고비 * 1.1", key: "marAdCost" },
         { optionName: "CPC 단가", key: "marCpcUnitCost" },
         { optionName: "노출수", key: "marImpressions" },
         { optionName: "클릭률", key: "marClicks" },
@@ -52,8 +55,8 @@ const MarginDataTable = ({ startDate, endDate, campaignId }) => {
                 <thead>
                     <tr>
                         <th className="option-name-header sticky-column"></th>
-                        {dateRange.map((date) => (
-                            <th key={date}>{date}</th>
+                        {dateRange.map(({ displayDate }) => (
+                            <th key={displayDate}>{displayDate}</th>
                         ))}
                     </tr>
                 </thead>
@@ -61,9 +64,9 @@ const MarginDataTable = ({ startDate, endDate, campaignId }) => {
                     {options.map((option) => (
                         <tr key={option.optionName}>
                             <td className="sticky-column">{option.optionName}</td>
-                            {dateRange.map((date) => {
+                            {dateRange.map(({ fullDate }) => {
                                 // 해당 날짜에 맞는 데이터 찾기
-                                const itemForDate = data.find(item => item.marDate === date);
+                                const itemForDate = data.find(item => item.marDate === fullDate);
                                 let value = '-'; // 기본값
 
                                 if (itemForDate) {
@@ -72,20 +75,18 @@ const MarginDataTable = ({ startDate, endDate, campaignId }) => {
                                     } else if (option.key === "marAdCost") { // 집행광고비 * 10
                                         value = formatNumber(Math.round(itemForDate.marAdCost * 1.1));
                                     } else if (option.key === "marCpcUnitCost") { // CPC 단가
-                                        value = formatNumber(Math.round(itemForDate.marAdCost / itemForDate.marClicks))
+                                        value = formatNumber(Math.round(itemForDate.marAdCost / itemForDate.marClicks));
                                     } else if (option.key === "marImpressions") {
-                                        value = formatNumber(itemForDate.marImpressions)
+                                        value = formatNumber(itemForDate.marImpressions);
                                     } else if (option.key === "marClicks") { // 클릭률
                                         value = ((itemForDate.marClicks / itemForDate.marImpressions) * 100).toFixed(2) + '%';
                                     } else if (option.key === "marAdConversionSalesCount") {
                                         value = formatNumber(((itemForDate.marAdConversionSalesCount / itemForDate.marClicks) * 100).toFixed(2)) + '%';
                                     } else if (option.key === "marAdMargin") {
-                                        value = formatNumber(itemForDate.marAdMargin)
-                                    }
-                                    else if (option.key === "marNetProfit") {  // 순이익
+                                        value = formatNumber(itemForDate.marAdMargin);
+                                    } else if (option.key === "marNetProfit") { // 순이익
                                         value = formatNumber(Math.round(itemForDate.marNetProfit));
-                                    }
-                                    else {
+                                    } else {
                                         // 기본 데이터 값
                                         value = itemForDate[option.key] || '-';
                                     }
@@ -97,7 +98,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId }) => {
 
                                 return (
                                     <td
-                                        key={date}
+                                        key={fullDate}
                                         className={
                                             isNetProfitColumn
                                                 ? (isNetProfitNegative ? "negative-profit" :

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getMargin } from "../../services/margin";
 import usePaginationAndSorting from "../../hooks/usePaginationAndSorting";
 import "../../styles/SalesReport.css";
+import "../../styles/numberColor.css"
 import Pagination from "../Date/Pagination";
 import { formatNumber } from "../../utils/formatUtils";
 import DateControls from "../Date/DateControls";
@@ -42,7 +43,11 @@ const SalesReport = () => {
         newDate.setDate(newDate.getDate() + 1);
         setDate(newDate);
     };
-
+    const getSalesDifferenceClass = (difference) => {
+        if (difference > 0) return "positive-profit"; // +이면 파란색
+        if (difference < 0) return "negative-profit"; // -이면 빨간색
+        return ""; // 0이면 기본 스타일
+    };
     return (
         <div className="sales-report">
             {/* 제목과 날짜 선택기를 한 줄로 배치 */}
@@ -79,7 +84,9 @@ const SalesReport = () => {
                             <td>{item.campaignName}</td>
                             <td>{formatNumber(item.yesterdaySales)}</td>
                             <td>{formatNumber(item.todaySales)}</td>
-                            <td>{formatNumber(item.differentSales)}</td>
+                            <td className={getSalesDifferenceClass(item.differentSales)}>
+                                {formatNumber(item.differentSales)}
+                            </td>
                         </tr>
                     ))}
                 </tbody>

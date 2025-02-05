@@ -43,18 +43,19 @@
   display: flex;
   align-items: center;
   padding: 8px 16px;
-  border-radius: 8px;
+  border-radius: 20px;
   cursor: pointer;
 }
 
 .menu-item-content:hover:not(.active) {
-  background-color: rgba(72, 128, 255, 1);
+  background-color: #9da7d3;
   color: white;
 }
 
 .menu-item-content.active {
-  background-color: #4880FF;
+  background-color: #5C62B8;
   color: white;
+  font-weight: bold;
 }
 
 .menu-item-icon {
@@ -74,7 +75,7 @@
   height: 1px;
   background: #020000;
   /* 구분선 색상 */
-  margin: 0;
+  margin: 8px;
   /* 기본 여백 제거 */
 }
 
@@ -103,7 +104,7 @@
 .sidebar-footer {
   height: 100px;
   /* 박스 높이 */
-  background-color: #e8eaff;
+  background-color: #EAECF9;
   /* 연한 배경색 */
   border-radius: 16px;
   /* 둥근 모서리 */
@@ -122,7 +123,7 @@
   /* 가로 가운데 정렬 */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   /* 약간의 그림자 */
-  color: #374151;
+  color: #4c547b;
   /* 텍스트 색상 */
   font-size: 14px;
   /* 기본 텍스트 크기 */
@@ -144,7 +145,7 @@
 .user-role {
   font-size: 12px;
   /* 역할 텍스트 크기 */
-  color: #6b7280;
+  color: #4c547b;
   /* 연한 회색 텍스트 색상 */
 }
 

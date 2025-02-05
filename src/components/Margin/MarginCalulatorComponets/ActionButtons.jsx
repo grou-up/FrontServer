@@ -129,7 +129,7 @@ const ActionButtons = ({ selectedOptions, options, campaignId, handleCalculate }
                 onClick={handleSave}
                 disabled={!isAllFieldsFilled()} // 비활성화 조건 추가
                 style={{
-                    backgroundColor: isAllFieldsFilled() ? 'green' : 'gray', // 버튼 색상 변경
+                    backgroundColor: isAllFieldsFilled() ? '#28a575' : 'gray', // 버튼 색상 변경
                     color: 'white',
                     cursor: isAllFieldsFilled() ? 'pointer' : 'not-allowed',
                 }}

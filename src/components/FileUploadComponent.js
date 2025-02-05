@@ -1,30 +1,34 @@
 import React from 'react';
 import { Upload } from 'lucide-react';
+import '../styles/FileUpload.css';
 
-const FileUploadComponent = ({ label, file, setFile }) => {
+const FileUploadComponent = ({ label, files, setFiles, multiple = false }) => {
   const handleFileUpload = (event) => {
-    const selectedFile = event.target.files[0];
-    setFile(selectedFile);
+    const selectedFiles = Array.from(event.target.files);
+    setFiles(multiple ? (prevFiles) => [...prevFiles, ...selectedFiles] : selectedFiles);
   };
 
   return (
-    <div className="bg-white p-6 rounded-lg shadow-md">
-      <div className="flex items-center justify-center w-full">
-        <label className="w-full flex flex-col items-center px-4 py-6 bg-white rounded-lg shadow-lg tracking-wide border border-blue-500 cursor-pointer hover:bg-blue-50">
-          <Upload className="w-8 h-8 text-blue-500" />
-          <span className="mt-2 text-base">{label}</span>
+    <div className="file-upload-container">
+      <div className="file-upload-wrapper">
+        <label className="file-upload-label">
+          <Upload className="file-upload-icon" />
+          <span className="file-upload-text">{label}</span>
           <input
             type="file"
-            className="hidden"
+            className="file-upload-input"
             accept=".xlsx, .xls"
             onChange={handleFileUpload}
+            multiple={multiple} // multiple 속성 반영
           />
         </label>
       </div>
-      {file && (
-        <p className="mt-2 text-sm text-gray-600">
-          선택된 파일: {file.name}
-        </p>
+      {files.length > 0 && (
+        <div className="file-upload-selected">
+          {files.map((file, index) => (
+            <p key={index}>선택된 파일: {file.name}</p>
+          ))}
+        </div>
       )}
     </div>
   );

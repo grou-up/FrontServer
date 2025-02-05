@@ -35,6 +35,11 @@ const MarginReport = () => {
         newDate.setDate(newDate.getDate() - 1);
         setDate(newDate);
     };
+    const getSalesDifferenceClass = (difference) => {
+        if (difference > 0) return "positive-profit"; // +이면 파란색
+        if (difference < 0) return "negative-profit"; // -이면 빨간색
+        return ""; // 0이면 기본 스타일
+    };
 
     // 날짜를 하루 후로 이동
     const handleNextDay = () => {
@@ -47,7 +52,7 @@ const MarginReport = () => {
         <div className="sales-report">
             {/* 제목과 날짜 선택기를 한 줄로 배치 */}
             <div className="report-header">
-                <h3 className="report-title">매출 보고서</h3>
+                <h3 className="report-title">마진 보고서</h3>
                 <DateControls
                     date={date}
                     onPrevDay={handlePrevDay}
@@ -83,7 +88,9 @@ const MarginReport = () => {
                                 <tr key={index}>
                                     <td>{item.marProductName}</td>
                                     <td>{formatNumber(item.marAdMargin)}</td>
-                                    <td>{formatNumber(Math.round(item.marNetProfit))}</td>
+                                    <td className={getSalesDifferenceClass(Math.round(item.marNetProfit))}>
+                                        {formatNumber(Math.round(item.marNetProfit))}
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>

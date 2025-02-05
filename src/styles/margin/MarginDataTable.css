@@ -11,19 +11,20 @@
 }
 
 .campaign-data-table {
-    width: 200%;
+    width: 100%;
     /* 테이블 너비 설정 */
     border-collapse: collapse;
     /* 경계 합치기 */
-    margin-top: 20px;
+    margin-top: 25px;
     /* 상단 여백 */
+    font-size: 14px;
+    /* 글자 크기 줄이기 */
+    table-layout: auto;
 }
 
 .campaign-data-table th,
 .campaign-data-table td {
-    border: 1px solid #ddd;
-    /* 경계선 설정 */
-    padding: 10px;
+    padding: 2px 4px;
     /* 패딩 설정 */
     text-align: left;
     /* 왼쪽 정렬 */
@@ -35,7 +36,7 @@
 }
 
 .option-name-header {
-    width: 200px;
+    width: 150px;
     /* 폭을 늘려서 줄바꿈 방지 */
     background-color: #e0e0e0;
     /* 옵션 이름 헤더 배경색 */
@@ -45,7 +46,7 @@
 
 /* 날짜 헤더 스타일 */
 .campaign-data-table th {
-    min-width: 120px;
+    min-width: 100px;
     /* 최소 너비 설정 */
     white-space: nowrap;
     /* 줄바꿈 방지 */

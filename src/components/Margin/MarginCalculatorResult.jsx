@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import CampaignDataTable from "./MarginDataTable"; // 새로 만든 테이블 컴포넌트 가져오기
 import MarginResultModal from "./MarginResultModal"; // 모달 컴포넌트 가져오기
+import MarginNetTable from "./MarginNetTable";
 
 const fetchCampaignData = async (campaignId, startDate, endDate) => {
     return new Promise((resolve) => {
@@ -18,6 +19,17 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
     const [tableData, setTableData] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
     const [selectedCampaign, setSelectedCampaign] = useState(null); // 선택된 캠페인
+
+    useEffect(() => {
+        // 날짜가 변경될 때마다 캠페인 데이터를 가져옴
+        if (expandedCampaignId) {
+            const fetchData = async () => {
+                const data = await fetchCampaignData(expandedCampaignId, startDate, endDate);
+                setTableData(data);
+            };
+            fetchData();
+        }
+    }, [expandedCampaignId, startDate, endDate]);
 
     const toggleExpandCampaign = async (campaignId) => {
         if (expandedCampaignId === campaignId) {
@@ -37,6 +49,10 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
 
     return (
         <div>
+            <div>
+                {/* MarginNetTable에 시작일과 종료일을 그대로 전달 */}
+                <MarginNetTable startDate={startDate} endDate={endDate} />
+            </div>
             <div className="campaign-list">
                 {campaigns.map((campaign) => (
                     <div
@@ -58,8 +74,8 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
                             <div>
                                 <CampaignDataTable
                                     data={tableData}
-                                    startDate={startDate}
-                                    endDate={endDate}
+                                    startDate={startDate} // YYYY-MM-DD 형식으로 그대로 전달
+                                    endDate={endDate} // YYYY-MM-DD 형식으로 그대로 전달
                                     campaignId={campaign.campaignId}
                                 />
                             </div>
