@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import "../styles/KeywordComponent.css"; // 스타일 파일
-import { ArrowDownUp } from 'lucide-react';
+import SortableHeader from './SortableHeader'; // SortableHeader 임포트
 
 const ExclusionKeywordComponent = ({
     keywords,
@@ -22,7 +22,13 @@ const ExclusionKeywordComponent = ({
         .sort((a, b) => {
             if (!sortConfig.key) return 0;
             const order = sortConfig.direction === "asc" ? 1 : -1;
-            return a > b ? order : a < b ? -order : 0;
+            // a와 b의 정렬 기준 속성에 따라 비교
+            const aValue = a[sortConfig.key];
+            const bValue = b[sortConfig.key];
+
+            if (aValue < bValue) return -1 * order;
+            if (aValue > bValue) return 1 * order;
+            return 0;
         });
 
     const handleSort = (key) => {
@@ -54,18 +60,12 @@ const ExclusionKeywordComponent = ({
     if (error) return <div>{error}</div>;
 
     return (
-        <div className="keyword-component">
+        <div className="keyword-table">
             <table>
                 <thead>
                     <tr>
-                        <th onClick={() => handleSort("keyKeyword")}>
-                            제외 키워드
-                            <ArrowDownUp />
-                        </th>
-                        <th onClick={() => handleSort("keyImpressions")}>
-                            등록 날짜
-                            <ArrowDownUp />
-                        </th>
+                        <SortableHeader label="제외 키워드" sortKey="exclusionKeyword" onSort={handleSort} />
+                        <SortableHeader label="등록 날짜" sortKey="addTime" onSort={handleSort} />
                         <th>
                             <input
                                 type="checkbox"

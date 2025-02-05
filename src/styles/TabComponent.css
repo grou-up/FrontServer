@@ -1,11 +1,12 @@
 /* 탭 컨테이너 */
 .tab-container {
     width: 100%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
     margin-bottom: 16px;
     border-radius: 16px;
     overflow: hidden;
     /* 컨테이너 밖으로 콘텐츠 넘침 방지 */
+
 }
 
 /* 탭 및 날짜 선택기 영역 */
@@ -18,16 +19,17 @@
 /* 탭 버튼 영역 */
 .tabs {
     display: flex;
-    gap: 12px;
+    gap: 7px;
     /* 탭 버튼 간 간격 */
     margin: 0;
     /* 상단 여백 제거 */
+
 }
 
 /* 개별 탭 버튼 */
 .tab {
     padding: 10px 50px;
-    background-color: #f0f0f0;
+    background-color: #c5c1c16e;
     border: none;
     cursor: pointer;
     font-weight: bold;
@@ -38,13 +40,16 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    margin-bottom: 10px;
 }
 
 /* 활성화된 탭 스타일 */
 .tab.active {
     background-color: #ffffff;
-    color: #0022ff;
+    color: #5C62B8;
     border-radius: 16px 16px 0 0;
+    font-size: 22px;
+    margin-bottom: 0px;
 }
 
 /* 콘텐츠 영역 */
@@ -105,17 +110,17 @@
 .date-picker {
     padding: 8px 12px;
     border: none;
-    background-color: transparent;
-    border-radius: 8px;
+    background-color: #D6DBF2;
+    border-radius: 20px;
     font-size: 14px;
-    color: #333;
+    color: #4C547B;
     /* 드롭다운이 다른 요소 위로 표시되도록 */
 }
 
 .date-range {
     display: flex;
     align-items: center;
-    background-color: #e0e7ff;
+    background-color: #D6DBF2;
     border-radius: 20px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
@@ -124,7 +129,8 @@
     padding: 8px 12px;
     border: 1px solid #ddd;
     border-radius: 8px;
-    background-color: #f9f9f9;
+    background-color: #D6DBF2;
     font-size: 14px;
     cursor: pointer;
+    color: #4C547B;
 }

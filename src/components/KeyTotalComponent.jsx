@@ -19,6 +19,8 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
     const [exclusionKeywords, setExclusionKeywords] = useState([]);
     const [isAllSelected, setIsAllSelected] = useState(false);
     const [sortConfig, setSortConfig] = useState({ key: null, direction: "asc" });
+    const [keyKeyword, setKeyKeyword] = useState(""); // 추가된 상태
+    const [activeButton, setActiveButton] = useState("keyword"); // 클릭된 버튼 상태
 
     // 키워드 조회
     const fetchKeywords = async () => {
@@ -31,7 +33,7 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
         setLoading(true);
         try {
             const response = await getKeywords({ start: startDate, end: endDate, campaignId });
-            console.log(response.data);
+            // console.log(response.data);
             setKeywords(response.data || []);
             setError(null);
         } catch (error) {
@@ -47,6 +49,7 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
         setLoading(true);
         try {
             const response = await getBidKeywords({ start: startDate, end: endDate, campaignId }); // 입찰 키워드 API 호출
+            // console.log(response.data);
             setBidKeywords(response.data || []); // API 응답에서 입찰 키워드 데이터 설정
             setError(null);
         } catch (error) {
@@ -75,14 +78,17 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
 
     const handleShowKeywords = () => {
         setActiveComponent("keyword");
+        setActiveButton("keyword"); // 클릭된 버튼 상태 업데이트
     };
 
     const handleExclusionKeywords = () => {
         setActiveComponent("exclusion");
+        setActiveButton("exclusion"); // 클릭된 버튼 상태 업데이트
     };
 
     const handleKeywordBids = () => {
         setActiveComponent("bid");
+        setActiveButton("bid"); // 클릭된 버튼 상태 업데이트
     };
     // 제외 키워드 등록
     const handleRegisterExclusionKeywords = async () => {
@@ -107,6 +113,7 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
         setLoading(true);
         try {
             const response = await getExclusionKeywords({ campaignId });
+            // console.log(response.data);
             setExclusionKeywords(response.data || []);
             setError(null);
         } catch (error) {
@@ -195,29 +202,52 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
     return (
         <div className="keyword-component">
             <div className="button-container">
-                <button className="keyword-button" onClick={handleShowKeywords}>전체키워드</button>
-                <button className="keyword-button" onClick={handleExclusionKeywords}>제외키워드</button>
-                <button className="keyword-button primary-button" onClick={handleKeywordBids}>수동입찰가</button>
-                <input type="text" placeholder="키워드를 입력하세요" className="keyword-input" />
-                {activeComponent === "keyword" && (
-                    <>
-                        <button className="keyword-button primary-button" onClick={handleRegisterExclusionKeywords}>제외 키워드 등록</button>
-                        <button className="keyword-button primary-button" onClick={handleRegisterKeywordBids}>입찰가 등록</button>
-                    </>
-                )}
-                {activeComponent === "exclusion" && (
-                    <>
-                        <button className="keyword-button primary-button" onClick={handleDownload}>복사</button>
-                        <button className="keyword-button primary-button" onClick={handleRemoveKeyword}>삭제</button>
-                    </>
-                )}
-                {activeComponent === "bid" && (
-                    <>
-                        <button className="keyword-button primary-button" onClick={handleUpdateKeywordBids}>수정</button>
-                        <button className="keyword-button primary-button" onClick={handleDownload}>복사</button>
-                        <button className="keyword-button primary-button" onClick={handleDeleteKeywordBids}>삭제</button>
-                    </>
-                )}
+                <button
+                    className={`keyword-button ${activeButton === "keyword" ? "active" : ""}`}
+                    onClick={handleShowKeywords}
+                >
+                    전체키워드
+                </button>
+                <button
+                    className={`keyword-button ${activeButton === "exclusion" ? "active" : ""}`}
+                    onClick={handleExclusionKeywords}
+                >
+                    제외키워드
+                </button>
+                <button
+                    className={`keyword-button ${activeButton === "bid" ? "active" : ""}`}
+                    onClick={handleKeywordBids}
+                >
+                    수동입찰가
+                </button>
+                <input
+                    type="text"
+                    placeholder="키워드를 입력하세요"
+                    className="keyword-input"
+                    value={keyKeyword}
+                    onChange={(e) => setKeyKeyword(e.target.value)} // 입력 시 키워드 업데이트
+                />
+                <div className="keyword-buttion2">
+                    {activeComponent === "keyword" && (
+                        <>
+                            <button className="keyword-button primary-button" onClick={handleRegisterExclusionKeywords}>제외 키워드 등록</button>
+                            <button className="keyword-button primary-button" onClick={handleRegisterKeywordBids}>입찰가 등록</button>
+                        </>
+                    )}
+                    {activeComponent === "exclusion" && (
+                        <>
+                            <button className="keyword-button primary-button" onClick={handleDownload}>복사</button>
+                            <button className="keyword-button primary-button" onClick={handleRemoveKeyword}>삭제</button>
+                        </>
+                    )}
+                    {activeComponent === "bid" && (
+                        <>
+                            <button className="keyword-button primary-button" onClick={handleUpdateKeywordBids}>수정</button>
+                            <button className="keyword-button primary-button" onClick={handleDownload}>복사</button>
+                            <button className="keyword-button primary-button" onClick={handleDeleteKeywordBids}>삭제</button>
+                        </>
+                    )}
+                </div>
             </div>
             {activeComponent === "keyword" && (
                 <KeywordComponent
@@ -226,14 +256,13 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
                     endDate={endDate}
                     selectedKeywords={selectedKeywords}
                     setSelectedKeywords={setSelectedKeywords}
-                    keywords={keywords}
-                    loading={loading}
+                    keywords={keywords.filter(item => item.keyKeyword.includes(keyKeyword))} // 객체의 keyword 프로퍼티로 필터링                    loading={loading}
                     error={error}
                 />
             )}
             {activeComponent === "exclusion" && (
                 <ExclusionKeywordComponent
-                    keywords={exclusionKeywords}
+                    keywords={exclusionKeywords.filter(item => item.exclusionKeyword.includes(keyKeyword))}
                     selectedKeywords={selectedKeywords}
                     setSelectedKeywords={setSelectedKeywords}
                     isAllSelected={isAllSelected}
@@ -251,7 +280,7 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
                     endDate={endDate}
                     selectedKeywords={selectedKeywords}
                     setSelectedKeywords={setSelectedKeywords}
-                    keywords={bidKeywords} // 변경: 입찰 키워드 전달
+                    keywords={bidKeywords.filter(item => item.keyKeyword.includes(keyKeyword))} // 변경: 입찰 키워드 전달
                     loading={loading}
                     error={error}
                 />
@@ -260,5 +289,5 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
     );
 };
 
-export default KeytotalComponent;
+export default KeytotalComponent
 

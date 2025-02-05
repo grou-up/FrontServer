@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import CampaignOptionDetailsComponent from "./CampaignOptionDetailsComponent";
 import KeytotalComponent from "./KeyTotalComponent";
 import DatePicker from "react-datepicker";
-import StatisticGrid from "./CampaignStatistics/StatisticGrid"
+import StatisticGrid from "./CampaignStatistics/StatisticGrid";
 import "react-datepicker/dist/react-datepicker.css";
 import "../styles/TabComponent.css";
 import { useParams } from "react-router-dom";
@@ -10,7 +10,7 @@ import { useParams } from "react-router-dom";
 const Totalsearchbar = ({ title }) => {
     const [activeTab, setActiveTab] = useState("campaign");
     const [startDate, setStartDate] = useState(new Date());
-    const { campaignId } = useParams(); // URL 파라미터에서 campaignId를 가져옴
+    const { campaignId } = useParams();
     const [endDate, setEndDate] = useState(new Date());
 
     const handleTabChange = (tabName) => {
@@ -21,7 +21,7 @@ const Totalsearchbar = ({ title }) => {
     const handleDateRangeChange = (range) => {
         const today = new Date();
         const yesterday = new Date();
-        yesterday.setDate(today.getDate() - 1); // 어제 날짜 계산
+        yesterday.setDate(today.getDate() - 1);
 
         switch (range) {
             case "yesterday":
@@ -30,19 +30,19 @@ const Totalsearchbar = ({ title }) => {
                 break;
             case "last7days":
                 const last7Days = new Date();
-                last7Days.setDate(yesterday.getDate() - 6); // 어제 포함 최근 7일
+                last7Days.setDate(yesterday.getDate() - 6);
                 setStartDate(last7Days);
                 setEndDate(yesterday);
                 break;
             case "last14days":
                 const last14Days = new Date();
-                last14Days.setDate(yesterday.getDate() - 13); // 어제 포함 최근 14일
+                last14Days.setDate(yesterday.getDate() - 13);
                 setStartDate(last14Days);
                 setEndDate(yesterday);
                 break;
             case "last1month":
                 const last1Month = new Date();
-                last1Month.setMonth(yesterday.getMonth() - 1); // 어제 포함 최근 1달
+                last1Month.setMonth(yesterday.getMonth() - 1);
                 setStartDate(last1Month);
                 setEndDate(yesterday);
                 break;
@@ -53,10 +53,28 @@ const Totalsearchbar = ({ title }) => {
         }
     };
 
+    const handleStartDateChange = (date) => {
+        if (date) {
+            setStartDate(date);
+            const endDate = new Date(date);
+            endDate.setMonth(endDate.getMonth() + 1); // 시작일에서 1개월 추가
+            setEndDate(endDate);
+        }
+    };
+
+    const handleEndDateChange = (date) => {
+        if (date) {
+            const monthDiff = (date - startDate) / (1000 * 60 * 60 * 24 * 30); // 날짜 차이를 월 단위로 계산
+            if (monthDiff > 1) {
+                alert("종료일은 시작일로부터 최대 1개월 이내로 설정해야 합니다.");
+            } else {
+                setEndDate(date);
+            }
+        }
+    };
 
     return (
         <div className="tab-container">
-            {/* 상단 영역 */}
             <div className="tabs-and-dates">
                 <div className="tabs">
                     {tabs.map((tab, index) => {
@@ -78,7 +96,6 @@ const Totalsearchbar = ({ title }) => {
                     })}
                 </div>
                 <h2 className="text-xl font-bold mb-4">{title}</h2>
-                {/* 날짜 선택기 */}
                 <div className="date-picker-container">
                     <select
                         className="dropdown"
@@ -92,7 +109,7 @@ const Totalsearchbar = ({ title }) => {
                     <div className="date-range">
                         <DatePicker
                             selected={startDate}
-                            onChange={(date) => setStartDate(date)}
+                            onChange={handleStartDateChange}
                             dateFormat="yyyy-MM-dd"
                             maxDate={new Date()}
                             className="date-picker"
@@ -100,7 +117,7 @@ const Totalsearchbar = ({ title }) => {
                         <span className="date-separator">~</span>
                         <DatePicker
                             selected={endDate}
-                            onChange={(date) => setEndDate(date)}
+                            onChange={handleEndDateChange}
                             dateFormat="yyyy-MM-dd"
                             minDate={startDate}
                             maxDate={new Date()}
@@ -110,7 +127,6 @@ const Totalsearchbar = ({ title }) => {
                 </div>
             </div>
 
-            {/* 콘텐츠 */}
             <div
                 className={`tab-content ${activeTab === "stats" ? "stats-active" :
                     activeTab === "campaign" ? "campaign-active" :
