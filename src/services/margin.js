@@ -44,3 +44,12 @@ export const getDailyMarginSummary = async ({ date }) => {
         throw error
     }
 }
+export const getNetProfit = async ({ startDate, endDate, }) => {
+    try {
+        const response = await apiRequest(`/margin/getNetProfit?startDate=${startDate}&endDate=${endDate}`);
+        console.log(response)
+        return response;
+    } catch (error) {
+        throw error
+    }
+}

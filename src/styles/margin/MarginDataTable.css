@@ -24,7 +24,6 @@
 
 .campaign-data-table th,
 .campaign-data-table td {
-    border: 1px solid #ddd;
     padding: 2px 4px;
     /* 패딩 설정 */
     text-align: left;
