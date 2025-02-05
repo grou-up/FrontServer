@@ -1,1 +1,1 @@
-export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
+export const API_URL = process.env.REACT_APP_API_URL || 'http://ec2-13-124-198-31.ap-northeast-2.compute.amazonaws.com:8080/api';
