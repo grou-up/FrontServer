@@ -8,48 +8,68 @@
 
 .button-container {
     display: flex;
-    /* Flexbox를 사용하여 수평 정렬 */
-    align-items: center;
-    /* 세로 중앙 정렬 */
-    gap: 8px;
-    /* 버튼 간격 */
+    /* align-items: center; */
+    gap: 7px;
+    /* justify-content: space-between; */
+    /* 버튼과 추가 버튼 간의 공간을 분배 */
 }
 
 .keyword-button {
-    padding: 8px 16px;
-    /* 버튼의 패딩 */
-    border: 1px solid #ccc;
+    padding: 4px 16px;
+    /* 세로 패딩을 줄여 높이를 낮춤 */
+    border: 1px solid #5C62B8;
     /* 테두리 스타일 */
-    border-radius: 4px;
+    border-radius: 10px;
     /* 모서리 둥글게 */
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     /* 배경색 */
+    color: #5C62B8;
     cursor: pointer;
     /* 커서 스타일 */
     transition: background-color 0.3s;
     /* 호버 효과 */
+    white-space: nowrap;
+    /* 자동 줄바꿈 방지 */
 }
+
 
 .keyword-button:hover {
-    background-color: #e0e0e0;
+    background-color: #9da7d3;
     /* 호버 시 배경색 변화 */
+    border: 1px solid #9da7d3;
+    color: #ffffff;
+    font-weight: bold;
+    /* 글씨를 굵게 */
 }
 
-.primary-button {
-    background-color: #4a90e2;
-    /* 주요 버튼 색상 */
-    color: white;
-    /* 글자색 */
-    border: none;
-    /* 테두리 제거 */
+.keyword-button.active {
+    background-color: #5C62B8;
+    /* 클릭된 버튼의 배경색 */
+    color: #ffffff;
+    /* 클릭된 버튼의 글씨 색상 */
+    font-weight: bold;
+    /* 글씨를 굵게 */
 }
+
+.keyword-buttion2 {
+    display: flex;
+    /* flex 컨테이너로 설정 */
+    justify-content: flex-end;
+    /* 요소를 오른쪽 끝으로 정렬 */
+    gap: 2px;
+    /* 버튼 간의 간격 */
+    margin-left: auto;
+}
+
 
 .keyword-input {
+    color: #888CA0;
+    background-color: #EAECF9;
     padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    flex-grow: 1;
-    /* 입력 필드가 가능한 공간을 모두 차지하도록 설정 */
+    border: 1px solid #EAECF9;
+    border-radius: 20px;
+    width: 350px;
+    margin-left: 8rem;
 }
 
 .icon-button {

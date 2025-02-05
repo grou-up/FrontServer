@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import "../styles/KeywordComponent.css"; // 스타일 파일
-import "../styles/Table.css";
 import SortableHeader from '../components/SortableHeader';
 import KeywordOptionModal from './KeywordOptionModal'; // 모달 컴포넌트 임포트
 import { getExeNames } from '../services/execution';
@@ -9,14 +8,31 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedKeyword, setSelectedKeyword] = useState(null);
     const [optionNames, setOptionNames] = useState({}); // 옵션 이름 저장용 상태 추가
+    const [sortConfig, setSortConfig] = useState({ key: 'keyKeyword', direction: 'asc' }); // 정렬 상태 추가
 
-    const filteredKeywords = keywords; // 필터링 로직은 필요에 따라 추가
+    const filteredKeywords = keywords.sort((a, b) => {
+        const aValue = a[sortConfig.key];
+        const bValue = b[sortConfig.key];
+
+        if (aValue < bValue) {
+            return sortConfig.direction === 'asc' ? -1 : 1;
+        }
+        if (aValue > bValue) {
+            return sortConfig.direction === 'asc' ? 1 : -1;
+        }
+        return 0;
+    });
 
     const handleSort = (key) => {
-        // 정렬 로직
+        let direction = 'asc';
+        if (sortConfig.key === key && sortConfig.direction === 'asc') {
+            direction = 'desc';
+        }
+        setSortConfig({ key, direction });
     };
 
-    const handleCheckboxChange = (item) => {
+    const handleCheckboxChange = (event, item) => {
+        event.stopPropagation(); // 이벤트 전파 중지
         const keywordData = {
             keyword: item.keyKeyword,
             bid: item.keyCpc // keyBid를 keyCpc로 설정
@@ -50,7 +66,6 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
         setIsModalOpen(true); // 모달 열기
         // API 호출하여 옵션 이름 가져오기
         try {
-            // keySalesOptions가 유효한지 확인
             const keySalesOptions = item.keySalesOptions || {}; // 기본값으로 빈 객체 설정
             const list = Object.keys(keySalesOptions); // 키 목록 가져오기
 
@@ -81,7 +96,7 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
     if (error) return <div>{error}</div>; // 에러 상태 표시
 
     return (
-        <div className="keyword-component">
+        <div className="keyword-table">
             <table>
                 <thead>
                     <tr>
@@ -106,25 +121,26 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
                 </thead>
                 <tbody>
                     {filteredKeywords.map((item, index) => (
-                        <tr key={index} onClick={() => handleRowClick(item)}> {/* 클릭 이벤트 추가 */}
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>
+                        <tr key={index} onClick={() => handleRowClick(item)}>
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
                                 {item.keyKeyword}
-                                {item.keyBidFlag && <span className="badge">Bid</span>} {/* 뱃지 추가 */}
+                                {item.keyBidFlag && <span className="badge">Bid</span>}
                             </td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyImpressions}</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyClicks}</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyClickRate}%</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyTotalSales}</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyCvr}%</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyCpc}</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyAdcost}</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyAdsales}</td>
-                            <td style={{ color: item.keyExcludeFlag ? 'red' : 'inherit' }}>{item.keyRoas}%</td>
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyImpressions}</td>
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyClicks}</td>
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyClickRate}%</td>
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyTotalSales}</td>
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyCvr}%</td>
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyCpc}</td>
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyAdcost}</td>
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyAdsales}</td>
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyRoas}%</td>
                             <td>
                                 <input
                                     type="checkbox"
-                                    checked={selectedKeywords.some(kw => kw.keyword === item.keyKeyword)} // keyword로 체크 여부 확인
-                                    onChange={() => handleCheckboxChange(item)} // item을 인자로 전달
+                                    checked={selectedKeywords.some(kw => kw.keyword === item.keyKeyword)}
+                                    onChange={(e) => handleCheckboxChange(e, item)}
+                                    onClick={(e) => e.stopPropagation()}
                                 />
                             </td>
                         </tr>
@@ -135,8 +151,8 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
             {isModalOpen && selectedKeyword && (
                 <KeywordOptionModal
                     onClose={closeModal}
-                    salesOptions={selectedKeyword.keySalesOptions} // keySalesOptions 전달
-                    optionNames={optionNames} // 옵션 이름 매핑 데이터 전달
+                    salesOptions={selectedKeyword.keySalesOptions}
+                    optionNames={optionNames}
                     startDate={startDate}
                     endDate={endDate}
                 >

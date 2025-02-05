@@ -5,10 +5,34 @@ import SortableHeader from '../components/SortableHeader';
 
 const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loading, error }) => {
     const [editableBids, setEditableBids] = useState({}); // 각 키워드에 대한 입찰가 상태 관리
-    const filteredKeywords = keywords; // 필터링 로직은 필요에 따라 추가
+    const [sortConfig, setSortConfig] = useState({ key: 'keyKeyword', direction: 'asc' }); // 정렬 상태 관리
+
+    const filteredKeywords = keywords
+        .sort((a, b) => {
+            if (!sortConfig.key) return 0;
+            const order = sortConfig.direction === "asc" ? 1 : -1;
+            const aValue = a[sortConfig.key];
+            const bValue = b[sortConfig.key];
+
+            // 값이 숫자인 경우
+            if (typeof aValue === 'number' && typeof bValue === 'number') {
+                return (aValue - bValue) * order;
+            }
+
+            // 값이 문자열인 경우
+            if (typeof aValue === 'string' && typeof bValue === 'string') {
+                return aValue.localeCompare(bValue) * order;
+            }
+
+            return 0;
+        });
 
     const handleSort = (key) => {
-        // 정렬 로직
+        let direction = "asc";
+        if (sortConfig.key === key && sortConfig.direction === "asc") {
+            direction = "desc";
+        }
+        setSortConfig({ key, direction });
     };
 
     const handleCheckboxChange = (item) => {
@@ -37,7 +61,7 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
     if (error) return <div>{error}</div>; // 에러 상태 표시
 
     return (
-        <div className="keyword-component">
+        <div className="keyword-table">
             <table>
                 <thead>
                     <tr>
@@ -91,7 +115,7 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
                                         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // 그림자 추가
                                         transition: 'border-color 0.3s, box-shadow 0.3s', // 부드러운 변화 효과
                                     }}
-                                    value={editableBids[item.keyKeyword] !== undefined ? editableBids[item.keyKeyword] : item.bid} // 사용자가 입력한 값 또는 기본값 사용
+                                    value={editableBids[item.keyKeyword] !== undefined ? editableBids[item.keyKeyword] : item.keyCpc} // 사용자가 입력한 값 또는 기본값 사용
                                     onChange={(e) => handleBidChange(item.keyKeyword, e.target.value)} // 입력값 변경 시 상태 업데이트
                                 />
                             </td>
@@ -111,4 +135,3 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
 };
 
 export default KeywordComponent;
-
