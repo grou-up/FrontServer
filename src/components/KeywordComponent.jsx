@@ -7,7 +7,7 @@ import { getExeNames } from '../services/execution';
 const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, setSelectedKeywords, keywords, loading, error }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedKeyword, setSelectedKeyword] = useState(null);
-    const [optionNames, setOptionNames] = useState({}); // 옵션 이름 저장용 상태 추가
+    // const [optionNames, setOptionNames] = useState({}); // 옵션 이름 저장용 상태 추가
     const [sortConfig, setSortConfig] = useState({ key: 'keyKeyword', direction: 'asc' }); // 정렬 상태 추가
 
     const filteredKeywords = keywords.sort((a, b) => {
@@ -65,31 +65,31 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
         setSelectedKeyword(item); // 선택된 키워드 설정
         setIsModalOpen(true); // 모달 열기
         // API 호출하여 옵션 이름 가져오기
-        try {
-            const keySalesOptions = item.keySalesOptions || {}; // 기본값으로 빈 객체 설정
-            const list = Object.keys(keySalesOptions); // 키 목록 가져오기
+        // try {
+        //     const keySalesOptions = item.keySalesOptions || {}; // 기본값으로 빈 객체 설정
+        //     const list = Object.keys(keySalesOptions); // 키 목록 가져오기
 
-            if (list.length === 0) {
-                console.warn("keySalesOptions가 비어 있습니다."); // 경고 메시지
-                return; // 더 이상 진행하지 않음
-            }
+        //     if (list.length === 0) {
+        //         console.warn("keySalesOptions가 비어 있습니다."); // 경고 메시지
+        //         return; // 더 이상 진행하지 않음
+        //     }
 
-            const formattedList = list.join(','); // 목록을 ','로 연결된 문자열로 변환
+        //     const formattedList = list.join(','); // 목록을 ','로 연결된 문자열로 변환
 
-            // API 호출 예시
-            const data = await getExeNames({ campaignId, keySalesOptions: formattedList }); // campaignId와 keySalesOptions 사용
-            console.log(data);
-            setOptionNames(data); // API 응답으로 받은 옵션 이름 설정
-        } catch (error) {
-            console.error("옵션 이름을 가져오는 데 실패했습니다:", error);
-            // 에러 처리 로직 추가 가능
-        }
+        //     // API 호출 예시
+        //     const data = await getExeNames({ campaignId, keySalesOptions: formattedList }); // campaignId와 keySalesOptions 사용
+        //     // console.log(data);
+        //     setOptionNames(keySalesOptions); // API 응답으로 받은 옵션 이름 설정
+        // } catch (error) {
+        //     console.error("옵션 이름을 가져오는 데 실패했습니다:", error);
+        //     // 에러 처리 로직 추가 가능
+        // }
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
         setSelectedKeyword(null);
-        setOptionNames({}); // 모달 닫을 때 옵션 이름 초기화
+        // setOptionNames({}); // 모달 닫을 때 옵션 이름 초기화
     };
 
     if (loading) return <div>Loading...</div>; // 로딩 상태 표시
@@ -152,7 +152,7 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
                 <KeywordOptionModal
                     onClose={closeModal}
                     salesOptions={selectedKeyword.keySalesOptions}
-                    optionNames={optionNames}
+                    // optionNames={optionNames}
                     startDate={startDate}
                     endDate={endDate}
                 >
