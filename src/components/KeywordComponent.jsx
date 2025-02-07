@@ -63,7 +63,11 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
 
     const handleRowClick = async (item) => {
         setSelectedKeyword(item); // 선택된 키워드 설정
-        setIsModalOpen(true); // 모달 열기
+        if (item.keyTotalSales == 0) {
+            alert("판매 데이터가 없어요!")
+        } else {
+            setIsModalOpen(true); // 모달 열기
+        }
         // API 호출하여 옵션 이름 가져오기
         // try {
         //     const keySalesOptions = item.keySalesOptions || {}; // 기본값으로 빈 객체 설정
@@ -122,19 +126,58 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
                 <tbody>
                     {filteredKeywords.map((item, index) => (
                         <tr key={index} onClick={() => handleRowClick(item)}>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                            <td style={{
+                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
+                                fontWeight: item.keyTotalSales > 1 ? 'bold' : 'normal' // 조건부 bold 적용
+                            }}>
                                 {item.keyKeyword}
                                 {item.keyBidFlag && <span className="badge">Bid</span>}
                             </td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyImpressions}</td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyClicks}</td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyClickRate}%</td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyTotalSales}</td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyCvr}%</td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyCpc}</td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyAdcost}</td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyAdsales}</td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>{item.keyRoas}%</td>
+                            <td style={{
+                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
+                            }}>
+                                {item.keyImpressions}
+                            </td>
+                            <td style={{
+                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
+                            }}>
+                                {item.keyClicks}
+                            </td>
+                            <td style={{
+                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
+                            }}>
+                                {item.keyClickRate}%
+                            </td>
+                            <td style={{
+                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
+                            }}>
+                                {item.keyTotalSales}
+                            </td>
+                            <td style={{
+                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
+                            }}>
+                                {item.keyCvr}%
+                            </td>
+                            <td style={{
+                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
+                            }}>
+                                {item.keyCpc}
+                            </td>
+                            <td style={{
+                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
+                            }}>
+                                {item.keyAdcost}
+                            </td>
+                            <td style={{
+                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
+                            }}>
+                                {item.keyAdsales}
+                            </td>
+                            <td style={{
+                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
+                            }}>
+                                {item.keyRoas}%
+                            </td>
                             <td>
                                 <input
                                     type="checkbox"
