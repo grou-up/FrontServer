@@ -8,7 +8,7 @@ import "../styles/TabComponent.css";
 import { useParams } from "react-router-dom";
 
 const Totalsearchbar = ({ title }) => {
-    const [activeTab, setActiveTab] = useState("campaign");
+    const [activeTab, setActiveTab] = useState("stats");
     const [startDate, setStartDate] = useState(new Date());
     const { campaignId } = useParams();
     const [endDate, setEndDate] = useState(new Date());

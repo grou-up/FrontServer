@@ -95,6 +95,8 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
                     text: 'Ad Sales',
                 },
                 stacked: true, // y 축 스택 설정
+                min: 0, // 최소값 설정
+                max: Math.max(...adCostData, ...searchData, ...nonSearchData) * 1.5, // 최대값 설정 (최대 데이터의 1.5배)
             },
             'y-roas': {
                 title: {
@@ -104,6 +106,9 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
                 position: 'right', // y축 위치 설정
                 ticks: {
                     beginAtZero: true,
+                },
+                grid: {
+                    display: false, // Y축의 그리드 선을 보이지 않게 설정
                 },
             },
         },
