@@ -196,7 +196,35 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
     }
 
     const handleDownload = () => {
-        handleRegisterExclusionKeywords();
+        if (exclusionKeywords.length === 0) {
+            alert("복사할 제외 키드가 없습니다.");
+            return;
+        }
+        // console.log(exclusionKeywords);
+        const keywordsToCopy = exclusionKeywords.map(keyword => keyword.exclusionKeyword).join('\n'); // 제외 키워드의 값을 줄바꿈으로 연결
+        navigator.clipboard.writeText(keywordsToCopy) // 클립보드에 복사
+            .then(() => {
+                alert("제외 키워드가 클립보드에 복사되었습니다.");
+            })
+            .catch((error) => {
+                console.error("복사 실패:", error);
+            });
+    };
+
+    const handleDownloadBid = () => {
+        if (bidKeywords.length === 0) {
+            alert("복사할 입찰가 없습니다.");
+            return;
+        }
+        // console.log(exclusionKeywords);
+        const keywordsToCopy = bidKeywords.map(keyword => `${keyword.keyKeyword}\t${keyword.bid}`).join('\n'); // 제외 키워드와 가격을 탭으로 구분하여 같은 가로줄로 연결
+        navigator.clipboard.writeText(keywordsToCopy) // 클립보드에 복사
+            .then(() => {
+                alert("입찰가가가 클립보드에 복사되었습니다.");
+            })
+            .catch((error) => {
+                console.error("복사 실패:", error);
+            });
     };
 
     return (
@@ -243,7 +271,7 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
                     {activeComponent === "bid" && (
                         <>
                             <button className="keyword-button primary-button" onClick={handleUpdateKeywordBids}>수정</button>
-                            <button className="keyword-button primary-button" onClick={handleDownload}>복사</button>
+                            <button className="keyword-button primary-button" onClick={handleDownloadBid}>복사</button>
                             <button className="keyword-button primary-button" onClick={handleDeleteKeywordBids}>삭제</button>
                         </>
                     )}

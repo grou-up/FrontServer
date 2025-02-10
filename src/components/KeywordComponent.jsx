@@ -136,47 +136,47 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
                             <td style={{
                                 color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
                             }}>
-                                {item.keyImpressions}
+                                {item.keyImpressions.toLocaleString()} {/* 천 단위 구분 기호 추가 */}
                             </td>
                             <td style={{
                                 color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
                             }}>
-                                {item.keyClicks}
+                                {item.keyClicks.toLocaleString()} {/* 천 단위 구분 기호 추가 */}
                             </td>
                             <td style={{
                                 color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
                             }}>
-                                {item.keyClickRate}%
+                                {item.keyClickRate.toLocaleString()}% {/* 천 단위 구분 기호 추가 */}
                             </td>
                             <td style={{
                                 color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
                             }}>
-                                {item.keyTotalSales}
+                                {item.keyTotalSales.toLocaleString()} {/* 천 단위 구분 기호 추가 */}
                             </td>
                             <td style={{
                                 color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
                             }}>
-                                {item.keyCvr}%
+                                {item.keyCvr.toLocaleString()}% {/* 천 단위 구분 기호 추가 */}
                             </td>
                             <td style={{
                                 color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
                             }}>
-                                {item.keyCpc}
+                                {item.keyCpc.toLocaleString()}원 {/* 천 단위 구분 기호 추가 */}
                             </td>
                             <td style={{
                                 color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
                             }}>
-                                {item.keyAdcost}
+                                {item.keyAdcost.toLocaleString()}원 {/* 천 단위 구분 기호 추가 */}
                             </td>
                             <td style={{
                                 color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
                             }}>
-                                {item.keyAdsales}
+                                {item.keyAdsales.toLocaleString()}원 {/* 천 단위 구분 기호 추가 */}
                             </td>
                             <td style={{
                                 color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
                             }}>
-                                {item.keyRoas}%
+                                {item.keyRoas.toLocaleString()}% {/* 천 단위 구분 기호 추가 */}
                             </td>
                             <td>
                                 <input
