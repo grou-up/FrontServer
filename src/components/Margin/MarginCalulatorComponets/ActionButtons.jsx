@@ -56,7 +56,6 @@ const ActionButtons = ({ selectedOptions, options, campaignId, handleCalculate }
 
         // 마진과 제로 ROAS 계산 후 업데이트
         const updatedOptions = [...options]; // 원본 옵션 복사
-
         // 수정 하는경우, 앞에 3개 수정 후 계산하기 안 누르고 저장시, 바뀐 값으로 저장
         selectedOptions.forEach(index => {
             const option = updatedOptions[index];
@@ -69,11 +68,11 @@ const ActionButtons = ({ selectedOptions, options, campaignId, handleCalculate }
                 option.mfcZeroRoas = parseFloat(zeroROAS);
             }
         });
-
         // 선택된 옵션만 포함하도록 수정
         const mfcRequestDtos = {
             campaignId: campaignId,
             data: selectedOptions.map(index => ({
+                mfcId: updatedOptions[index].id,
                 mfcProductName: updatedOptions[index].mfcProductName,
                 mfcSalePrice: updatedOptions[index].mfcSalePrice,
                 mfcTotalPrice: updatedOptions[index].mfcTotalPrice,
@@ -82,7 +81,6 @@ const ActionButtons = ({ selectedOptions, options, campaignId, handleCalculate }
                 mfcZeroRoas: updatedOptions[index].mfcZeroRoas,
             })),
         };
-
         // API 호출을 통한 업데이트
         try {
             const response = await updateExecutionAboutCampaign(mfcRequestDtos);
