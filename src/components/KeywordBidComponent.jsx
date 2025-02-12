@@ -95,15 +95,15 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
                     {filteredKeywords.map((item, index) => (
                         <tr key={index}>
                             <td>{item.keyKeyword}</td>
-                            <td>{item.keyImpressions}</td>
-                            <td>{item.keyClicks}</td>
-                            <td>{item.keyClickRate}%</td>
-                            <td>{item.keyTotalSales}</td>
-                            <td>{item.keyCvr}%</td>
-                            <td>{item.keyAdsales}</td>
-                            <td>{item.keyAdcost}</td>
-                            <td>{item.keyRoas}%</td>
-                            <td>{item.keyCpc}</td>
+                            <td>{item.keyImpressions.toLocaleString()}</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.keyClicks.toLocaleString()}</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.keyClickRate.toLocaleString()}%</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.keyTotalSales.toLocaleString()}</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.keyCvr.toLocaleString()}%</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.keyAdsales.toLocaleString()}원</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.keyAdcost.toLocaleString()}원</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.keyRoas.toLocaleString()}%</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.keyCpc.toLocaleString()}원</td> {/* 천 단위 구분 기호 추가 */}
                             <td>
                                 <input
                                     type="number" // 숫자 입력 필드로 변경
@@ -115,7 +115,7 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
                                         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // 그림자 추가
                                         transition: 'border-color 0.3s, box-shadow 0.3s', // 부드러운 변화 효과
                                     }}
-                                    value={editableBids[item.keyKeyword] !== undefined ? editableBids[item.keyKeyword] : item.keyCpc} // 사용자가 입력한 값 또는 기본값 사용
+                                    value={editableBids[item.keyKeyword] !== undefined ? editableBids[item.keyKeyword] : Math.round(item.keyCpc)} // 사용자가 입력한 값 또는 기본값 사용
                                     onChange={(e) => handleBidChange(item.keyKeyword, e.target.value)} // 입력값 변경 시 상태 업데이트
                                 />
                             </td>

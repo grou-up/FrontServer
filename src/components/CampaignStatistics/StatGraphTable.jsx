@@ -1,5 +1,5 @@
 import React from 'react';
-
+import '../../styles/campaignStats/StatTable.css'
 const StatGraphTable = ({ search, nonSearch, startDate, endDate }) => {
     // 날짜를 배열로 생성
     const dateLabels = [];
@@ -35,9 +35,19 @@ const StatGraphTable = ({ search, nonSearch, startDate, endDate }) => {
         return clicks > 0 ? ((sales / clicks) * 100).toFixed(2) : 0; // 전환율 계산
     });
 
+    const formatNumber = (num) => {
+        if (num >= 10000) {
+            return (num / 10000).toFixed(1) + '만'; // 1만, 2.1만 형식
+        } else if (num >= 1000) {
+            return (num / 1000).toFixed(0) + '천'; // 1천, 2천 형식
+        }
+        return num.toString(); // 천 이하의 숫자는 그대로 반환
+    };
+
+
     return (
         <div>
-            <div style={{ overflowX: 'auto', padding: '10px' }}>
+            <div style={{ overflowX: 'auto', padding: '0px' }}>
                 <table style={{ fontSize: '8px', width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                         <tr>
@@ -50,7 +60,7 @@ const StatGraphTable = ({ search, nonSearch, startDate, endDate }) => {
                     <tbody>
                         {/* Click Rate Row */}
                         <tr>
-                            <td style={{ padding: '5px', border: '1px solid #ddd' }}>클릭율 (%)</td>
+                            <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>클릭율 (%)</td>
                             {clickRateData.map((rate, index) => (
                                 <td key={index} style={{ padding: '5px', border: '1px solid #ddd' }}>{rate}</td>
                             ))}
@@ -58,15 +68,17 @@ const StatGraphTable = ({ search, nonSearch, startDate, endDate }) => {
 
                         {/* Impressions Row */}
                         <tr>
-                            <td style={{ padding: '5px', border: '1px solid #ddd' }}>노출 수</td>
+                            <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>노출 수</td>
                             {impressionData.map((impression, index) => (
-                                <td key={index} style={{ padding: '5px', border: '1px solid #ddd' }}>{impression}</td>
+                                <td key={index} style={{ padding: '5px', border: '1px solid #ddd', whiteSpace: 'nowrap' }}>
+                                    {formatNumber(impression)} {/* 포맷된 숫자 표시 */}
+                                </td>
                             ))}
                         </tr>
 
                         {/* Clicks Row */}
                         <tr>
-                            <td style={{ padding: '5px', border: '1px solid #ddd' }}>클릭 수</td>
+                            <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>클릭 수</td>
                             {clicksData.map((click, index) => (
                                 <td key={index} style={{ padding: '5px', border: '1px solid #ddd' }}>{click}</td>
                             ))}
@@ -74,7 +86,7 @@ const StatGraphTable = ({ search, nonSearch, startDate, endDate }) => {
 
                         {/* CVR Row */}
                         <tr>
-                            <td style={{ padding: '5px', border: '1px solid #ddd' }}>전환율 (%)</td>
+                            <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>전환율 (%)</td>
                             {cvrData.map((cvr, index) => (
                                 <td key={index} style={{ padding: '5px', border: '1px solid #ddd' }}>{cvr}</td>
                             ))}
@@ -82,7 +94,7 @@ const StatGraphTable = ({ search, nonSearch, startDate, endDate }) => {
 
                         {/* Total Sales Row */}
                         <tr>
-                            <td style={{ padding: '5px', border: '1px solid #ddd' }}>Total Sales</td>
+                            <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>Total Sales</td>
                             {totalSalesData.map((sales, index) => (
                                 <td key={index} style={{ padding: '5px', border: '1px solid #ddd' }}>{sales}</td>
                             ))}
