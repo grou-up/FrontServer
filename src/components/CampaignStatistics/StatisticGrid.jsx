@@ -68,7 +68,7 @@ const StatisticGrid = ({ campaignId, startDate, endDate }) => {
                     nonSearch={aggregatedNonSearchStats}
                 />
             </div>
-            <div className="grid-item">
+            <div className="grid-item-graph"> {/*css 에서 height를 수정하여 세로 크기 조정 가능*/}
                 <StatGraph
                     search={searchStats}
                     nonSearch={nonSearchStats}

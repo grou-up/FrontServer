@@ -73,14 +73,15 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
     // 옵션 설정
     const options = {
         responsive: true,
+        maintainAspectRatio: false, // 비율 유지하지 않음
         plugins: {
             legend: {
                 position: 'top',
             },
-            title: {
-                display: true,
-                text: 'Statistics Graph',
-            },
+            // title: {
+            //     display: true,
+            //     text: '아래 칸을 클릭하세요',
+            // },
         },
         scales: {
             x: {
@@ -115,8 +116,8 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
     };
 
     return (
-        <div>
-            <Bar data={data} options={options} />
+        <div style={{ height: '100%' }}> {/* 부모의 높이에 맞추기 위해 100% 설정 */}
+            <Bar data={data} options={{ ...options, maintainAspectRatio: false }} /> {/* 비율 유지하지 않음 */}
         </div>
     );
 };
