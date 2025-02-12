@@ -97,10 +97,14 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
             return;
         }
         try {
-            console.log(selectedKeywords);
-            await registerExclusionKeywords({ selectedKeywords, campaignId });
-            const count = selectedKeywords.length;
-            alert(`${count}개의 제외 키워드가 성공적으로 등록되었습니다.`);
+            // console.log(selectedKeywords);
+            const response = await registerExclusionKeywords({ selectedKeywords, campaignId });
+            const count = response.data.responseData;
+            if (count == 0) {
+                alert('이미 등록되어 있는 제외키워드입니다.')
+            } else {
+                alert(`${count}개의 제외 키워드가 성공적으로 등록되었습니다.`);
+            }
             setSelectedKeywords([]);
             await fetchKeywords();
         } catch (error) {
@@ -150,10 +154,15 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
             return;
         }
         try {
-            console.log(selectedKeywords);
-            await registerKeywordBid({ selectedKeywords, campaignId });
-            const count = selectedKeywords.length;
-            alert(`${count}개의 수동 입찰가 등록을 완료했습니다.`);
+            // console.log(selectedKeywords);
+            const response = await registerKeywordBid({ selectedKeywords, campaignId });
+            // console.log(response.data.responseNumber);
+            const count = response.data.responseNumber;
+            if (count == 0) {
+                alert(`이미 등록되어 있는 키워드입니다.`);
+            } else {
+                alert(`${count}개의 수동 입찰가 등록을 완료했습니다.`);
+            }
             setSelectedKeywords([]);
             await fetchKeywords();
         } catch (error) {

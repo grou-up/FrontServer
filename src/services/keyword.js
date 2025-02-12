@@ -34,7 +34,7 @@ export const registerExclusionKeywords = async ({ selectedKeywords, campaignId }
     };
     // API 요청
     const response = await apiRequest(`/exclusionKeyword/addExclusionKeyword`, 'POST', requestData);
-    console.log(response); // 응답값을 콘솔에 출력
+    // console.log(response); // 응답값을 콘솔에 출력
     return response;
   } catch (error) {
     console.error("Error fetching campaigns:", error); // 에러 핸들링
@@ -59,7 +59,7 @@ export const removeExclsuionKeywords = async ({ selectedKeywords, campaignId }) 
   }
 }
 
-// 입찰가 조회
+// 입찰가 등록
 export const registerKeywordBid = async ({ selectedKeywords, campaignId }) => {
   try {
     const requestData = {
@@ -71,6 +71,7 @@ export const registerKeywordBid = async ({ selectedKeywords, campaignId }) => {
       }))
     };
     const response = await apiRequest('/bid/adds', 'POST', requestData);
+    // console.log(response);
     return response;
   } catch (error) {
 
