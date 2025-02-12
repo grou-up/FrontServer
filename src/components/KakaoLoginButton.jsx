@@ -9,7 +9,7 @@ const KakaoLoginButton = () => {
         console.log('REST_API_KEY:', REST_API_KEY);
 
         // 카카오 로그인 페이지로 리다이렉트
-        window.location.href = `http://ec2-13-124-198-31.ap-northeast-2.compute.amazonaws.com:8080/oauth2/authorization/kakao`;
+        window.location.href = `https://server.grouup.co.kr/oauth2/authorization/kakao`;
     };
 
     return (
