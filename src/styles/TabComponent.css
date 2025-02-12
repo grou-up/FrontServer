@@ -73,7 +73,7 @@
 
 /* 중간 활성화 탭 */
 .tab.active.middle {
-    border-radius: 0 50px 0 0;
+    border-radius: 50px 50px 0 0;
 }
 
 /* 콘텐츠 영역 */
