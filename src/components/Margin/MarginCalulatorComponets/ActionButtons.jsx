@@ -84,13 +84,14 @@ const ActionButtons = ({ selectedOptions, options, campaignId, handleCalculate }
         // API 호출을 통한 업데이트
         try {
             const response = await updateExecutionAboutCampaign(mfcRequestDtos);
-            console.log("Save response:", response);
 
             if (response.data && response.data.failedProductNames && response.data.failedProductNames.length > 0) {
                 alert(`저장 실패한 상품명: ${response.data.failedProductNames.join(", ")}`);
             } else {
                 alert("저장이 성공적으로 완료되었습니다.");
                 setErrorMessage(""); // 성공 시 에러 메시지 초기화
+                localStorage.setItem("isFirstVisit", "true");
+                window.location.reload();
             }
         } catch (error) {
             console.error("Error saving data:", error);

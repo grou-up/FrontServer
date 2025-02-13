@@ -38,6 +38,7 @@
     /* 버튼과 날짜 선택기를 양쪽 끝으로 배치 */
     padding-left: 20px;
     /* 왼쪽 여백 추가 */
+    gap: 10px;
 }
 
 .date-picker-group {

@@ -47,10 +47,10 @@
   cursor: pointer;
 }
 
-.menu-item-content:hover:not(.active) {
+/* .menu-item-content:hover:not(.active) {
   background-color: #9da7d3;
   color: white;
-}
+} */
 
 .menu-item-content.active {
   background-color: #5C62B8;
