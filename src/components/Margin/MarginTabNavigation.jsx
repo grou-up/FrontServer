@@ -13,7 +13,6 @@ const MarginTabNavigation = () => {
     const [endDate, setEndDate] = useState(new Date());
     const [monthYear, setMonthYear] = useState(new Date()); // 월 선택 상태 추가
 
-
     const handleComponentChange = (component) => {
         setActiveComponent(component);
     };
@@ -41,7 +40,6 @@ const MarginTabNavigation = () => {
         return { startOfMonth, endOfMonth };
     };
 
-
     // 월 선택 시 시작일과 끝일 업데이트
     const handleMonthYearChange = (date) => {
         setMonthYear(date);
@@ -49,6 +47,7 @@ const MarginTabNavigation = () => {
         setStartDate(startOfMonth);
         setEndDate(endOfMonth);
     };
+
     return (
         <div className="main-content">
             <div className="min-h-screen bg-gray-100">
@@ -56,10 +55,8 @@ const MarginTabNavigation = () => {
                     <main className="container mx-auto p-6">
                         <div className="flex items-center justify-between">
                             <TabNavigation onComponentChange={handleComponentChange} />
-                            {/* activeComponent가 "MarginCalculatorResult"일 때만 DatePicker 표시 */}
                             {activeComponent === "MarginCalculatorResult" && (
                                 <div className="date-picker-container">
-                                    {/* 년월 선택기 */}
                                     <div className="date-picker-group month-picker-group">
                                         <DatePicker
                                             selected={monthYear}
@@ -100,6 +97,7 @@ const MarginTabNavigation = () => {
                                     campaigns={campaign}
                                     startDate={startDate.toISOString().split("T")[0]}
                                     endDate={endDate.toISOString().split("T")[0]}
+                                    isActive={activeComponent === "MarginCalculatorResult"} // 활성화 여부 전달
                                 />
                             )}
                         </div>
