@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../styles/KeywordComponent.css"; // 스타일 파일
 import SortableHeader from '../components/SortableHeader';
 import KeywordOptionModal from './KeywordOptionModal'; // 모달 컴포넌트 임포트
-import { getExeNames } from '../services/execution';
+
 
 const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, setSelectedKeywords, keywords, loading, error }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -125,13 +125,22 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
                 </thead>
                 <tbody>
                     {filteredKeywords.map((item, index) => (
-                        <tr key={index} onClick={() => handleRowClick(item)}>
+                        <tr key={index} onClick={(e) => handleCheckboxChange(e, item)}>
                             <td style={{
-                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
-                                fontWeight: item.keyTotalSales > 1 ? 'bold' : 'normal' // 조건부 bold 적용
+                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit'
                             }}>
                                 {item.keyKeyword}
-                                {item.keyBidFlag && <span className="badge">Bid</span>}
+                                {item.keyTotalSales > 1 && <button
+                                    className="icon-button"
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // 버튼 클릭 시 이벤트 전파 방지
+                                        handleRowClick(item);
+                                    }}
+                                    aria-label="Search"
+                                >
+                                    🔍
+                                </button>} {/* 돋보기 아이콘 추가 */}
+                                {item.keyBidFlag && <span className="badge">Bid</span>} {/* 마진 추가로 간격 조정 */}
                             </td>
                             <td style={{
                                 color: item.keyExcludeFlag ? '#d3264f' : 'inherit',

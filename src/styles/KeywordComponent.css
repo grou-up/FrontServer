@@ -53,9 +53,33 @@ th svg {
     display: inline-block;
     margin-left: 5px;
     padding: 2px 5px;
-    background-color: #007bff;
+    background-color: #5C62B8;
     /* 또는 원하는 색상 */
     color: white;
     border-radius: 3px;
     font-size: 0.8em;
+}
+
+.icon-button {
+    background: none;
+    /* 배경 없음 */
+    border: none;
+    /* 테두리 없음 */
+    cursor: pointer;
+    /* 포인터 커서 */
+    font-size: 16px;
+    /* 아이콘 크기 조정 */
+    padding: 0;
+    /* 패딩 없음 */
+    transition: background-color 0.2s, transform 0.2s;
+    /* 부드러운 효과 */
+}
+
+.icon-button:hover {
+    background-color: rgba(0, 123, 255, 0.1);
+    /* 호버 시 배경색 변경 */
+    border-radius: 5px;
+    /* 모서리 둥글게 */
+    transform: scale(1.1);
+    /* 마우스 오버 시 확대 */
 }
