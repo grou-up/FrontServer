@@ -23,6 +23,7 @@ const MarginTabNavigation = () => {
                 const response = await getMyCampaigns();
                 setCampaign(response.data || []);
             } catch (error) {
+                setCampaign([]);
                 console.error("캠페인 데이터를 가져오는 중 오류 발생:", error);
             }
         };
@@ -47,6 +48,9 @@ const MarginTabNavigation = () => {
         setStartDate(startOfMonth);
         setEndDate(endOfMonth);
     };
+
+    // 이번 달의 첫 날과 마지막 날을 계산해서 상태를 업데이트
+    const { startOfMonth, endOfMonth } = getStartAndEndDates(monthYear);
 
     return (
         <div className="main-content">
@@ -95,8 +99,8 @@ const MarginTabNavigation = () => {
                             {activeComponent === "MarginCalculatorResult" && (
                                 <MarginCalculatorResult
                                     campaigns={campaign}
-                                    startDate={startDate.toISOString().split("T")[0]}
-                                    endDate={endDate.toISOString().split("T")[0]}
+                                    startDate={startOfMonth.toISOString().split("T")[0]} // 이번 달 첫날
+                                    endDate={endOfMonth.toISOString().split("T")[0]}   // 이번 달 마지막날
                                     isActive={activeComponent === "MarginCalculatorResult"} // 활성화 여부 전달
                                 />
                             )}
