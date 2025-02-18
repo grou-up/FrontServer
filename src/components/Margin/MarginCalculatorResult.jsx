@@ -1,83 +1,78 @@
 import React, { useState, useEffect, useCallback } from "react";
-import CampaignDataTable from "./MarginDataTable"; // 새로 만든 테이블 컴포넌트 가져오기
-import MarginResultModal from "./MarginResultModal"; // 모달 컴포넌트 가져오기
+import CampaignDataTable from "./MarginDataTable";
+import MarginResultModal from "./MarginResultModal";
 import MarginNetTable from "./MarginNetTable";
 import { getMarginByCampaignId } from "../../services/margin";
 
 const MarginCalculatorResult = ({ campaigns, startDate, endDate, isActive }) => {
-    const [expandedCampaignId, setExpandedCampaignId] = useState(null);
-    const [tableData, setTableData] = useState([]);
-    const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
-    const [selectedCampaign, setSelectedCampaign] = useState(null); // 선택된 캠페인
+    const [expandedCampaigns, setExpandedCampaigns] = useState(new Set()); // 펼쳐진 캠페인 목록 (Set으로 변경)
+    const [allCampaignData, setAllCampaignData] = useState([]); // 모든 캠페인 데이터 저장
+    const [isLoading, setIsLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedCampaign, setSelectedCampaign] = useState(null);
+    const [isNetTableVisible, setIsNetTableVisible] = useState(false);
 
-    const fetchMarginResults = useCallback(async (campaigns) => {
-        const allCampaignData = [];
-        // 캠페인 ID를 기반으로 API 호출
-        for (const campaign of campaigns) {
-            const campaignId = campaign.campaignId;
-            const response = await getMarginByCampaignId({ startDate, endDate, campaignId });
-            if (response && response.data) {
-                allCampaignData.push({ campaignId, data: response.data });
-            }
+    const fetchMarginResults = useCallback(async () => {
+        setIsLoading(true);
+        try {
+            const promises = campaigns.map(async ({ campaignId }) => {
+                const response = await getMarginByCampaignId({ startDate, endDate, campaignId });
+                console.log(response)
+                return { campaignId, data: response?.data ?? [] };
+            });
+
+            const results = await Promise.all(promises);
+            setAllCampaignData(results);
+        } catch (error) {
+            console.error("데이터를 가져오는 중 오류 발생:", error);
+        } finally {
+            setIsLoading(false);
+            setIsNetTableVisible(true); // 모든 데이터 로드 완료 후 표시
         }
-        // tableData에 데이터를 설정
-        setTableData(allCampaignData);
+    }, [campaigns]);
+
+    useEffect(() => {
+        fetchMarginResults();
+    }, [isActive, expandedCampaigns, campaigns.length, fetchMarginResults]);
+
+    useEffect(() => {
+        setIsNetTableVisible(false); // 날짜가 변경될 때마다 NetTable을 숨긴다.
+        setAllCampaignData([]); // 데이터를 초기화
+        fetchMarginResults();
     }, [startDate, endDate]);
 
-    // 페이지에 처음 방문했는지를 localStorage로 확인
-    useEffect(() => {
-        const isFirstVisit = localStorage.getItem("isFirstVisit");
-        if (isActive && isFirstVisit === "true") {
-            fetchMarginResults(campaigns);
-            localStorage.setItem("isFirstVisit", "false"); // 이후에는 API 호출하지 않도록 설정
-        }
-    }, [isActive, campaigns, fetchMarginResults]);
 
-    const toggleExpandCampaign = async (campaignId) => {
-        if (expandedCampaignId === campaignId) {
-            setExpandedCampaignId(null);
-        } else {
-            setExpandedCampaignId(campaignId);
-        }
-    };
-
-    const handleOptionMarginClick = (campaign) => {
-        setSelectedCampaign(campaign);
-        setIsModalOpen(true); // 모달 열기
+    const toggleExpandCampaign = (campaignId) => {
+        setExpandedCampaigns(prev => {
+            const newExpanded = new Set(prev);
+            newExpanded.has(campaignId) ? newExpanded.delete(campaignId) : newExpanded.add(campaignId);
+            return newExpanded;
+        });
     };
 
     return (
         <div>
-            <div>
-                <MarginNetTable startDate={startDate} endDate={endDate} />
-            </div>
+            {/* Net Table 표시 */}
+            {isLoading ? <div>로딩 중...</div> : isNetTableVisible && <MarginNetTable startDate={startDate} endDate={endDate} />}
+
+            {/* 캠페인 목록 */}
             <div className="campaign-list">
                 {campaigns.map((campaign) => (
-                    <div
-                        key={campaign.campaignId}
-                        className={`campaign-card ${expandedCampaignId === campaign.campaignId ? "expanded" : ""}`}
-                    >
-                        <div
-                            className="campaign-header"
-                            onClick={() => toggleExpandCampaign(campaign.campaignId)}
-                        >
+                    <div key={campaign.campaignId} className="campaign-card expanded">
+                        <div className="campaign-header" onClick={() => toggleExpandCampaign(campaign.campaignId)}>
                             <h3>{campaign.title}</h3>
-                            <button
-                                className="add-button"
-                                onClick={() => handleOptionMarginClick(campaign)}>
+                            <button className="add-button" onClick={() => {
+                                setSelectedCampaign(campaign);
+                                setIsModalOpen(true);
+                            }}>
                                 옵션마진 설정
                             </button>
                         </div>
-                        {expandedCampaignId === campaign.campaignId && (
-                            <div>
-                                <CampaignDataTable
-                                    data={tableData.find(item => item.campaignId === campaign.campaignId)?.data || []}
-                                    startDate={startDate} // YYYY-MM-DD 형식으로 그대로 전달
-                                    endDate={endDate} // YYYY-MM-DD 형식으로 그대로 전달
-                                    campaignId={campaign.campaignId}
-                                />
-                            </div>
-                        )}
+                        <CampaignDataTable
+                            data={allCampaignData.find(item => item.campaignId === campaign.campaignId)?.data || []}
+                            startDate={startDate}
+                            endDate={endDate}
+                        />
                     </div>
                 ))}
             </div>
@@ -86,7 +81,7 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate, isActive }) => 
                 <MarginResultModal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    campaignId={selectedCampaign.campaignId} // campaignId 전달
+                    campaignId={selectedCampaign.campaignId}
                 />
             )}
         </div>
