@@ -34,7 +34,6 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
         return totalCost > 0 ? (totalRevenue / totalCost) * 100 : 0; // 비용이 0일 경우 0을 반환
     });
 
-    // 데이터 준비
     const data = {
         labels: dateLabels,
         datasets: [
@@ -43,12 +42,14 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
                 data: searchData,
                 backgroundColor: 'rgba(54, 162, 235, 0.6)', // Search 색상 (파랑)
                 stack: 'Stack 0', // 스택 설정
+                order: 3, // 막대 그래프 우선
             },
             {
                 label: '비검색',
                 data: nonSearchData,
                 backgroundColor: 'rgba(255, 159, 64, 0.6)', // Non-Search 색상 (주황)
                 stack: 'Stack 0', // 스택 설정
+                order: 3, // 막대 그래프 우선
             },
             {
                 label: '광고비',
@@ -56,7 +57,8 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
                 borderColor: 'rgb(0, 123, 255)', // Ad Cost 선 색상 (짙은 파랑)
                 backgroundColor: 'rgba(0, 123, 255, 0.3)', // Ad Cost 색상 (옅은 파랑)
                 type: 'line', // 선 그래프로 표시
-                fill: true, // 선 그래프 안 채우기
+                fill: false, // 선 그래프 안 채우기
+                order: 1, // 선 그래프를 막대 위에 표시
             },
             {
                 label: 'ROAS',
@@ -64,11 +66,13 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
                 borderColor: 'rgb(255, 99, 132)', // ROAS 선 색상 (빨강)
                 backgroundColor: 'rgba(255, 99, 132, 0.3)', // ROAS 색상 (옅은 빨강)
                 type: 'line', // 선 그래프로 표시
-                fill: true, // 선 그래프 안 채우기
+                fill: false, // 선 그래프 안 채우기
                 yAxisID: 'y-roas', // ROAS 데이터의 y축 ID
+                order: 1, // ROAS 선 그래프를 가장 위에 표시
             },
         ],
     };
+
 
     // 옵션 설정
     const options = {
