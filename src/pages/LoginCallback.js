@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-function KakaoLoginCallback() {
+function LoginCallback() {
     useEffect(() => {
         const queryParams = new URLSearchParams(window.location.search);
         const token = queryParams.get("token");
@@ -21,4 +21,4 @@ function KakaoLoginCallback() {
     return null;
 }
 
-export default KakaoLoginCallback;
+export default LoginCallback;
