@@ -3,17 +3,35 @@ import "../../styles/margin/MarginDataTable.css";
 import { getMarginByCampaignId } from "../../services/margin";
 import { formatNumber } from "../../utils/formatUtils";
 
-const MarginDataTable = ({ startDate, endDate, data }) => {
+const MarginDataTable = ({ startDate, endDate, campaignId }) => {
+    const [data, setData] = useState([]); // 데이터 상태
+
+    // 날짜 범위 생성
     const dateRange = [];
     const currentDate = new Date(startDate);
     const end = new Date(endDate);
 
     while (currentDate <= end) {
-        const fullDate = currentDate.toISOString().split('T')[0];
-        const displayDate = `${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
-        dateRange.push({ fullDate, displayDate });
-        currentDate.setDate(currentDate.getDate() + 1);
+        const yearMonthDay = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD 형식
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // 월을 2자리로 포맷
+        const day = String(currentDate.getDate()).padStart(2, '0'); // 일을 2자리로 포맷
+        dateRange.push({ fullDate: yearMonthDay, displayDate: `${month}-${day}` }); // 객체로 저장
+        currentDate.setDate(currentDate.getDate() + 1); // 하루씩 증가
     }
+
+    // 데이터 가져오기
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await getMarginByCampaignId({ startDate, endDate, campaignId });
+                setData(response.data[0].data); // API 응답에서 데이터 설정
+            } catch (error) {
+                console.error("데이터를 가져오는 중 오류 발생:", error);
+            }
+        };
+
+        fetchData();
+    }, [startDate, endDate, campaignId]);
 
     // 고정된 옵션 이름과 백엔드에서 가져온 데이터 매핑
     const options = [

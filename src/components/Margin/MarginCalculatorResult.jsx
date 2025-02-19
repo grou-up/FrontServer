@@ -1,78 +1,75 @@
 import React, { useState, useEffect, useCallback } from "react";
-import CampaignDataTable from "./MarginDataTable";
-import MarginResultModal from "./MarginResultModal";
+import CampaignDataTable from "./MarginDataTable"; // 새로 만든 테이블 컴포넌트 가져오기
+import MarginResultModal from "./MarginResultModal"; // 모달 컴포넌트 가져오기
 import MarginNetTable from "./MarginNetTable";
 import { getMarginByCampaignId } from "../../services/margin";
 
-const MarginCalculatorResult = ({ campaigns, startDate, endDate, isActive }) => {
-    const [expandedCampaigns, setExpandedCampaigns] = useState(new Set()); // 펼쳐진 캠페인 목록 (Set으로 변경)
-    const [allCampaignData, setAllCampaignData] = useState([]); // 모든 캠페인 데이터 저장
-    const [isLoading, setIsLoading] = useState(false);
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedCampaign, setSelectedCampaign] = useState(null);
-    const [isNetTableVisible, setIsNetTableVisible] = useState(false);
+const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
+    const [expandedCampaignId, setExpandedCampaignId] = useState(new Set()); // 펼쳐진 캠페인 목록 (Set으로 변경)
+    const [tableData, setTableData] = useState([]); // 캠페인 데이터 저장
+    const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
+    const [selectedCampaign, setSelectedCampaign] = useState(null); // 선택된 캠페인
 
     const fetchMarginResults = useCallback(async () => {
-        setIsLoading(true);
-        try {
-            const promises = campaigns.map(async ({ campaignId }) => {
-                const response = await getMarginByCampaignId({ startDate, endDate, campaignId });
-                console.log(response)
-                return { campaignId, data: response?.data ?? [] };
-            });
+        console.log("Fetching data with:", startDate, endDate); // 확인을 위한 로그
+        const allCampaignData = await Promise.all(campaigns.map(async ({ campaignId }) => {
+            const response = await getMarginByCampaignId({ startDate, endDate, campaignId });
+            return { campaignId, data: response?.data ?? [] };
+        }));
+        setTableData(allCampaignData);
+    }, [startDate, endDate, campaigns]);
 
-            const results = await Promise.all(promises);
-            setAllCampaignData(results);
-        } catch (error) {
-            console.error("데이터를 가져오는 중 오류 발생:", error);
-        } finally {
-            setIsLoading(false);
-            setIsNetTableVisible(true); // 모든 데이터 로드 완료 후 표시
-        }
+    useEffect(() => {
+        fetchMarginResults(); // startDate와 endDate가 변경될 때마다 데이터 로드
+    }, [fetchMarginResults, startDate, endDate]); // 의존성 배열에 startDate와 endDate 추가
+
+    useEffect(() => {
+        // 모든 캠페인이 펼쳐진 상태로 초기화
+        const initialExpandedIds = new Set(campaigns.map(campaign => campaign.campaignId));
+        setExpandedCampaignId(initialExpandedIds);
     }, [campaigns]);
 
-    useEffect(() => {
-        fetchMarginResults();
-    }, [isActive, expandedCampaigns, campaigns.length, fetchMarginResults]);
-
-    useEffect(() => {
-        setIsNetTableVisible(false); // 날짜가 변경될 때마다 NetTable을 숨긴다.
-        setAllCampaignData([]); // 데이터를 초기화
-        fetchMarginResults();
-    }, [startDate, endDate]);
-
-
     const toggleExpandCampaign = (campaignId) => {
-        setExpandedCampaigns(prev => {
+        setExpandedCampaignId(prev => {
             const newExpanded = new Set(prev);
             newExpanded.has(campaignId) ? newExpanded.delete(campaignId) : newExpanded.add(campaignId);
             return newExpanded;
         });
     };
 
+    const handleOptionMarginClick = (campaign) => {
+        setSelectedCampaign(campaign);
+        setIsModalOpen(true); // 모달 열기
+    };
+
     return (
         <div>
-            {/* Net Table 표시 */}
-            {isLoading ? <div>로딩 중...</div> : isNetTableVisible && <MarginNetTable startDate={startDate} endDate={endDate} />}
-
-            {/* 캠페인 목록 */}
+            <MarginNetTable startDate={startDate} endDate={endDate} />
             <div className="campaign-list">
                 {campaigns.map((campaign) => (
-                    <div key={campaign.campaignId} className="campaign-card expanded">
-                        <div className="campaign-header" onClick={() => toggleExpandCampaign(campaign.campaignId)}>
+                    <div
+                        key={campaign.campaignId}
+                        className={`campaign-card ${expandedCampaignId.has(campaign.campaignId) ? "expanded" : ""}`}
+                    >
+                        <div
+                            className="campaign-header"
+                            onClick={() => toggleExpandCampaign(campaign.campaignId)}
+                        >
                             <h3>{campaign.title}</h3>
-                            <button className="add-button" onClick={() => {
-                                setSelectedCampaign(campaign);
-                                setIsModalOpen(true);
-                            }}>
+                            <button
+                                className="add-button"
+                                onClick={() => handleOptionMarginClick(campaign)}>
                                 옵션마진 설정
                             </button>
                         </div>
-                        <CampaignDataTable
-                            data={allCampaignData.find(item => item.campaignId === campaign.campaignId)?.data || []}
-                            startDate={startDate}
-                            endDate={endDate}
-                        />
+                        {expandedCampaignId.has(campaign.campaignId) && (
+                            <CampaignDataTable
+                                data={tableData.find(item => item.campaignId === campaign.campaignId)?.data || []}
+                                startDate={startDate}
+                                endDate={endDate}
+                                campaignId={campaign.campaignId}
+                            />
+                        )}
                     </div>
                 ))}
             </div>

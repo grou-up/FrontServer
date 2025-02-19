@@ -9,12 +9,16 @@ import "react-datepicker/dist/react-datepicker.css";
 const MarginTabNavigation = () => {
     const [activeComponent, setActiveComponent] = useState("MarginCalculatorForm");
     const [campaign, setCampaign] = useState([]);
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(new Date());
+    const [startDate, setStartDate] = useState(new Date()); // 초기 시작일
+    const [endDate, setEndDate] = useState(new Date()); // 초기 끝일
     const [monthYear, setMonthYear] = useState(new Date()); // 월 선택 상태 추가
 
     const handleComponentChange = (component) => {
         setActiveComponent(component);
+        // 현재 월의 시작일과 끝일 계산
+        const { startOfMonth, endOfMonth } = getStartAndEndDates(monthYear);
+        setStartDate(startOfMonth);
+        setEndDate(endOfMonth);
     };
 
     useEffect(() => {
@@ -23,7 +27,6 @@ const MarginTabNavigation = () => {
                 const response = await getMyCampaigns();
                 setCampaign(response.data || []);
             } catch (error) {
-                setCampaign([]);
                 console.error("캠페인 데이터를 가져오는 중 오류 발생:", error);
             }
         };
@@ -49,8 +52,25 @@ const MarginTabNavigation = () => {
         setEndDate(endOfMonth);
     };
 
-    // 이번 달의 첫 날과 마지막 날을 계산해서 상태를 업데이트
-    const { startOfMonth, endOfMonth } = getStartAndEndDates(monthYear);
+    const handleStartDateChange = (date) => {
+        if (date) {
+            setStartDate(date);
+            const endDate = new Date(date);
+            endDate.setDate(endDate.getDate() + 30); // 시작일에서 30일 추가
+            setEndDate(endDate);
+        }
+    };
+
+    const handleEndDateChange = (date) => {
+        if (date) {
+            const diffDays = (date - startDate) / (1000 * 60 * 60 * 24); // 날짜 차이를 일 단위로 계산
+            if (diffDays > 30) {
+                alert("종료일은 시작일로부터 최대 30일 이내로 설정해야 합니다.");
+            } else {
+                setEndDate(date);
+            }
+        }
+    };
 
     return (
         <div className="main-content">
@@ -74,7 +94,7 @@ const MarginTabNavigation = () => {
                                     <div className="date-picker-group">
                                         <DatePicker
                                             selected={startDate}
-                                            onChange={(date) => setStartDate(date)}
+                                            onChange={handleStartDateChange}
                                             dateFormat="yyyy-MM-dd"
                                             maxDate={new Date()}
                                             className="date-picker-tab"
@@ -82,7 +102,7 @@ const MarginTabNavigation = () => {
                                         <span className="date-separator">~</span>
                                         <DatePicker
                                             selected={endDate}
-                                            onChange={(date) => setEndDate(date)}
+                                            onChange={handleEndDateChange}
                                             dateFormat="yyyy-MM-dd"
                                             minDate={startDate}
                                             maxDate={new Date()}
@@ -99,8 +119,8 @@ const MarginTabNavigation = () => {
                             {activeComponent === "MarginCalculatorResult" && (
                                 <MarginCalculatorResult
                                     campaigns={campaign}
-                                    startDate={startOfMonth.toISOString().split("T")[0]} // 이번 달 첫날
-                                    endDate={endOfMonth.toISOString().split("T")[0]}   // 이번 달 마지막날
+                                    startDate={startDate.toISOString().split("T")[0]} // 시작일
+                                    endDate={endDate.toISOString().split("T")[0]} // 끝일
                                     isActive={activeComponent === "MarginCalculatorResult"} // 활성화 여부 전달
                                 />
                             )}
