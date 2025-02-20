@@ -51,13 +51,21 @@ const StatGraphTable = ({ search, nonSearch, startDate, endDate }) => {
                 <table style={{ fontSize: '8px', width: '100%', borderCollapse: 'collapse' }}>
                     <thead>
                         <tr>
-                            <th></th>
+                            <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>날짜</td>
                             {dateLabels.map((date, index) => (
-                                <th key={index} style={{ padding: '5px', border: '1px solid #ddd' }}>{date}</th>
+                                <th key={index} style={{ padding: '5px', border: '1px solid #ddd', whiteSpace: 'nowrap' }}>{date.slice(5)}</th>
                             ))}
                         </tr>
                     </thead>
                     <tbody>
+                        {/* CVR Row */}
+                        <tr>
+                            <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>전환율 (%)</td>
+                            {cvrData.map((cvr, index) => (
+                                <td key={index} style={{ padding: '5px', border: '1px solid #ddd' }}>{cvr}</td>
+                            ))}
+                        </tr>
+
                         {/* Click Rate Row */}
                         <tr>
                             <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>클릭율 (%)</td>
@@ -84,17 +92,9 @@ const StatGraphTable = ({ search, nonSearch, startDate, endDate }) => {
                             ))}
                         </tr>
 
-                        {/* CVR Row */}
+                        {/* 광고전환판매수 */}
                         <tr>
-                            <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>전환율 (%)</td>
-                            {cvrData.map((cvr, index) => (
-                                <td key={index} style={{ padding: '5px', border: '1px solid #ddd' }}>{cvr}</td>
-                            ))}
-                        </tr>
-
-                        {/* Total Sales Row */}
-                        <tr>
-                            <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>Total Sales</td>
+                            <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>광고전환판매수</td>
                             {totalSalesData.map((sales, index) => (
                                 <td key={index} style={{ padding: '5px', border: '1px solid #ddd' }}>{sales}</td>
                             ))}

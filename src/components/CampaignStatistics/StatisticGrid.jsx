@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import StatTable from "./StatTable";
 import StatGraph from "./StatGraph";
 import StatGraphTable from "./StatGraphTable";
+import StatGraph2 from "./StatGraph2";
+import StatGraph3 from "./StatGraph3";
 import { getCampaignStats } from "../../services/keyword";
 import "../../styles/campaignStats/StatisticGrid.css";
 
@@ -78,6 +80,22 @@ const StatisticGrid = ({ campaignId, startDate, endDate }) => {
             </div>
             <div className="grid-item">
                 <StatGraphTable
+                    search={searchStats}
+                    nonSearch={nonSearchStats}
+                    startDate={startDate}
+                    endDate={endDate}
+                />
+            </div>
+            <div className="grid-item-graph"> {/*css 에서 height를 수정하여 세로 크기 조정 가능*/}
+                <StatGraph2
+                    search={searchStats}
+                    nonSearch={nonSearchStats}
+                    startDate={startDate}
+                    endDate={endDate}
+                />
+            </div>
+            <div className="grid-item-graph"> {/*css 에서 height를 수정하여 세로 크기 조정 가능*/}
+                <StatGraph3
                     search={searchStats}
                     nonSearch={nonSearchStats}
                     startDate={startDate}
