@@ -53,7 +53,7 @@ const StatGraphTable = ({ search, nonSearch, startDate, endDate }) => {
                         <tr>
                             <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>날짜</td>
                             {dateLabels.map((date, index) => (
-                                <th key={index} style={{ padding: '5px', border: '1px solid #ddd' }}>{date}</th>
+                                <th key={index} style={{ padding: '5px', border: '1px solid #ddd', whiteSpace: 'nowrap' }}>{date.slice(5)}</th>
                             ))}
                         </tr>
                     </thead>

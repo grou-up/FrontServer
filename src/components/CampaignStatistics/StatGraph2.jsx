@@ -38,7 +38,7 @@ const StatGraph2 = ({ search, nonSearch, startDate, endDate }) => {
         const keyClicks = nonsearchImpressionData[index];
         // console.log(impressions);
         const adSales = nonsearchKeyTotalSalesData[index];
-        console.log(adSales);
+        // console.log(adSales);
         return keyClicks > 0 ? (adSales / keyClicks) * 100 : 0; // 퍼센트로 표현
     });
 
@@ -61,26 +61,6 @@ const StatGraph2 = ({ search, nonSearch, startDate, endDate }) => {
                 stack: 'Stack 0', // 스택 설정
                 order: 1, // 막대 그래프 우선
             },
-            {
-                label: '검색 전환율',
-                data: searchCvrData,
-                borderColor: 'rgb(255, 99, 132)', // 전환율 선 색상 (빨강)
-                backgroundColor: 'rgba(255, 99, 132, 0.3)', // 전환율 색상 (옅은 빨강)
-                type: 'line', // 선 그래프로 표시
-                fill: false, // 선 그래프 안 채우기
-                yAxisID: 'y-cvr', // CVR 데이터의 y축 ID
-                order: 2, // CVR 선 그래프를 막대 위에 표시
-            },
-            {
-                label: '비검색 전환율',
-                data: nonsearchCvrData,
-                borderColor: 'rgb(0, 123, 255)', // Ad Cost 선 색상 (짙은 파랑)
-                backgroundColor: 'rgba(0, 123, 255, 0.3)', // Ad Cost 색상 (옅은 파랑)
-                type: 'line', // 선 그래프로 표시
-                fill: false, // 선 그래프 안 채우기
-                yAxisID: 'y-cvr', // CVR 데이터의 y축 ID
-                order: 2, // CVR 선 그래프를 막대 위에 표시
-            },
         ],
     };
 
@@ -94,7 +74,7 @@ const StatGraph2 = ({ search, nonSearch, startDate, endDate }) => {
             },
             title: {
                 display: true,
-                text: '광고비 및 전환율 그래프',
+                text: '광고비 그래프',
             },
         },
         scales: {
@@ -112,20 +92,6 @@ const StatGraph2 = ({ search, nonSearch, startDate, endDate }) => {
                 stacked: true, // y 축 스택 설정
                 min: 0, // 최소값 설정
                 max: Math.max(...searchAdCostData, ...nonSearchAdCostData) * 1.5, // 최대값 설정 (최대 데이터의 1.5배)
-            },
-            'y-cvr': {
-                title: {
-                    display: true,
-                    text: '전환율 (%)',
-                },
-                position: 'right', // y축 위치 설정
-                ticks: {
-                    beginAtZero: true,
-                    max: 100, // CVR 최대값 설정
-                },
-                grid: {
-                    display: false, // Y축의 그리드 선을 보이지 않게 설정
-                },
             },
         },
     };
