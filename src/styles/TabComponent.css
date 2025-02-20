@@ -68,12 +68,12 @@
 
 /* 우측 활성화 탭 */
 .tab.active.right {
-    border-radius: 0 50px 0 0;
+    border-radius: 16px 50px 0 0;
 }
 
 /* 중간 활성화 탭 */
 .tab.active.middle {
-    border-radius: 50px 50px 0 0;
+    border-radius: 16px 50px 0 0;
 }
 
 /* 콘텐츠 영역 */
@@ -121,15 +121,16 @@
     align-items: center;
     background-color: #D6DBF2;
     border-radius: 20px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
 }
 
 .dropdown {
     padding: 8px 12px;
     border: 1px solid #ddd;
-    border-radius: 8px;
+    border-radius: 20px;
     background-color: #D6DBF2;
     font-size: 14px;
     cursor: pointer;
     color: #4C547B;
+    margin-right: 5px;
 }
