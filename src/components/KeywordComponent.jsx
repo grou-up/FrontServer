@@ -140,7 +140,7 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
                                 >
                                     🔍
                                 </button>} {/* 돋보기 아이콘 추가 */}
-                                {item.keyBidFlag && <span className="badge">Bid</span>} {/* 마진 추가로 간격 조정 */}
+                                {item.keyBidFlag && <span className="badge">수동</span>} {/* 마진 추가로 간격 조정 */}
                             </td>
                             <td style={{
                                 color: item.keyExcludeFlag ? '#d3264f' : 'inherit',

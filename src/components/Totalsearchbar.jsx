@@ -9,9 +9,15 @@ import { useParams } from "react-router-dom";
 
 const Totalsearchbar = ({ title }) => {
     const [activeTab, setActiveTab] = useState("stats");
-    const [startDate, setStartDate] = useState(new Date());
     const { campaignId } = useParams();
-    const [endDate, setEndDate] = useState(new Date());
+    const today = new Date();
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+    firstDayOfMonth.setHours(12, 0, 0, 0);
+    lastDayOfMonth.setHours(23, 59, 59, 999);
+    // 초기값을 이번달로 설정
+    const [startDate, setStartDate] = useState(firstDayOfMonth);
+    const [endDate, setEndDate] = useState(lastDayOfMonth);
 
     const handleTabChange = (tabName) => {
         setActiveTab(tabName);
@@ -46,6 +52,17 @@ const Totalsearchbar = ({ title }) => {
                 setStartDate(last1Month);
                 setEndDate(yesterday);
                 break;
+            case "thismonth":
+                const today = new Date();
+                const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                firstDayOfMonth.setHours(12, 0, 0, 0);
+                lastDayOfMonth.setHours(23, 59, 59, 999);
+                // console.log(firstDayOfMonth);
+                // console.log(lastDayOfMonth);
+                setStartDate(firstDayOfMonth);
+                setEndDate(lastDayOfMonth);
+                break;
             default:
                 setStartDate(yesterday);
                 setEndDate(yesterday);
@@ -55,6 +72,7 @@ const Totalsearchbar = ({ title }) => {
 
     const handleStartDateChange = (date) => {
         if (date) {
+            // console.log(date);
             setStartDate(date);
             const endDate = new Date(date);
             endDate.setMonth(endDate.getMonth() + 1); // 시작일에서 1개월 추가
@@ -101,6 +119,7 @@ const Totalsearchbar = ({ title }) => {
                         className="dropdown"
                         onChange={(e) => handleDateRangeChange(e.target.value)}
                     >
+                        <option value="thismonth">이번 달</option>
                         <option value="yesterday">어제</option>
                         <option value="last7days">최근 1주</option>
                         <option value="last14days">최근 2주</option>

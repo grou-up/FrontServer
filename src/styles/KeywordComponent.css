@@ -73,6 +73,7 @@ th svg {
     /* 패딩 없음 */
     transition: background-color 0.2s, transform 0.2s;
     /* 부드러운 효과 */
+    margin-left: 5px;
 }
 
 .icon-button:hover {
