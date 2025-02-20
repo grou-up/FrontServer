@@ -79,7 +79,6 @@ const MarginCalculatorForm = ({ campaigns }) => {
     };
 
     const handleCalculate = () => {
-        console.log("버튼 클릭됨");
         const updatedOptions = [...calculatedOptions];
 
         selectedOptions.forEach(index => {
@@ -89,13 +88,11 @@ const MarginCalculatorForm = ({ campaigns }) => {
             }
 
             const option = updatedOptions[index];
-            console.log(option);
 
             // 필요한 값이 존재하는지 확인
             if (option && option.mfcSalePrice && option.mfcTotalPrice && option.mfcCostPrice) {
                 const margin = Math.round(option.mfcSalePrice - (1.1 * option.mfcTotalPrice) - option.mfcCostPrice) || 0;
                 const zeroROAS = margin !== 0 ? ((option.mfcSalePrice / margin) * 1.1 * 100).toFixed(2) : "0.00";
-                console.log(margin, zeroROAS);
 
                 updatedOptions[index] = {
                     ...option,

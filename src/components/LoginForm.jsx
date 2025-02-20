@@ -1,26 +1,27 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Mail, Lock } from "lucide-react";
-import Button from "./Button";
-import { login } from "../services/auth";
-import { handleError } from "../utils/errorHandler";
+import React from "react";
+// import { useNavigate } from "react-router-dom";
+// import { Mail, Lock } from "lucide-react";
+// import Button from "./Button";
+// import { login } from "../services/auth";
+// import { handleError } from "../utils/errorHandler";
 import KakaoLoginButton from "./KakaoLoginButton"; // 새로 추가된 버튼
+import GoogleLoginButton from "./GoogleLoginButton";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const navigate = useNavigate();
+  // const [email, setEmail] = useState("");
+  // const [password, setPassword] = useState("");
+  // const navigate = useNavigate();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      await login({ email, password });
-      alert("꺄악!");
-      navigate('/main');
-    } catch (error) {
-      handleError(error);
-    }
-  };
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     await login({ email, password });
+  //     alert("꺄악!");
+  //     navigate('/main');
+  //   } catch (error) {
+  //     handleError(error);
+  //   }
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center">
@@ -99,8 +100,9 @@ const LoginForm = () => {
                 로그인
               </Button>
             </form> */}
-            <div className="text-center mt-4">
+            <div className="text-center mt-4 space-y-3">
               <KakaoLoginButton />
+              <GoogleLoginButton />
             </div>
           </div>
         </div>

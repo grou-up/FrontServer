@@ -1,6 +1,6 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 
-function KakaoLoginCallback() {
+function LoginCallback() {
     useEffect(() => {
         const queryParams = new URLSearchParams(window.location.search);
         const token = queryParams.get("token");
@@ -8,7 +8,7 @@ function KakaoLoginCallback() {
         if (token) {
             localStorage.clear();
             localStorage.setItem("accessToken", token);
-
+            localStorage.setItem("isFirstVisit", "true"); // 이후에는 API 호출하지 않도록 설정
             // 저장된 토큰 확인
             console.log("Token saved in localStorage:", localStorage.getItem("accessToken"));
 
@@ -21,4 +21,4 @@ function KakaoLoginCallback() {
     return null;
 }
 
-export default KakaoLoginCallback;
+export default LoginCallback;

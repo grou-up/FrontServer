@@ -1,45 +1,40 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import CampaignDataTable from "./MarginDataTable"; // 새로 만든 테이블 컴포넌트 가져오기
 import MarginResultModal from "./MarginResultModal"; // 모달 컴포넌트 가져오기
 import MarginNetTable from "./MarginNetTable";
-
-const fetchCampaignData = async (campaignId, startDate, endDate) => {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve([
-                { id: 1, name: "옵션 1", margin: 100 },
-                { id: 2, name: "옵션 2", margin: 150 },
-            ]);
-        }, 1000);
-    });
-};
+import { getMarginByCampaignId } from "../../services/margin";
 
 const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
-    const [expandedCampaignId, setExpandedCampaignId] = useState(null);
-    const [tableData, setTableData] = useState([]);
+    const [expandedCampaignId, setExpandedCampaignId] = useState(new Set()); // 펼쳐진 캠페인 목록 (Set으로 변경)
+    const [tableData, setTableData] = useState([]); // 캠페인 데이터 저장
     const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
     const [selectedCampaign, setSelectedCampaign] = useState(null); // 선택된 캠페인
 
-    useEffect(() => {
-        // 날짜가 변경될 때마다 캠페인 데이터를 가져옴
-        if (expandedCampaignId) {
-            const fetchData = async () => {
-                const data = await fetchCampaignData(expandedCampaignId, startDate, endDate);
-                setTableData(data);
-            };
-            fetchData();
-        }
-    }, [expandedCampaignId, startDate, endDate]);
+    const fetchMarginResults = useCallback(async () => {
+        console.log("Fetching data with:", startDate, endDate); // 확인을 위한 로그
+        const allCampaignData = await Promise.all(campaigns.map(async ({ campaignId }) => {
+            const response = await getMarginByCampaignId({ startDate, endDate, campaignId });
+            return { campaignId, data: response?.data ?? [] };
+        }));
+        setTableData(allCampaignData);
+    }, [startDate, endDate, campaigns]);
 
-    const toggleExpandCampaign = async (campaignId) => {
-        if (expandedCampaignId === campaignId) {
-            setExpandedCampaignId(null);
-            setTableData([]);
-        } else {
-            setExpandedCampaignId(campaignId);
-            const data = await fetchCampaignData(campaignId, startDate, endDate);
-            setTableData(data);
-        }
+    useEffect(() => {
+        fetchMarginResults(); // startDate와 endDate가 변경될 때마다 데이터 로드
+    }, [fetchMarginResults, startDate, endDate]); // 의존성 배열에 startDate와 endDate 추가
+
+    useEffect(() => {
+        // 모든 캠페인이 펼쳐진 상태로 초기화
+        const initialExpandedIds = new Set(campaigns.map(campaign => campaign.campaignId));
+        setExpandedCampaignId(initialExpandedIds);
+    }, [campaigns]);
+
+    const toggleExpandCampaign = (campaignId) => {
+        setExpandedCampaignId(prev => {
+            const newExpanded = new Set(prev);
+            newExpanded.has(campaignId) ? newExpanded.delete(campaignId) : newExpanded.add(campaignId);
+            return newExpanded;
+        });
     };
 
     const handleOptionMarginClick = (campaign) => {
@@ -49,15 +44,12 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
 
     return (
         <div>
-            <div>
-                {/* MarginNetTable에 시작일과 종료일을 그대로 전달 */}
-                <MarginNetTable startDate={startDate} endDate={endDate} />
-            </div>
+            <MarginNetTable startDate={startDate} endDate={endDate} />
             <div className="campaign-list">
                 {campaigns.map((campaign) => (
                     <div
                         key={campaign.campaignId}
-                        className={`campaign-card ${expandedCampaignId === campaign.campaignId ? "expanded" : ""}`}
+                        className={`campaign-card ${expandedCampaignId.has(campaign.campaignId) ? "expanded" : ""}`}
                     >
                         <div
                             className="campaign-header"
@@ -70,30 +62,27 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
                                 옵션마진 설정
                             </button>
                         </div>
-                        {expandedCampaignId === campaign.campaignId && (
-                            <div>
-                                <CampaignDataTable
-                                    data={tableData}
-                                    startDate={startDate} // YYYY-MM-DD 형식으로 그대로 전달
-                                    endDate={endDate} // YYYY-MM-DD 형식으로 그대로 전달
-                                    campaignId={campaign.campaignId}
-                                />
-                            </div>
+                        {expandedCampaignId.has(campaign.campaignId) && (
+                            <CampaignDataTable
+                                data={tableData.find(item => item.campaignId === campaign.campaignId)?.data || []}
+                                startDate={startDate}
+                                endDate={endDate}
+                                campaignId={campaign.campaignId}
+                            />
                         )}
                     </div>
                 ))}
             </div>
 
-            {/* 모달 추가 */}
-            {selectedCampaign && ( // selectedCampaign이 존재할 때만 모달을 렌더링
+            {selectedCampaign && (
                 <MarginResultModal
                     isOpen={isModalOpen}
                     onClose={() => setIsModalOpen(false)}
-                    campaignId={selectedCampaign.campaignId} // campaignId 전달
+                    campaignId={selectedCampaign.campaignId}
                 />
             )}
         </div>
     );
-}
+};
 
 export default MarginCalculatorResult;

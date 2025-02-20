@@ -100,6 +100,8 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
         try {
             await marginUpdatesByPeriod(mfcRequestWithDatesDto);
             alert("선택된 데이터가 저장되었습니다!");
+            localStorage.setItem("isFirstVisit", "true");
+            window.location.reload();
         } catch (error) {
             console.error("저장 중 오류 발생:", error);
             alert("저장 중 오류가 발생했습니다.");
