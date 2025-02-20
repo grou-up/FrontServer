@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { getNetProfit } from "../../services/margin"; // API 요청 함수 가져오기
 import "../../styles/margin/MarginNetTable.css";
 import { formatNumber } from "../../utils/formatUtils";
@@ -7,6 +7,21 @@ import "../../styles/numberColor.css";
 const MarginNetTable = ({ startDate, endDate }) => {
     const [dailyNetProfitData, setDailyNetProfitData] = useState([]);
     const [fullDateRange, setFullDateRange] = useState([]);
+
+    const generateDateRange = useCallback(() => {
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        const dates = [];
+
+        for (let d = start; d <= end; d.setDate(d.getDate() + 1)) {
+            // MM-DD 형식으로 변환
+            const month = (d.getMonth() + 1).toString().padStart(2, '0'); // 월을 2자리로
+            const day = d.getDate().toString().padStart(2, '0'); // 일을 2자리로
+            dates.push(`${month}-${day}`); // MM-DD 형식으로 추가
+        }
+
+        setFullDateRange(dates);
+    }, [startDate, endDate]); // startDate와 endDate에 의존
 
     useEffect(() => {
         const fetchData = async () => {
@@ -28,23 +43,7 @@ const MarginNetTable = ({ startDate, endDate }) => {
 
         fetchData();
         generateDateRange(); // 날짜 범위 생성
-    }, [startDate, endDate]);
-
-    // startDate와 endDate 사이의 날짜 배열 생성
-    const generateDateRange = () => {
-        const start = new Date(startDate);
-        const end = new Date(endDate);
-        const dates = [];
-
-        for (let d = start; d <= end; d.setDate(d.getDate() + 1)) {
-            // MM-DD 형식으로 변환
-            const month = (d.getMonth() + 1).toString().padStart(2, '0'); // 월을 2자리로
-            const day = d.getDate().toString().padStart(2, '0'); // 일을 2자리로
-            dates.push(`${month}-${day}`); // MM-DD 형식으로 추가
-        }
-
-        setFullDateRange(dates);
-    };
+    }, [startDate, endDate, generateDateRange]); // generateDateRange 추가
 
     // 날짜별 마진 데이터 생성
     const getMarginDataForDate = (date) => {
