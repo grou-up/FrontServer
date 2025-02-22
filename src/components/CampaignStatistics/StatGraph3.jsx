@@ -54,7 +54,7 @@ const StatGraph3 = ({ search, nonSearch, startDate, endDate }) => {
             {
                 label: '검색 전환율',
                 data: searchCvrData,
-                borderColor: 'rgb(255, 99, 132)', // 전환율 선 색상 (빨강)
+                borderColor: '#d3264f', // 전환율 선 색상 (빨강)
                 backgroundColor: 'rgba(255, 99, 132, 0.3)', // 전환율 색상 (옅은 빨강)
                 type: 'line', // 선 그래프로 표시
                 fill: false, // 선 그래프 안 채우기
@@ -64,8 +64,8 @@ const StatGraph3 = ({ search, nonSearch, startDate, endDate }) => {
             {
                 label: '비검색 전환율',
                 data: nonSearchCvrData,
-                borderColor: 'rgb(0, 123, 255)', // 비검색 전환율 선 색상 (짙은 파랑)
-                backgroundColor: 'rgba(0, 123, 255, 0.3)', // 비검색 전환율 색상 (옅은 파랑)
+                borderColor: '#fdb665', // 비검색 전환율 선 색상 (짙은 파랑)
+                backgroundColor: 'rgba(255, 165, 0, 0.3)', // 비검색 전환율 색상 (옅은 파랑)
                 type: 'line', // 선 그래프로 표시
                 fill: false,
                 yAxisID: 'y', // 첫 번째 Y축
@@ -74,9 +74,8 @@ const StatGraph3 = ({ search, nonSearch, startDate, endDate }) => {
             {
                 label: '검색 클릭률',
                 data: searchClickRate,
-                borderColor: 'rgb(0, 255, 0)', // 클릭률 선 색상 (초록)
-                backgroundColor: 'rgba(0, 255, 0, 0.3)', // 클릭률 색상 (옅은 초록)
-                type: 'line', // 선 그래프로 표시
+                backgroundColor: '#8bc8b0', // 클릭률 색상 (옅은 초록)
+                type: 'bar', // 선 그래프로 표시
                 fill: false,
                 yAxisID: 'y1', // 두 번째 Y축
                 order: 2,
@@ -84,9 +83,8 @@ const StatGraph3 = ({ search, nonSearch, startDate, endDate }) => {
             {
                 label: '비검색 클릭률',
                 data: nonSearchClickRate,
-                borderColor: 'rgb(255, 165, 0)', // 클릭률 선 색상 (주황)
-                backgroundColor: 'rgba(255, 165, 0, 0.3)', // 클릭률 색상 (옅은 주황)
-                type: 'line', // 선 그래프로 표시
+                backgroundColor: '#5c62b8', // 클릭률 색상 (옅은 주황)
+                type: 'bar', // 선 그래프로 표시
                 fill: false,
                 yAxisID: 'y1', // 두 번째 Y축
                 order: 2,
