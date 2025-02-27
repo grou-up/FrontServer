@@ -110,8 +110,12 @@
 
     .pricing-image {
         max-width: 90%;
-        /* 모바일에서의 최대 너비 */
+        /* 모바일에서 최대 너비를 90%로 설정하여 크게 보이도록 */
+        height: auto;
+        /* 비율 유지 */
     }
+
+
 
     .note-subtitle {
         font-size: 1.5rem;
@@ -119,29 +123,31 @@
     }
 
     .price-button {
-        font-size: 1.2rem;
+        font-size: 1.7rem;
         /* 모바일에서 버튼 텍스트 크기 */
     }
 }
 
 @media (max-width: 768px) {
-    .note-title {
-        font-size: 4rem;
-        /* 모바일에서의 제목 크기 */
-    }
 
     .note-subtitle {
         font-size: 1.5rem;
         /* 모바일에서의 서브 제목 크기 */
     }
 
-    .note-subtitle {
-        font-size: 1.2rem;
-        /* 모바일에서의 서브 제목 크기 */
+    .pricing-image {
+        max-width: 100%;
+        /* 모바일에서 최대 너비를 90%로 설정하여 크게 보이도록 */
+        height: auto;
+        /* 비율 유지 */
+    }
+
+    .note-title {
+        font-size: 3.0rem;
     }
 
     .price-button {
-        font-size: 0.9rem;
+        font-size: 1.5rem;
         /* 모바일에서 버튼 텍스트 크기 */
     }
 }
