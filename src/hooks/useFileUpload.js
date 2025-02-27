@@ -17,9 +17,11 @@ const useFileUpload = (uploadFunction, successMessage, shouldNavigate = false, s
       for (let i = 0; i < file.length; i++) { // 여러 파일 처리 가능
         const response = await uploadFunction(file[i]);
         if (response.status !== 200) {
+          window.location.href = "/main";
           throw new Error("파일 업로드 실패");
         }
       }
+      window.location.href = "/main";
       alert(successMessage);
       if (setFileData) {
         setFileData(file); // 데이터 반영
@@ -28,7 +30,7 @@ const useFileUpload = (uploadFunction, successMessage, shouldNavigate = false, s
         window.location.href = "/main";
       }
     } catch (error) {
-      console.error("파일 업로드 오류:", error);
+      window.location.href = "/upload";
       alert("업로드 실패!");
     } finally {
       setUploading(false);
