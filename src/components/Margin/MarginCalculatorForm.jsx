@@ -28,6 +28,8 @@ const MarginCalculatorForm = ({ campaigns }) => {
                 mfcSalePrice: option.mfcSalePrice || 0,
                 mfcTotalPrice: option.mfcTotalPrice || 0,
                 mfcCostPrice: option.mfcCostPrice || 0,
+                mfcType: option.mfcType || "",
+                mfcReturnPrice: option.mfcReturnPrice || 0,
                 mfcPerPiece: option.mfcPerPiece || 0,
                 mfcZeroRoas: option.mfcZeroRoas || 0,
                 // 다른 속성도 필요에 따라 초기화
@@ -117,17 +119,25 @@ const MarginCalculatorForm = ({ campaigns }) => {
             return; // 사용자가 "아니오"를 선택하면 함수를 종료
         }
 
+        // 로컬 상태에서 삭제
+        setCalculatedOptions(prevOptions =>
+            prevOptions.filter((_, index) => index !== indexToDelete)
+        );
+        setSelectedOptions(prevSelected =>
+            prevSelected.filter(selectedIndex => selectedIndex !== indexToDelete)
+        );
+
         try {
-            await deleteExecutionAboutCampaign({ id }); // API 호출
-            setCalculatedOptions(prevOptions =>
-                prevOptions.filter((_, index) => index !== indexToDelete)
-            );
-            setSelectedOptions(prevSelected =>
-                prevSelected.filter(selectedIndex => selectedIndex !== indexToDelete)
-            );
+            // API 호출 이전에 id가 존재하는지 확인
+            if (id) {
+                await deleteExecutionAboutCampaign({ id }); // ID가 있을 때만 API 호출
+            } else {
+                // ID가 없으면 바로 로컬 상태에서 삭제
+                console.log("삭제 실패");
+            }
         } catch (error) {
-            alert("삭제 실패");
-            // 오류 처리 로직 추가 가능 (예: 사용자에게 알림)
+            alert("삭제 실패"); // API 호출 실패 시 사용자에게 알림
+            // 실패했을 경우에도 로컬 상태에서 삭제된 상태를 유지하기 위해 추가 처리 없음
         }
     };
 

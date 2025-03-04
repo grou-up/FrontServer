@@ -13,6 +13,8 @@ const ActionButtons = ({ selectedOptions, options, campaignId, handleCalculate }
                 option.mfcProductName &&
                 option.mfcSalePrice !== undefined &&
                 option.mfcTotalPrice !== undefined &&
+                option.mfcReturnPrice !== undefined &&
+                option.mfcType !== undefined &&
                 option.mfcCostPrice !== undefined;
         });
     };
@@ -39,7 +41,9 @@ const ActionButtons = ({ selectedOptions, options, campaignId, handleCalculate }
                 !option.mfcProductName ||
                 option.mfcSalePrice === undefined || option.mfcSalePrice === "" ||
                 option.mfcTotalPrice === undefined || option.mfcTotalPrice === "" ||
-                option.mfcCostPrice === undefined || option.mfcCostPrice === "";
+                option.mfcReturnPrice === undefined || option.mfcCostPrice === "" ||
+                option.mfcTotalPrice === undefined || option.mfcTotalPrice === "" ||
+                option.mfcType === undefined || option.mfcCostPrice === "";
         });
 
         // 저장 전 제로ROAS, 개별마진 체크
@@ -77,6 +81,8 @@ const ActionButtons = ({ selectedOptions, options, campaignId, handleCalculate }
                 mfcSalePrice: updatedOptions[index].mfcSalePrice,
                 mfcTotalPrice: updatedOptions[index].mfcTotalPrice,
                 mfcCostPrice: updatedOptions[index].mfcCostPrice,
+                mfcType: updatedOptions[index].mfcType,
+                mfcReturnPrice: updatedOptions[index].mfcReturnPrice,
                 mfcPerPiece: updatedOptions[index].mfcPerPiece,
                 mfcZeroRoas: updatedOptions[index].mfcZeroRoas,
             })),
