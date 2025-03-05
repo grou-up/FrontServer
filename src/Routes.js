@@ -9,6 +9,8 @@ import Sidebar from "./components/Sidebar";
 import FileUploadForm from "./components/FileUploadForm";
 import CampaignDetail from "./components/CampaignDetail";
 import MarginTabNavigation from "./components/Margin/MarginTabNavigation";
+import KakaoPay from "./components/KakaoPay/KakaoPay"
+import KakaoPayCompleted from "./components/KakaoPay/KakaoPayCompleted"
 class AppRoutes extends React.Component {
     render() {
         return (
@@ -19,6 +21,9 @@ class AppRoutes extends React.Component {
                     <Route path="/signup" element={<SignupForm />} />
                     <Route path="/oauth/kakao/callback" element={<LoginCallback />} />
                     <Route path="/oauth/google/callback" element={<LoginCallback />} />
+                    {/* 결제 경로 임시 설정*/}
+                    <Route path="/pay" element={<KakaoPay />} />
+                    <Route path="/pay/kakao/completed" element={<KakaoPayCompleted />} />
                     {/* 보호된 경로 */}
                     <Route
                         path="/main"
