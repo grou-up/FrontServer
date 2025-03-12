@@ -12,7 +12,7 @@ const LoginNavbar = () => {
                 <div className="flex space-x-2">
                     <a href="#features" className="button">기능 소개</a>
                     <a href="#pricing" className="button">요금 정책</a>
-                    <a href="#contact" className="button">진짜?가능?</a>
+                    <a href="#contact" className="button">문의</a>
                     <a href="#login" className="button">로그인</a>
                 </div>
             </div>
