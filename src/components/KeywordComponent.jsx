@@ -130,7 +130,7 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
                                 color: item.keyExcludeFlag ? '#d3264f' : 'inherit'
                             }}>
                                 {item.keyKeyword}
-                                {item.keyTotalSales >= 1 && <button
+                                {item.keyTotalSales > 1 && <button
                                     className="icon-button"
                                     onClick={(e) => {
                                         e.stopPropagation(); // 버튼 클릭 시 이벤트 전파 방지

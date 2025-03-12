@@ -33,7 +33,7 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
         setLoading(true);
         try {
             const response = await getKeywords({ start: startDate, end: endDate, campaignId });
-            console.log(response.data);
+            // console.log(response.data);
             setKeywords(response.data || []);
             setError(null);
         } catch (error) {

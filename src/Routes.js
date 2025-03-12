@@ -9,24 +9,8 @@ import Sidebar from "./components/Sidebar";
 import FileUploadForm from "./components/FileUploadForm";
 import CampaignDetail from "./components/CampaignDetail";
 import MarginTabNavigation from "./components/Margin/MarginTabNavigation";
-import OtherComponent from "./components/memo/MemoComponent";
-import MemoButton from "./components/memo/MemoButton";
-
 class AppRoutes extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showOtherComponent: false, // OtherComponent 표시 여부
-        };
-    }
-
-    toggleOtherComponent = () => {
-        this.setState((prevState) => ({
-            showOtherComponent: !prevState.showOtherComponent,
-        }));
-    };
     render() {
-        const { showOtherComponent } = this.state;
         return (
             <Router>
                 <Routes>
@@ -64,21 +48,11 @@ class AppRoutes extends React.Component {
                         }
                     />
                     <Route
-                        path="/campaigns/:campaignId"
+                        path="/campaigns/:campaignId" // 캠페인 분석 경로 추가
                         element={
                             <PrivateRoute>
-                                {showOtherComponent ? (
-                                    <>
-                                        <OtherComponent />
-                                        <CampaignDetail />
-                                    </>
-                                ) : (
-                                    <>
-                                        <Sidebar />
-                                        <CampaignDetail />
-                                    </>
-                                )}
-                                <MemoButton onClick={this.toggleOtherComponent} />
+                                <Sidebar />
+                                <CampaignDetail />
                             </PrivateRoute>
                         }
                     />
