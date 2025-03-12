@@ -43,7 +43,7 @@ const MemoCreate = ({ onAddMemo }) => {
                     dateFormat="yyyy-MM-dd" // 날짜 포맷 설정
                     className="date-picker-memo-create" // 스타일을 위한 클래스
                 />
-                <button className="add-button" onClick={handleAddMemo}>추가</button>
+                <button className="memo-add-button" onClick={handleAddMemo}>추가</button>
             </div>
             <hr />
             <textarea
