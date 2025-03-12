@@ -11,10 +11,14 @@ import FeautresSectionGrouup from "./Login/FeautresSectionGrouup";
 import FeaturesSectionGrouupEx from "./Login/FeaturesSectionGrouupEx";
 import FeatureLastSection from "./Login/FeatureLastSection";
 import FeatureSectionMeetSellerOrDev from "./Login/FeatureSectionMeetSellerOrDev";
+
 const LoginForm = () => {
   const sectionsRef = useRef([]);
 
   useEffect(() => {
+    // 로그인 페이지일 때 body에 클래스 추가
+    document.body.classList.add("login-page");
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
@@ -30,11 +34,15 @@ const LoginForm = () => {
     });
 
     return () => {
+      // 컴포넌트 언마운트 시 body에서 클래스 제거
+      document.body.classList.remove("login-page");
+
       sectionsRef.current.forEach(section => {
-        observer.unobserve(section); // 컴포넌트 언마운트 시 관찰 해제
+        observer.unobserve(section); // 관찰 해제
       });
     };
   }, []);
+
   return (
     <div className="login-page">
       <LoginNavbar /> {/* 네비게이션 바 추가 */}
@@ -71,6 +79,5 @@ const LoginForm = () => {
     </div>
   );
 };
-
 
 export default LoginForm;

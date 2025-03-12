@@ -23,6 +23,7 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
             const optionsWithDefaults = (response.data || []).map(option => ({
                 id: option.id,
                 mfcProductName: option.mfcProductName,
+                mfcType: option.mfcType,
                 mfcSalePrice: option.mfcSalePrice || 0,
                 mfcTotalPrice: option.mfcTotalPrice || 0,
                 mfcCostPrice: option.mfcCostPrice || 0,
@@ -62,6 +63,17 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
         });
 
         setTableData(updatedOptions); // 업데이트된 데이터를 상태에 설정
+    };
+    // mfcType을 한국어로 변환하는 함수
+    const getMfcTypeDisplayName = (mfcType) => {
+        switch (mfcType) {
+            case 'ROCKET_GROWTH':
+                return '로켓그로스';
+            case 'SELLER_DELIVERY':
+                return '판매자배송';
+            default:
+                return mfcType; // 기본값: 원래의 값 반환
+        }
     };
 
     const handleSave = async () => {
@@ -181,6 +193,7 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
                                     />
                                 </th>
                                 <th>옵션명</th>
+                                <th>상품타입</th>
                                 <th>판매가</th>
                                 <th>총비용</th>
                                 <th>원가</th>
@@ -199,6 +212,7 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
                                         />
                                     </td>
                                     <td>{item.mfcProductName}</td>
+                                    <td>{getMfcTypeDisplayName(item.mfcType)}</td> {/* 변환된 상품타입 표시 */}
                                     <td>
                                         <input
                                             type="number"
