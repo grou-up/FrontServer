@@ -75,7 +75,7 @@ const MemoView = ({ memos, fetchMemos }) => {
                                 </td>
                                 <td className="memo-view-td-delete-button">
                                     <button onClick={() => handleDelete(memo.id)} style={{ border: 'none', background: 'none', cursor: 'pointer' }}>
-                                        <Trash2 size={16} /> {/* 삭제 아이콘 */}
+                                        <Trash2 size={16} />
                                     </button>
                                 </td>
                             </tr>
@@ -84,6 +84,7 @@ const MemoView = ({ memos, fetchMemos }) => {
                 </table>
             </div>
         </div>
+
     );
 };
 
