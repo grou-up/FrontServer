@@ -1,17 +1,17 @@
 import React, { useState, useEffect, useCallback } from "react";
-import CampaignDataTable from "./MarginDataTable"; // 새로 만든 테이블 컴포넌트 가져오기
-import MarginResultModal from "./MarginResultModal"; // 모달 컴포넌트 가져오기
+import CampaignDataTable from "./MarginDataTable";
+import MarginResultModal from "./MarginResultModal";
 import MarginNetTable from "./MarginNetTable";
 import { getMarginByCampaignId } from "../../services/margin";
-
+import { updateEfficiencyAndAdBudget } from "../../services/margin";
 const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
-    const [expandedCampaignId, setExpandedCampaignId] = useState(new Set()); // 펼쳐진 캠페인 목록 (Set으로 변경)
-    const [tableData, setTableData] = useState([]); // 캠페인 데이터 저장
-    const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
-    const [selectedCampaign, setSelectedCampaign] = useState(null); // 선택된 캠페인
+    const [expandedCampaignId, setExpandedCampaignId] = useState(new Set());
+    const [tableData, setTableData] = useState([]);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [selectedCampaign, setSelectedCampaign] = useState(null);
+    const [modifiedData, setModifiedData] = useState({}); // 변경된 데이터 저장
 
     const fetchMarginResults = useCallback(async () => {
-        console.log("Fetching data with:", startDate, endDate); // 확인을 위한 로그
         const allCampaignData = await Promise.all(campaigns.map(async ({ campaignId }) => {
             const response = await getMarginByCampaignId({ startDate, endDate, campaignId });
             return { campaignId, data: response?.data ?? [] };
@@ -20,11 +20,10 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
     }, [startDate, endDate, campaigns]);
 
     useEffect(() => {
-        fetchMarginResults(); // startDate와 endDate가 변경될 때마다 데이터 로드
-    }, [fetchMarginResults, startDate, endDate]); // 의존성 배열에 startDate와 endDate 추가
+        fetchMarginResults();
+    }, [fetchMarginResults, startDate, endDate]);
 
     useEffect(() => {
-        // 모든 캠페인이 펼쳐진 상태로 초기화
         const initialExpandedIds = new Set(campaigns.map(campaign => campaign.campaignId));
         setExpandedCampaignId(initialExpandedIds);
     }, [campaigns]);
@@ -39,7 +38,41 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
 
     const handleOptionMarginClick = (campaign) => {
         setSelectedCampaign(campaign);
-        setIsModalOpen(true); // 모달 열기
+        setIsModalOpen(true);
+    };
+
+    const handleSave = async (selectedCampaign) => {
+        try {
+            const changedData = modifiedData[selectedCampaign.campaignId] || {};
+            if (typeof changedData !== 'object' || Array.isArray(changedData)) {
+                throw new Error("변경된 데이터의 형식이 올바르지 않습니다.");
+            }
+
+            const data = {
+                campaignId: selectedCampaign.campaignId,
+                data: Object.values(changedData).map(item => ({
+                    id: item.id, // ID
+                    mardate: item.marDate, // 날짜
+                    marTargetEfficiency: item.marTargetEfficiency, // 목표효율
+                    marAdBudget: item.marAdBudget // 광고예산
+                })),
+            };
+            console.log(data)
+            const response = await updateEfficiencyAndAdBudget(data);
+
+            alert("저장되었습니다.");
+        } catch (error) {
+            console.error("저장 중 오류 발생:", error);
+            alert("저장 실패");
+        }
+    };
+
+
+    const handleDataChange = (campaignId, newData) => {
+        setModifiedData(prev => ({
+            ...prev,
+            [campaignId]: newData
+        }));
     };
 
     return (
@@ -56,11 +89,18 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
                             onClick={() => toggleExpandCampaign(campaign.campaignId)}
                         >
                             <h3>{campaign.title}</h3>
-                            <button
-                                className="add-button"
-                                onClick={() => handleOptionMarginClick(campaign)}>
-                                옵션마진 설정
-                            </button>
+                            <div className="button-container"> {/* 버튼을 감싸는 컨테이너 추가 */}
+                                <button
+                                    className="add-button"
+                                    onClick={() => handleSave(campaign)}>
+                                    목표효율/예산 저장
+                                </button>
+                                <button
+                                    className="add-button"
+                                    onClick={() => handleOptionMarginClick(campaign)}>
+                                    기간별 원가 수정
+                                </button>
+                            </div>
                         </div>
                         {expandedCampaignId.has(campaign.campaignId) && (
                             <CampaignDataTable
@@ -68,6 +108,7 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
                                 startDate={startDate}
                                 endDate={endDate}
                                 campaignId={campaign.campaignId}
+                                onDataChange={(newData) => handleDataChange(campaign.campaignId, newData)} // 데이터 변경 처리
                             />
                         )}
                     </div>

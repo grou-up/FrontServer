@@ -89,6 +89,42 @@
     /* 기본 아웃라인 제거 */
 }
 
+/* 각 열의 너비 조정 */
+.data-table th:nth-child(3),
+/* 상품타입 */
+.data-table td:nth-child(3) {
+    width: 10%;
+    /* 상품타입 열 넓이 */
+}
+
+.data-table th:nth-child(4),
+/* 판매가 */
+.data-table td:nth-child(4) {
+    width: 10%;
+    /* 판매가 열 넓이 */
+}
+
+.data-table th:nth-child(5),
+/* 총비용 */
+.data-table td:nth-child(5) {
+    width: 10%;
+    /* 총비용 열 넓이 */
+}
+
+.data-table th:nth-child(6),
+/* 원가 */
+.data-table td:nth-child(6) {
+    width: 10%;
+    /* 원가 열 넓이 */
+}
+
+/* 나머지 열은 기본 너비 */
+.data-table th:nth-child(n+7),
+/* 마진, 제로ROAS */
+.data-table td:nth-child(n+7) {
+    width: auto;
+    /* 기본 너비 */
+}
 
 /* 날짜 컨트롤 컨테이너 */
 .date-controls {
