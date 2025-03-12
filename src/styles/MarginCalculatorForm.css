@@ -60,7 +60,7 @@
 }
 
 .action-buttons {
-    margin-top: 20px;
+    margin-top: 20px 10px;
     display: flex;
     justify-content: flex-end;
     gap: 10px;
@@ -204,12 +204,6 @@
         /* 패딩 조정 */
     }
 
-    .action-buttons {
-        flex-direction: column;
-        /* 버튼을 세로로 배치 */
-        align-items: flex-start;
-        /* 왼쪽 정렬 */
-    }
 
     .calculate,
     .add-button,

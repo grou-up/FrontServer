@@ -148,12 +148,3 @@
   color: #4c547b;
   /* 연한 회색 텍스트 색상 */
 }
-
-@media (max-width: 768px) {
-  .sidebar-footer {
-    height: 100px;
-    /* 높이 축소 */
-    margin-bottom: 40px;
-    /* 여백 축소 */
-  }
-}
