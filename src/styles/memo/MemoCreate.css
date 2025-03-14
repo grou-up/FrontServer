@@ -25,7 +25,7 @@
     /* 글씨 색상 */
 }
 
-.add-button {
+.memo-add-button {
     background-color: #5157AB;
     /* 버튼 배경색 */
     color: white;
@@ -42,7 +42,7 @@
     /* 글씨 크기 */
 }
 
-.add-button:hover {
+.memo-add-button:hover {
     background-color: #807aee;
     /* 호버 시 색상 변경 */
 }
