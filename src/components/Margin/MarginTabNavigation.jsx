@@ -8,7 +8,7 @@ import "react-datepicker/dist/react-datepicker.css";
 
 const MarginTabNavigation = () => {
     const [activeComponent, setActiveComponent] = useState("MarginCalculatorForm");
-    const [campaign, setCampaign] = useState([]);
+    const [campaigns, setCampaigns] = useState([]); // 캠페인 상태 초기화
     const [startDate, setStartDate] = useState(new Date()); // 초기 시작일
     const [endDate, setEndDate] = useState(new Date()); // 초기 끝일
     const [monthYear, setMonthYear] = useState(new Date()); // 월 선택 상태 추가
@@ -25,7 +25,7 @@ const MarginTabNavigation = () => {
         const fetchCampaigns = async () => {
             try {
                 const response = await getMyCampaigns();
-                setCampaign(response.data || []);
+                setCampaigns(response.data || []); // 캠페인 데이터를 상태에 저장
             } catch (error) {
                 console.error("캠페인 데이터를 가져오는 중 오류 발생:", error);
             }
@@ -72,6 +72,11 @@ const MarginTabNavigation = () => {
         }
     };
 
+    // 캠페인 순서 업데이트 핸들러
+    const handleCampaignOrderChange = (newCampaigns) => {
+        setCampaigns(newCampaigns);
+    };
+
     return (
         <div className="main-content">
             <div className="min-h-screen bg-gray-100">
@@ -114,11 +119,14 @@ const MarginTabNavigation = () => {
                         </div>
                         <div className="mt-8">
                             {activeComponent === "MarginCalculatorForm" && (
-                                <MarginCalculatorForm campaigns={campaign} />
+                                <MarginCalculatorForm
+                                    campaigns={campaigns}
+                                    onCampaignOrderChange={handleCampaignOrderChange} // 캠페인 순서 변경 핸들러 전달
+                                />
                             )}
                             {activeComponent === "MarginCalculatorResult" && (
                                 <MarginCalculatorResult
-                                    campaigns={campaign}
+                                    campaigns={campaigns}
                                     startDate={startDate.toISOString().split("T")[0]} // 시작일
                                     endDate={endDate.toISOString().split("T")[0]} // 끝일
                                     isActive={activeComponent === "MarginCalculatorResult"} // 활성화 여부 전달
