@@ -60,7 +60,7 @@
 }
 
 .action-buttons {
-    margin-top: 20px 10px;
+    margin-top: 20px;
     display: flex;
     justify-content: flex-end;
     gap: 10px;
@@ -77,9 +77,14 @@
     font-size: 15px;
     font-weight: bold;
     transition: background-color 0.3s, transform 0.2s;
+    white-space: nowrap;
+    /* 줄 바꿈 방지 */
+    width: auto;
+    /* 너비를 자동으로 조정 */
 }
 
-.calculate {
+.calculate,
+.marginupdate-calculate {
     background-color: #efcb35;
 }
 
@@ -88,7 +93,8 @@
 }
 
 
-.save {
+.save,
+.marginupdate-save {
     background-color: #28a575;
 }
 
