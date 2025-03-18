@@ -84,7 +84,6 @@ const Sidebar = () => {
     const fetchCampaigns = async () => {
       try {
         const response = await getMyCampaigns();// 캠페인 데이터 가져오기
-        console.log(response);
         setCampaigns(response.data || []); // response.data가 캠페인 리스트라고 가정
       } catch (error) {
         console.error('Error fetching campaigns:', error);

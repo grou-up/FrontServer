@@ -24,6 +24,7 @@ const SalesReport = () => {
             try {
                 const response = await getMargin({ date: date.toISOString().split("T")[0] });
                 setData(response.data || []);
+
             } catch (error) {
                 console.error("Error fetching data:", error);
             }
@@ -61,41 +62,47 @@ const SalesReport = () => {
                 />
             </div>
             {/* 매출 테이블 */}
-            <table className="sales-table">
-                <thead>
-                    <tr>
-                        <th onClick={() => changeSort("campaignName")}>
-                            캠페인 이름 {sortConfig?.key === "campaignName" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                        </th>
-                        <th onClick={() => changeSort("yesterdaySales")}>
-                            어제 매출 {sortConfig?.key === "yesterdaySales" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                        </th>
-                        <th onClick={() => changeSort("todaySales")}>
-                            오늘 매출 {sortConfig?.key === "todaySales" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                        </th>
-                        <th onClick={() => changeSort("differentSales")}>
-                            매출 차이 {sortConfig?.key === "differentSales" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {paginatedData.map((item, index) => (
-                        <tr key={index}>
-                            <td>{item.campaignName}</td>
-                            <td>{formatNumber(item.yesterdaySales)}</td>
-                            <td>{formatNumber(item.todaySales)}</td>
-                            <td className={getSalesDifferenceClass(item.differentSales)}>
-                                {formatNumber(item.differentSales)}
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </table>
-            <Pagination
-                currentPage={page}
-                totalPages={totalPages}
-                onPageChange={changePage}
-            />
+            {data.length === 0 ? ( // 데이터가 없을 때 메시지 표시
+                <div className="empty-message">광고 보고서를 넣어주세요</div>
+            ) : (
+                <>
+                    <table className="sales-table">
+                        <thead>
+                            <tr>
+                                <th onClick={() => changeSort("campaignName")}>
+                                    캠페인 이름 {sortConfig?.key === "campaignName" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                                </th>
+                                <th onClick={() => changeSort("yesterdaySales")}>
+                                    어제 매출 {sortConfig?.key === "yesterdaySales" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                                </th>
+                                <th onClick={() => changeSort("todaySales")}>
+                                    오늘 매출 {sortConfig?.key === "todaySales" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                                </th>
+                                <th onClick={() => changeSort("differentSales")}>
+                                    매출 차이 {sortConfig?.key === "differentSales" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {paginatedData.map((item, index) => (
+                                <tr key={index}>
+                                    <td>{item.campaignName}</td>
+                                    <td>{formatNumber(item.yesterdaySales)}</td>
+                                    <td>{formatNumber(item.todaySales)}</td>
+                                    <td className={getSalesDifferenceClass(item.differentSales)}>
+                                        {formatNumber(item.differentSales)}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <Pagination
+                        currentPage={page}
+                        totalPages={totalPages}
+                        onPageChange={changePage}
+                    />
+                </>
+            )}
         </div>
     );
 };

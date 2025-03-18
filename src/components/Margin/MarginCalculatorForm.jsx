@@ -1,10 +1,11 @@
 import React, { useState } from "react";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import OptionsTable from "./MarginCalulatorComponets/OptionsTable";
 import { getExecutionAboutCampaign, deleteExecutionAboutCampaign } from "../../services/marginforcampaign";
 import ActionButtons from "./MarginCalulatorComponets/ActionButtons";
 import "../../styles/MarginCalculatorForm.css";
 
-const MarginCalculatorForm = ({ campaigns }) => {
+const MarginCalculatorForm = ({ campaigns, onCampaignOrderChange }) => {
     const [expandedCampaignId, setExpandedCampaignId] = useState(null); // 확장된 캠페인 ID
     const [calculatedOptions, setCalculatedOptions] = useState([]); // 옵션 데이터
     const [selectedOptions, setSelectedOptions] = useState([]); // 선택된 옵션 상태
@@ -32,7 +33,6 @@ const MarginCalculatorForm = ({ campaigns }) => {
                 mfcReturnPrice: option.mfcReturnPrice || 0,
                 mfcPerPiece: option.mfcPerPiece || 0,
                 mfcZeroRoas: option.mfcZeroRoas || 0,
-                // 다른 속성도 필요에 따라 초기화
             }));
             setCalculatedOptions(optionsWithDefaults);
         } catch (error) {
@@ -91,7 +91,6 @@ const MarginCalculatorForm = ({ campaigns }) => {
 
             const option = updatedOptions[index];
 
-            // 필요한 값이 존재하는지 확인
             if (option && option.mfcSalePrice && option.mfcTotalPrice && option.mfcCostPrice) {
                 const margin = Math.round(option.mfcSalePrice - (1.1 * option.mfcTotalPrice) - option.mfcCostPrice) || 0;
                 const zeroROAS = margin !== 0 ? ((option.mfcSalePrice / margin) * 1.1 * 100).toFixed(2) : "0.00";
@@ -113,7 +112,6 @@ const MarginCalculatorForm = ({ campaigns }) => {
         const optionToDelete = calculatedOptions[indexToDelete];
         const id = optionToDelete.id; // 삭제할 ID (옵션 객체에 ID가 있다고 가정)
 
-        // 삭제 확인
         const confirmDelete = window.confirm("삭제하시겠습니까?");
         if (!confirmDelete) {
             return; // 사용자가 "아니오"를 선택하면 함수를 종료
@@ -132,60 +130,87 @@ const MarginCalculatorForm = ({ campaigns }) => {
             if (id) {
                 await deleteExecutionAboutCampaign({ id }); // ID가 있을 때만 API 호출
             } else {
-                // ID가 없으면 바로 로컬 상태에서 삭제
                 console.log("삭제 실패");
             }
         } catch (error) {
             alert("삭제 실패"); // API 호출 실패 시 사용자에게 알림
-            // 실패했을 경우에도 로컬 상태에서 삭제된 상태를 유지하기 위해 추가 처리 없음
         }
     };
 
+    // 드래그 앤 드롭 핸들러
+    const handleOnDragEnd = (result) => {
+        if (!result.destination) return; // 드롭 위치가 없을 경우
+
+        const items = Array.from(campaigns);
+        const [reorderedItem] = items.splice(result.source.index, 1); // 원래 위치에서 아이템 제거
+        items.splice(result.destination.index, 0, reorderedItem); // 새 위치에 아이템 추가
+
+        // 캠페인 순서 업데이트
+        onCampaignOrderChange(items); // 상위 컴포넌트에 변경된 캠페인 목록 전달
+    };
+
     return (
-        <div className="campaign-list">
-            {campaigns.map((campaign) => (
-                <div
-                    key={campaign.campaignId}
-                    className={`campaign-card ${expandedCampaignId === campaign.campaignId ? "expanded" : ""}`}
-                >
+        <DragDropContext onDragEnd={handleOnDragEnd}>
+            <Droppable droppableId="campaigns">
+                {(provided) => (
                     <div
-                        className="campaign-header"
-                        onClick={() => toggleExpandCampaign(campaign.campaignId)}
+                        className="campaign-list"
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
                     >
-                        <h3>{campaign.title}</h3>
-                        <button
-                            className="add-button"
-                            onClick={(e) => {
-                                e.stopPropagation();
-                                addEmptyRow(campaign.campaignId);
-                            }}
-                        >
-                            마진입력
-                        </button>
+                        {campaigns.map((campaign, index) => (
+                            <Draggable key={campaign.campaignId} draggableId={String(campaign.campaignId)} index={index}>
+                                {(provided) => (
+                                    <div
+                                        ref={provided.innerRef}
+                                        {...provided.draggableProps}
+                                        {...provided.dragHandleProps}
+                                        className={`campaign-card ${expandedCampaignId === campaign.campaignId ? "expanded" : ""}`}
+                                    >
+                                        <div
+                                            className="campaign-header"
+                                            onClick={() => toggleExpandCampaign(campaign.campaignId)}
+                                        >
+                                            <h3>{campaign.title}</h3>
+                                            <button
+                                                className="add-button"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    addEmptyRow(campaign.campaignId);
+                                                }}
+                                            >
+                                                마진입력
+                                            </button>
+                                        </div>
+                                        {expandedCampaignId === campaign.campaignId && (
+                                            <div className="campaign-details">
+                                                <OptionsTable
+                                                    options={calculatedOptions}
+                                                    handleInputChange={handleInputChange}
+                                                    handleCheckboxChange={handleCheckboxChange}
+                                                    selectedOptions={selectedOptions}
+                                                    handleDeleteOption={handleDeleteOption}
+                                                    handleSelectAll={handleSelectAll}
+                                                    allSelected={allSelected}
+                                                />
+                                                <ActionButtons
+                                                    selectedOptions={selectedOptions}
+                                                    options={calculatedOptions}
+                                                    campaignId={campaign.campaignId}
+                                                    handleCalculate={handleCalculate}
+                                                    handleDeleteOption={handleDeleteOption}
+                                                />
+                                            </div>
+                                        )}
+                                    </div>
+                                )}
+                            </Draggable>
+                        ))}
+                        {provided.placeholder}
                     </div>
-                    {expandedCampaignId === campaign.campaignId && (
-                        <div className="campaign-details">
-                            <OptionsTable
-                                options={calculatedOptions}
-                                handleInputChange={handleInputChange}
-                                handleCheckboxChange={handleCheckboxChange}
-                                selectedOptions={selectedOptions}
-                                handleDeleteOption={handleDeleteOption} // 삭제 핸들러 전달
-                                handleSelectAll={handleSelectAll} // 전체 선택 핸들러 전달
-                                allSelected={allSelected} // 전체 선택 상태 전달
-                            />
-                            <ActionButtons
-                                selectedOptions={selectedOptions}
-                                options={calculatedOptions}
-                                campaignId={campaign.campaignId}
-                                handleCalculate={handleCalculate} // 계산하기 핸들러 전달
-                                handleDeleteOption={handleDeleteOption} // 삭제 핸들러 전달
-                            />
-                        </div>
-                    )}
-                </div>
-            ))}
-        </div>
+                )}
+            </Droppable>
+        </DragDropContext>
     );
 };
 
