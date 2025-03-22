@@ -55,7 +55,7 @@
 /* 첫 번째 열 색칠 */
 .campaign-data-table td:first-child,
 .campaign-data-table th:first-child {
-    background-color: #cbf012;
+    background-color: #d6dbf2;
     /* 원하는 색상 */
 }
 
@@ -65,7 +65,7 @@
     /* 고정 설정 */
     left: 0;
     /* 왼쪽에 고정 */
-    background-color: #cbf012;
+    background-color: #d6dbf2;
     /* 고정된 열 배경색 */
     z-index: 2;
     /* 다른 요소 위에 표시되도록 설정 */
@@ -78,7 +78,7 @@
 .total-column {
     right: 0;
     /* 오른쪽 고정 */
-    background-color: #cbf012;
+    background-color: #d6dbf2;
     /* 배경색 설정 (옵션) */
 }
 
@@ -88,7 +88,7 @@
     /* 음수일 때 빨간색 */
     font-weight: bold;
     /* 글씨 두껍게 */
-    font-size: 1.2em;
+    font-size: 1em;
     /* 글씨 크기 증가 */
 }
 
@@ -98,7 +98,7 @@
     /* 양수일 때 파란색 */
     font-weight: bold;
     /* 글씨 두껍게 */
-    font-size: 1.2em;
+    font-size: 1em;
     /* 글씨 크기 증가 */
 }
 

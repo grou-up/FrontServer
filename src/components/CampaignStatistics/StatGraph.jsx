@@ -5,6 +5,30 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 // Chart.js 등록
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, LineElement);
 
+// 이모티콘 플러그인 정의
+const emojiPlugin = {
+    id: 'emojiPlugin',
+    afterDatasetsDraw: (chart) => {
+        const { ctx, data, scales } = chart;
+
+        // searchData는 첫 번째 데이터셋
+        const searchData = data.datasets[0].data;
+
+        searchData.forEach((value, index) => {
+            const x = scales.x.getPixelForValue(index);
+            const y = scales.y.getPixelForValue(value);
+
+            ctx.save();
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.font = '20px Arial';
+            ctx.fillText('⭐', x, y - 10);
+            ctx.restore();
+        });
+    }
+};
+
+
 const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
     // 날짜를 배열로 생성
     const dateLabels = [];
@@ -23,15 +47,13 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
     // 광고비 데이터 생성
     const searchAdCostData = dateLabels.map(date => (search[date] ? search[date].keyAdcost : 0));
     const nonSearchAdCostData = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].keyAdcost : 0));
-
-    // adCostData 생성: searchAdCostData와 nonSearchAdCostData의 합
     const adCostData = dateLabels.map((date, index) => searchAdCostData[index] + nonSearchAdCostData[index]);
 
     // ROAS 데이터 생성
     const roasData = dateLabels.map((date, index) => {
-        const totalRevenue = searchData[index] + nonSearchData[index]; // 총 광고 수익
-        const totalCost = searchAdCostData[index] + nonSearchAdCostData[index]; // 총 광고 비용
-        return totalCost > 0 ? (totalRevenue / totalCost) * 100 : 0; // 비용이 0일 경우 0을 반환
+        const totalRevenue = searchData[index] + nonSearchData[index];
+        const totalCost = searchAdCostData[index] + nonSearchAdCostData[index];
+        return totalCost > 0 ? (totalRevenue / totalCost) * 100 : 0;
     });
 
     const data = {
@@ -40,52 +62,47 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
             {
                 label: '검색',
                 data: searchData,
-                backgroundColor: 'rgba(54, 162, 235, 0.6)', // Search 색상 (파랑)
-                stack: 'Stack 0', // 스택 설정
-                order: 3, // 막대 그래프 우선
+                backgroundColor: 'rgba(54, 162, 235, 0.6)',
+                stack: 'Stack 0',
+                order: 3,
             },
             {
                 label: '비검색',
                 data: nonSearchData,
-                backgroundColor: 'rgba(255, 159, 64, 0.6)', // Non-Search 색상 (주황)
-                stack: 'Stack 0', // 스택 설정
-                order: 3, // 막대 그래프 우선
+                backgroundColor: 'rgba(255, 159, 64, 0.6)',
+                stack: 'Stack 0',
+                order: 3,
             },
             {
                 label: '광고비',
                 data: adCostData,
-                borderColor: 'rgb(0, 123, 255)', // Ad Cost 선 색상 (짙은 파랑)
-                backgroundColor: 'rgba(0, 123, 255, 0.3)', // Ad Cost 색상 (옅은 파랑)
-                type: 'line', // 선 그래프로 표시
-                fill: false, // 선 그래프 안 채우기
-                order: 1, // 선 그래프를 막대 위에 표시
+                borderColor: 'rgb(0, 123, 255)',
+                backgroundColor: 'rgba(0, 123, 255, 0.3)',
+                type: 'line',
+                fill: false,
+                order: 1,
             },
             {
                 label: 'ROAS',
                 data: roasData,
-                borderColor: 'rgb(255, 99, 132)', // ROAS 선 색상 (빨강)
-                backgroundColor: 'rgba(255, 99, 132, 0.3)', // ROAS 색상 (옅은 빨강)
-                type: 'line', // 선 그래프로 표시
-                fill: false, // 선 그래프 안 채우기
-                yAxisID: 'y-roas', // ROAS 데이터의 y축 ID
-                order: 1, // ROAS 선 그래프를 가장 위에 표시
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.3)',
+                type: 'line',
+                fill: false,
+                yAxisID: 'y-roas',
+                order: 1,
             },
         ],
     };
 
-
-    // 옵션 설정
     const options = {
         responsive: true,
-        maintainAspectRatio: false, // 비율 유지하지 않음
+        maintainAspectRatio: false,
         plugins: {
             legend: {
                 position: 'top',
             },
-            // title: {
-            //     display: true,
-            //     text: '아래 칸을 클릭하세요',
-            // },
+            emojiPlugin: {}, // 플러그인 활성화
         },
         scales: {
             x: {
@@ -99,31 +116,35 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
                     display: true,
                     text: 'Ad Sales',
                 },
-                stacked: true, // y 축 스택 설정
-                min: 0, // 최소값 설정
-                max: Math.max(...adCostData, ...searchData, ...nonSearchData) * 1.5, // 최대값 설정 (최대 데이터의 1.5배)
+                stacked: true,
+                min: 0,
+                max: Math.max(...adCostData, ...searchData, ...nonSearchData) * 1.5,
             },
             'y-roas': {
                 title: {
                     display: true,
                     text: 'ROAS (%)',
                 },
-                position: 'right', // y축 위치 설정
+                position: 'right',
                 ticks: {
                     beginAtZero: true,
                 },
                 grid: {
-                    display: false, // Y축의 그리드 선을 보이지 않게 설정
+                    display: false,
                 },
             },
         },
     };
 
     return (
-        <div style={{ height: '100%' }}> {/* 부모의 높이에 맞추기 위해 100% 설정 */}
-            <Bar data={data} options={{ ...options, maintainAspectRatio: false }} /> {/* 비율 유지하지 않음 */}
+        <div style={{ height: '100%' }}>
+            <Bar
+                data={data}
+                options={{ ...options, maintainAspectRatio: false }}
+                plugins={[emojiPlugin]} // 플러그인 등록
+            />
         </div>
     );
 };
 
-export default StatGraph;
+export default StatGraph; 

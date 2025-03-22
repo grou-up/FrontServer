@@ -170,11 +170,11 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
                             className="date-picker"
                         />
                     </div>
-                    <div className="action-buttons">
-                        <button className="calculate" onClick={handleCalculate}>
+                    <div className="marginupdate-action-buttons">
+                        <button className="marginupdate-calculate" onClick={handleCalculate}>
                             계산하기
                         </button>
-                        <button className="save" onClick={handleSave}>
+                        <button className="marginupdate-save" onClick={handleSave}>
                             수정하기
                         </button>
                     </div>
