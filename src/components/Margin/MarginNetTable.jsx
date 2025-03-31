@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from "react";
-import { getNetProfit } from "../../services/margin"; // API 요청 함수 가져오기
+import { getNetProfitAndReturnCost } from "../../services/margin"; // API 요청 함수 가져오기
 import "../../styles/margin/MarginNetTable.css";
 import { formatNumber } from "../../utils/formatUtils";
 import "../../styles/numberColor.css";
@@ -26,10 +26,9 @@ const MarginNetTable = ({ startDate, endDate }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await getNetProfit({ startDate, endDate }); // getNetProfit 호출
+                const response = await getNetProfitAndReturnCost({ startDate, endDate }); // getNetProfit 호출
                 const data = response.data; // 'data' 배열을 가져옴
-                console.log("API 응답 데이터:", data); // 데이터를 콘솔에 출력
-
+                console.log(data)
                 // 데이터가 배열인지 확인
                 if (Array.isArray(data)) {
                     setDailyNetProfitData(data); // 데이터 설정
@@ -52,9 +51,18 @@ const MarginNetTable = ({ startDate, endDate }) => {
         return found ? Math.floor(found.margin) : 0; // 데이터가 없으면 0 반환, 소수점 아래를 버림
     };
 
+    const getReturnCostDataForDate = (date) => {
+        const originalDate = `${new Date(startDate).getFullYear()}-${date.replace('-', '-')}`;
+        const found = dailyNetProfitData.find(item => item.marDate === originalDate);
+        return found ? Math.floor(found.marReturnCost) : 0; // 반품비 데이터 반환
+    };
+
     // 총 합계 계산
     const getTotalMargin = () => {
         return fullDateRange.reduce((total, date) => total + getMarginDataForDate(date), 0);
+    };
+    const getTotalReturn = () => {
+        return fullDateRange.reduce((total, date) => total + getReturnCostDataForDate(date), 0);
     };
 
     const getSalesDifferenceClass = (difference) => {
@@ -64,6 +72,7 @@ const MarginNetTable = ({ startDate, endDate }) => {
     };
 
     const totalMargin = getTotalMargin(); // 총 합계 계산
+    const totalReturn = getTotalReturn(); // 총 반품 계산
 
     return (
         <div>
@@ -83,13 +92,27 @@ const MarginNetTable = ({ startDate, endDate }) => {
                         <tr>
                             <td>마진</td>
                             <td className={getSalesDifferenceClass(totalMargin)}>
-                                {formatNumber(totalMargin)} {/* 첫 번째 열에 총 마진 합계 표시 */}
+                                {formatNumber(totalMargin)}
                             </td>
                             {fullDateRange.map((date) => {
                                 const margin = getMarginDataForDate(date);
                                 return (
                                     <td key={date} className={getSalesDifferenceClass(margin)}>
                                         {formatNumber(margin)} {/* 날짜에 따른 마진 값 표시 */}
+                                    </td>
+                                );
+                            })}
+                        </tr>
+                        <tr>
+                            <td>반품비</td>
+                            <td className={getSalesDifferenceClass(totalReturn)}>
+                                {formatNumber(totalReturn)}
+                            </td>
+                            {fullDateRange.map((date) => {
+                                const marReturnCost = getReturnCostDataForDate(date);
+                                return (
+                                    <td key={date} className={getSalesDifferenceClass(marReturnCost)}>
+                                        {formatNumber(marReturnCost)} {/* 날짜에 따른 마진 값 표시 */}
                                     </td>
                                 );
                             })}
