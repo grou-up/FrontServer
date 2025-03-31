@@ -61,7 +61,6 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
                 return
             }
             const response = await updateEfficiencyAndAdBudget(data);
-            console.log(response)
             alert("저장되었습니다.");
         } catch (error) {
             console.error("저장 중 오류 발생:", error);

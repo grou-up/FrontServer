@@ -83,10 +83,12 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                 [fullDate]: updatedData // 전체 업데이트된 데이터 반환
             };
         });
-
-        // 부모 컴포넌트에 변경된 데이터 전달
-        onDataChange(modifiedData);
     };
+
+    useEffect(() => {
+        onDataChange(modifiedData);
+    }, [modifiedData]);
+
 
 
     return (
