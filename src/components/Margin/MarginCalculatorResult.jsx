@@ -47,7 +47,6 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
             if (typeof changedData !== 'object' || Array.isArray(changedData)) {
                 throw new Error("변경된 데이터의 형식이 올바르지 않습니다.");
             }
-
             const data = {
                 campaignId: selectedCampaign.campaignId,
                 data: Object.values(changedData).map(item => ({
@@ -57,9 +56,12 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
                     marAdBudget: item.marAdBudget // 광고예산
                 })),
             };
-            console.log(data)
+            if (data.data.length == 0) {
+                alert("바뀐 데이터가 없습니다.")
+                return
+            }
             const response = await updateEfficiencyAndAdBudget(data);
-
+            console.log(response)
             alert("저장되었습니다.");
         } catch (error) {
             console.error("저장 중 오류 발생:", error);
@@ -89,19 +91,26 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
                             onClick={() => toggleExpandCampaign(campaign.campaignId)}
                         >
                             <h3>{campaign.title}</h3>
-                            <div className="button-container"> {/* 버튼을 감싸는 컨테이너 추가 */}
+                            <div className="button-container">
                                 <button
                                     className="add-button"
-                                    onClick={() => handleSave(campaign)}>
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // 이벤트 버블링 막기
+                                        handleSave(campaign);
+                                    }}>
                                     목표효율/예산 저장
                                 </button>
                                 <button
                                     className="add-button"
-                                    onClick={() => handleOptionMarginClick(campaign)}>
+                                    onClick={(e) => {
+                                        e.stopPropagation(); // 이벤트 버블링 막기
+                                        handleOptionMarginClick(campaign);
+                                    }}>
                                     기간별 원가 수정
                                 </button>
                             </div>
                         </div>
+
                         {expandedCampaignId.has(campaign.campaignId) && (
                             <CampaignDataTable
                                 data={tableData.find(item => item.campaignId === campaign.campaignId)?.data || []}
