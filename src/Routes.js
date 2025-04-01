@@ -11,6 +11,7 @@ import CampaignDetail from "./components/CampaignDetail";
 import MarginTabNavigation from "./components/Margin/MarginTabNavigation";
 import OtherComponent from "./components/memo/MemoComponent";
 import MemoButton from "./components/memo/MemoButton";
+import PaymentsComponets from "./components/Payments/PaymentsComponent";
 
 class AppRoutes extends React.Component {
     constructor(props) {
@@ -36,6 +37,15 @@ class AppRoutes extends React.Component {
                     <Route path="/oauth/kakao/callback" element={<LoginCallback />} />
                     <Route path="/oauth/google/callback" element={<LoginCallback />} />
                     {/* 보호된 경로 */}
+                    <Route
+                        path="/payments"
+                        element={
+                            <PrivateRoute>
+                                <Sidebar></Sidebar>
+                                <PaymentsComponets></PaymentsComponets>
+                            </PrivateRoute>
+                        }
+                    />
                     <Route
                         path="/main"
                         element={

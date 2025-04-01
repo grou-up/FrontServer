@@ -1,0 +1,95 @@
+/* Rectangle 109 */
+.banner1 {
+    /* Rectangle 109 */
+    position: absolute;
+    width: 100%;
+    height: 40%;
+    left: 230px;
+    top: 0px;
+
+    background: radial-gradient(85.96% 67.95% at 14.04% 41.87%, #FAE58A 30.32%, #F6F4E9 100%)
+        /* warning: gradient uses a rotation that is not supported by CSS and may not behave as expected */
+    ;
+    border-radius: 3px;
+}
+
+.banner_title {
+    /* 햇빛이란? */
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 60px;
+    line-height: 116px;
+    text-align: center;
+    white-space: nowrap;
+    color: #000000;
+
+}
+
+.banner_font {
+    position: absolute;
+    width: 35%;
+    height: 40%;
+    left: 10%;
+    top: 16%;
+}
+
+.banner_contents1 {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 36px;
+    text-align: center;
+    white-space: nowrap;
+    color: #000000;
+}
+
+.banner_contents2 {
+    /* 캠패인을 조회하기 위한 단위 입니다 . x 햇살을 통해 하나의 캠패인에 y 일 동안 조회 가능합니다 */
+    /* position: absolute;
+    width: 909px;
+    height: 72px;
+    left: 5%;
+    top: 312px; */
+
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 36px;
+    text-align: center;
+    white-space: nowrap;
+    color: #000000;
+}
+
+.banner_button {
+    /* Rectangle 143 */
+    position: absolute;
+    width: 300px;
+    height: 50px;
+    left: 55%;
+    top: 35%;
+
+    background: #FFD787;
+    border: 1px solid #FFD787;
+    border-radius: 140px;
+}
+
+.banner_button:hover {
+    /* Rectangle 143 */
+    background: #f0aa1c;
+    border: 1px solid #FFD787;
+    border-radius: 140px;
+}
+
+.banner_button_font {
+    /* 자세히 알아보러가기 */
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 36px;
+    text-align: center;
+    color: #000000;
+}

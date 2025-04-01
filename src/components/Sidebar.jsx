@@ -28,8 +28,8 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [] }) => {
         navigate(`/campaigns/${item.campaignId}?title=${encodeURIComponent(item.title)}`);
       } else if (item.title === "마진 계산기") {
         navigate("/margin-calculator");
-      } else if (item.title === "설정") {
-        navigate("/settings");
+      } else if (item.title === "결제") {
+        navigate("/payments");
       } else if (item.title === "로그아웃") {
         removeToken(); // 토큰 삭제
         navigate('/'); // 로그인 페이지로 리다이렉트
@@ -149,7 +149,7 @@ const Sidebar = () => {
       showDivider: true,
     },
     {
-      title: "설정",
+      title: "결제",
       icon: <Settings size={16} />,
       showDivider: true,
     },
