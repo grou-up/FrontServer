@@ -23,7 +23,8 @@ jobs:
         run: npm install -g vercel
 
       - name: Pull Vercel Environment Variables
-        run: vercel env pull .env.production
+        run: |
+          vercel env pull .env.production --token=${{ secrets.VERCEL_TOKEN }}
 
       - name: Build and Deploy to Vercel
         run: |
