@@ -49,7 +49,6 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
         setLoading(true);
         try {
             const response = await getBidKeywords({ start: startDate, end: endDate, campaignId }); // 입찰 키워드 API 호출
-            // console.log(response.data);
             setBidKeywords(response.data || []); // API 응답에서 입찰 키워드 데이터 설정
             setError(null);
         } catch (error) {
