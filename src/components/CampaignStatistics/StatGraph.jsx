@@ -1,35 +1,92 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, LineElement } from 'chart.js';
 
-// Chart.js 등록
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, LineElement);
 
-// 이모티콘 플러그인 정의
-const emojiPlugin = {
-    id: 'emojiPlugin',
-    afterDatasetsDraw: (chart) => {
-        const { ctx, data, scales } = chart;
+const StatGraph = ({ search, nonSearch, memoData, startDate, endDate }) => {
+    const chartRef = useRef(null);
 
-        // searchData는 첫 번째 데이터셋
-        const searchData = data.datasets[0].data;
+    useEffect(() => {
+        if (!chartRef.current) return;
 
-        searchData.forEach((value, index) => {
-            const x = scales.x.getPixelForValue(index);
-            const y = scales.y.getPixelForValue(value);
+        const chart = chartRef.current;
+        const canvas = chart.canvas;
 
-            ctx.save();
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'bottom';
-            ctx.font = '20px Arial';
-            ctx.fillText('⭐', x, y - 10);
-            ctx.restore();
-        });
-    }
-};
+        const handleMouseMove = (event) => {
+            const xAxis = chart.scales.x; // x축 스케일 가져오기
+            const xAxisArea = {
+                top: chart.chartArea.bottom + 5, // x축 레이블 영역 시작 (임의 값 조정)
+                left: chart.chartArea.left,
+                right: chart.chartArea.right,
+                bottom: chart.height
+            };
 
+            // 마우스 좌표가 x축 레이블 영역 안에 있는지 확인
+            if (event.y >= xAxisArea.top && event.y <= xAxisArea.bottom && event.x >= xAxisArea.left && event.x <= xAxisArea.right) {
+                // 가장 가까운 x축 레이블 찾기
+                let minDist = Infinity;
+                let closestLabel = null;
 
-const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
+                for (let i = 0; i < chart.data.labels.length; i++) {
+                    const labelX = xAxis.getPixelForValue(i); // 각 레이블의 x좌표
+                    const dist = Math.abs(event.x - labelX);
+
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closestLabel = chart.data.labels[i];
+                    }
+                }
+
+                // 툴팁 표시
+                if (closestLabel && memoData && memoData[closestLabel]) {
+                    // 툴팁 엘리먼트 생성 또는 업데이트
+                    let tooltipEl = document.getElementById('chartjs-x-axis-tooltip');
+
+                    if (!tooltipEl) {
+                        tooltipEl = document.createElement('div');
+                        tooltipEl.id = 'chartjs-x-axis-tooltip';
+                        tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
+                        tooltipEl.style.color = 'white';
+                        tooltipEl.style.borderRadius = '3px';
+                        tooltipEl.style.padding = '5px';
+                        tooltipEl.style.position = 'absolute';
+                        tooltipEl.style.zIndex = 10;
+                        canvas.parentNode.appendChild(tooltipEl);
+                    }
+
+                    // 툴팁 위치 설정
+                    tooltipEl.innerHTML = memoData[closestLabel];
+                    tooltipEl.style.top = (event.clientY - 50) + 'px'; // 마우스 위치 기준으로 툴팁 위치 조정
+                    tooltipEl.style.left = (event.clientX + 10) + 'px';
+                    tooltipEl.style.display = 'block';
+                } else {
+                    // 툴팁 숨김
+                    const tooltipEl = document.getElementById('chartjs-x-axis-tooltip');
+                    if (tooltipEl) {
+                        tooltipEl.style.display = 'none';
+                    }
+                }
+            } else {
+                // 마우스가 x축 레이블 영역 밖에 있으면 툴팁 숨김
+                const tooltipEl = document.getElementById('chartjs-x-axis-tooltip');
+                if (tooltipEl) {
+                    tooltipEl.style.display = 'none';
+                }
+            }
+        };
+
+        canvas.addEventListener('mousemove', handleMouseMove);
+
+        return () => {
+            canvas.removeEventListener('mousemove', handleMouseMove);
+            const tooltipEl = document.getElementById('chartjs-x-axis-tooltip');
+            if (tooltipEl && canvas.parentNode) {
+                canvas.parentNode.removeChild(tooltipEl);
+            }
+        };
+    }, [memoData]);
+
     // 날짜를 배열로 생성
     const dateLabels = [];
     const start = new Date(startDate);
@@ -102,7 +159,6 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
             legend: {
                 position: 'top',
             },
-            emojiPlugin: {}, // 플러그인 활성화
         },
         scales: {
             x: {
@@ -110,6 +166,12 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
                     display: false,
                     text: 'Date',
                 },
+                ticks: {
+                    color: (context) => {
+                        const label = context.tick.label;
+                        return memoData && memoData[label] ? 'red' : 'black'; // memoData에 해당 날짜가 있으면 빨간색, 없으면 검은색
+                    }
+                }
             },
             y: {
                 title: {
@@ -141,10 +203,9 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
             <Bar
                 data={data}
                 options={{ ...options, maintainAspectRatio: false }}
-                plugins={[emojiPlugin]} // 플러그인 등록
             />
         </div>
     );
 };
 
-export default StatGraph; 
+export default StatGraph;

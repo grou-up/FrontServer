@@ -1,1 +1,1 @@
-export const API_URL = process.env.REACT_APP_API_URL || 'https://server.grouup.co.kr/api';
+export const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/api';
