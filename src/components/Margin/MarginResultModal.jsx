@@ -106,6 +106,7 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
                 mfcCostPrice: updatedOptions[index].mfcCostPrice,
                 mfcPerPiece: updatedOptions[index].mfcPerPiece,
                 mfcZeroRoas: updatedOptions[index].mfcZeroRoas,
+                mfcType: updatedOptions[index].mfcType
             })),
         };
 

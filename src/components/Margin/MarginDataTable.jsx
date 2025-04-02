@@ -47,6 +47,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
         { optionName: "광고 전환 판매 수", key: "marAdConversionSales" },
         { optionName: "실제 판매 수", key: "marActualSales" },
         { optionName: "반품 개수", key: "marReturnCount" },
+        { optionName: "반품 비용", key: "marReturnCost" },
         { optionName: "광고 마진", key: "marAdMargin" },
         { optionName: "순이익", key: "marNetProfit" },
     ];
@@ -82,10 +83,12 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                 [fullDate]: updatedData // 전체 업데이트된 데이터 반환
             };
         });
-
-        // 부모 컴포넌트에 변경된 데이터 전달
-        onDataChange(modifiedData);
     };
+
+    useEffect(() => {
+        onDataChange(modifiedData);
+    }, [modifiedData]);
+
 
 
     return (
@@ -110,7 +113,6 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
 
                                 if (itemForDate) {
                                     if (option.key === "marAdRevenue") {
-                                        console.log("수웅", itemForDate.marAdMargin, itemForDate.marAdCost)
                                         value = itemForDate.marAdCost > 0
                                             ? ((itemForDate.marAdMargin / itemForDate.marAdCost) * 100).toFixed(2) + '%'
                                             : '0.00%';
@@ -134,7 +136,10 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                                         value = formatNumber(itemForDate.marAdMargin);
                                     } else if (option.key === "marNetProfit") {
                                         value = formatNumber(Math.round(itemForDate.marNetProfit));
-                                    } else {
+                                    } else if (option.key === "marReturnCost") {
+                                        value = formatNumber(Math.round(itemForDate.marReturnCost));
+                                    }
+                                    else {
                                         value = itemForDate[option.key] || '-';
                                     }
                                 }
@@ -191,7 +196,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                                 ) : (
                                     formatNumber(
                                         Math.floor(data.reduce((total, item) => {
-                                            if (["marAdCost", "marImpressions", "marActualSales", "marReturnCount", "marAdMargin", "marNetProfit", "marAdConversionSales"].includes(option.key)) {
+                                            if (["marAdCost", "marImpressions", "marActualSales", "marReturnCount", "marAdMargin", "marNetProfit", "marAdConversionSales", "marReturnCost"].includes(option.key)) {
                                                 return total + (item[option.key] || 0);
                                             }
                                             return total;
