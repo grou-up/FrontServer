@@ -1,5 +1,5 @@
 import React from "react";
-import "../../styles/payments/MySunComponent.css"
+import "../../../styles/payments/MySunComponent.css"
 
 const MySunComponent = () => {
     return (

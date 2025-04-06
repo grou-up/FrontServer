@@ -1,3 +1,122 @@
-.ItemContainer {
-    background-color: aqua;
+.Items {
+    display: flex;
+    flex-wrap: nowrap;
+    /* ItemContainer들이 줄바꿈되지 않도록 설정 */
+    overflow-x: auto;
+    /* ItemContainer들이 Items 영역을 벗어날 경우 가로 스크롤 생성 */
+    justify-content: space-between;
+    /* 또는 space-around, space-evenly */
+}
+
+.ItemButton {
+    position: relative;
+    margin-top: 40px;
+    width: 20%;
+    height: 240px;
+    border-radius: 30px;
+    /* margin-right: 50px; */
+    background-color: white;
+    /* 경계선 스타일 지정 */
+}
+
+.ItemButton:hover {
+    border: 2px solid #4880FF;
+    /* 경계선 스타일 지정 */
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    /* 예시 */
+}
+
+.ItemButton:hover .ItemBadge {
+    background-color: #BDFEB6;
+}
+
+.ItemButton:hover .payButton {
+    background-color: rgba(72, 128, 255, 0.8);
+}
+
+.ItemBadge {
+    /* text-align: right; */
+    margin-top: 5px;
+    margin-left: 75%;
+    font-size: 8px;
+    background: #D9D9D9;
+    border-radius: 22.5px;
+    display: inline-block;
+    white-space: nowrap;
+    /* 추가 */
+}
+
+
+.ItemPriceContainer {
+    display: flex;
+    white-space: nowrap;
+}
+
+.ItemPrice {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 30px;
+    line-height: 48px;
+    text-align: center;
+    margin-left: 10px;
+    color: #000000;
+}
+
+/* 70,000 */
+
+.ItemPrePrice {
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 30px;
+    text-align: center;
+    margin-top: 15px;
+    margin-left: 15px;
+    text-decoration-line: line-through;
+    color: #979797;
+}
+
+.thick-hr {
+    border-top: 0.5px solid black;
+    margin: 0 auto;
+    width: 90%;
+}
+
+.ItemButtonDetailContainer {
+    margin-top: 25px;
+    margin-left: 10px;
+}
+
+.ItemButtonDetail {
+    display: flex;
+    justify-content: flex-start;
+    /* 왼쪽 정렬 */
+    /* 광고캠패인 1개 10달 분석 */
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    font-size: 15px;
+    /* identical to box height */
+    text-align: center;
+    color: #989797;
+
+}
+
+.payButton {
+    margin-left: 5%;
+    position: absolute;
+    margin-top: 20px;
+    /* Rectangle 136 */
+    width: 90%;
+    height: 30px;
+    bottom: 10%;
+    /* 부모 컴포넌트 맨 아래에 붙임 */
+    background: #C6C6C7;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+    border-radius: 35px;
+    color: white;
+    font-size: 20px;
+    font-size: bold;
 }

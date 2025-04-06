@@ -1,5 +1,5 @@
 import React from "react";
-import './../../styles/payments/Banner1Component.css' // 필요한 CSS 파일 import
+import './../../../styles/payments/Banner1Component.css' // 필요한 CSS 파일 import
 
 const Banner1Component = () => {
     return (

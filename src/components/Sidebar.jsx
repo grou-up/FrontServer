@@ -28,8 +28,10 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [] }) => {
         navigate(`/campaigns/${item.campaignId}?title=${encodeURIComponent(item.title)}`);
       } else if (item.title === "마진 계산기") {
         navigate("/margin-calculator");
-      } else if (item.title === "결제") {
+      } else if (item.title === "결제하기") {
         navigate("/payments");
+      } else if (item.title === "내역 조회") {
+        navigate("/payments/history"); // 예시: 결제 내역 조회 페이지
       } else if (item.title === "로그아웃") {
         removeToken(); // 토큰 삭제
         navigate('/'); // 로그인 페이지로 리다이렉트
@@ -150,7 +152,12 @@ const Sidebar = () => {
     },
     {
       title: "결제",
+      description: "결제 및 조회",
       icon: <Settings size={16} />,
+      children: [
+        { title: "결제하기" },
+        { title: "내역 조회" }
+      ],
       showDivider: true,
     },
     {

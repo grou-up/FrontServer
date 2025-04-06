@@ -11,7 +11,8 @@ import CampaignDetail from "./components/CampaignDetail";
 import MarginTabNavigation from "./components/Margin/MarginTabNavigation";
 import OtherComponent from "./components/memo/MemoComponent";
 import MemoButton from "./components/memo/MemoButton";
-import PaymentsComponets from "./components/Payments/PaymentsComponent";
+import PaymentsComponets from "./components/Payments/payments/PaymentsComponent";
+import PaymentHistoryComponent from "./components/Payments/PaymentHistoryComponent";
 
 class AppRoutes extends React.Component {
     constructor(props) {
@@ -43,6 +44,15 @@ class AppRoutes extends React.Component {
                             <PrivateRoute>
                                 <Sidebar></Sidebar>
                                 <PaymentsComponets></PaymentsComponets>
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/payments/history"
+                        element={
+                            <PrivateRoute>
+                                <Sidebar />
+                                <PaymentHistoryComponent />
                             </PrivateRoute>
                         }
                     />
