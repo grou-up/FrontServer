@@ -1,6 +1,6 @@
 import axios from 'axios';
 import { getToken } from '../utils/tokenManager';  // 토큰 가져오기 함수 사용
-
+import { PYTHON_URL } from '../config/api';
 export const uploadFile1 = (file, onUploadProgress) => {
   console.log(1)
   console.log(file)
@@ -10,7 +10,7 @@ export const uploadFile1 = (file, onUploadProgress) => {
   // 토큰 가져오기
   const token = getToken();
 
-  return axios.post('https://server.grouup.co.kr/django/upload_excel/', formData, {
+  return axios.post(`${PYTHON_URL}/django/upload_excel/`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
       'Authorization': `Bearer ${token}`  // Authorization 헤더에 토큰 추가
@@ -42,7 +42,7 @@ export const uploadFile3 = (file, onUploadProgress) => {
   // 토큰 가져오기
   const token = getToken();
 
-  return axios.post('https://server.grouup.co.kr/django/upload_margin/', formData, {
+  return axios.post(`${PYTHON_URL}/django/upload_margin/`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
       'Authorization': `Bearer ${token}`  // Authorization 헤더에 토큰 추가

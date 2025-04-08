@@ -1,0 +1,27 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v3
+
+      - name: Create .env.production
+        run: |
+          echo "REACT_APP_API_URL=${{ secrets.REACT_APP_API_URL }}" > .env.production
+          echo "REACT_APP_EXCEPT_API_URL=${{ secrets.REACT_APP_EXCEPT_API_URL }}" >> .env.production
+          echo "REACT_APP_PYTHON_URL=${{ secrets.REACT_APP_PYTHON_URL }}" >> .env.production
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel
+
+      - name: Build and Deploy to Vercel
+        run: |
+          vercel --prod --yes --token=${{ secrets.VERCEL_TOKEN }}

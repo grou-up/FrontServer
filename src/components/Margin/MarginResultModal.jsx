@@ -27,6 +27,7 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
                 mfcSalePrice: option.mfcSalePrice || 0,
                 mfcTotalPrice: option.mfcTotalPrice || 0,
                 mfcCostPrice: option.mfcCostPrice || 0,
+                mfcReturnPrice: option.mfcReturnPrice || 0,
                 mfcPerPiece: option.mfcPerPiece || 0,
                 mfcZeroRoas: option.mfcZeroRoas || 0,
                 // 다른 속성도 필요에 따라 초기화
@@ -101,18 +102,18 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
             endDate: endDate.toISOString().split("T")[0], // 선택된 종료 날짜
             data: selectedOptions.map(index => ({
                 mfcProductName: updatedOptions[index].mfcProductName,
-                mfcSalePrice: updatedOptions[index].mfcSalePrice,
-                mfcTotalPrice: updatedOptions[index].mfcTotalPrice,
-                mfcCostPrice: updatedOptions[index].mfcCostPrice,
-                mfcPerPiece: updatedOptions[index].mfcPerPiece,
-                mfcZeroRoas: updatedOptions[index].mfcZeroRoas,
+                mfcType: updatedOptions[index].mfcType,
+                mfcSalePrice: updatedOptions[index].mfcSalePrice, // 판매가
+                mfcTotalPrice: updatedOptions[index].mfcTotalPrice, // 총비용
+                mfcCostPrice: updatedOptions[index].mfcCostPrice, // 원가
+                mfcPerPiece: updatedOptions[index].mfcPerPiece, // 마진
+                mfcReturnPrice: updatedOptions[index].mfcReturnPrice, // 반품비용
+                mfcZeroRoas: updatedOptions[index].mfcZeroRoas, // 로아스
             })),
         };
-
         try {
             await marginUpdatesByPeriod(mfcRequestWithDatesDto);
             alert("선택된 데이터가 저장되었습니다!");
-            localStorage.setItem("isFirstVisit", "true");
             window.location.reload();
         } catch (error) {
             console.error("저장 중 오류 발생:", error);
@@ -197,6 +198,7 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
                                 <th>판매가</th>
                                 <th>총비용</th>
                                 <th>원가</th>
+                                <th>반품비용</th>
                                 <th>마진</th>
                                 <th>제로ROAS</th>
                             </tr>
@@ -211,8 +213,10 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
                                             onChange={() => handleCheckboxChange(index)}
                                         />
                                     </td>
-                                    <td>{item.mfcProductName}</td>
+                                    <td>{item.mfcProductName}</td> {/* 반품비용 */}
                                     <td>{getMfcTypeDisplayName(item.mfcType)}</td> {/* 변환된 상품타입 표시 */}
+
+                                    {/* 판매가 */}
                                     <td>
                                         <input
                                             type="number"
@@ -224,6 +228,7 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
                                             }}
                                         />
                                     </td>
+                                    {/* 총 비용 */}
                                     <td>
                                         <input
                                             type="number"
@@ -235,6 +240,7 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
                                             }}
                                         />
                                     </td>
+                                    {/* 원가 */}
                                     <td>
                                         <input
                                             type="number"
@@ -242,6 +248,18 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
                                             onChange={(e) => {
                                                 const updatedTableData = [...tableData];
                                                 updatedTableData[index].mfcCostPrice = parseFloat(e.target.value) || 0;
+                                                setTableData(updatedTableData);
+                                            }}
+                                        />
+                                    </td>
+                                    {/* 반품비용 */}
+                                    <td>
+                                        <input
+                                            type="number"
+                                            value={item.mfcReturnPrice}
+                                            onChange={(e) => {
+                                                const updatedTableData = [...tableData];
+                                                updatedTableData[index].mfcReturnPrice = parseFloat(e.target.value) || 0;
                                                 setTableData(updatedTableData);
                                             }}
                                         />

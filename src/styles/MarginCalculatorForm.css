@@ -12,11 +12,25 @@
 
 .campaign-header {
     display: flex;
-    align-items: center;
     justify-content: space-between;
-    margin-left: 2%;
-    margin-right: 1%;
-    gap: 10px;
+    /* 제목과 버튼들을 양쪽 끝으로 보냅니다. */
+    align-items: center;
+    /* 세로 중앙 정렬 */
+}
+
+.campaign-header {
+    display: flex;
+    justify-content: space-between;
+    /* 제목과 버튼들을 양쪽 끝으로 보냅니다. */
+    align-items: center;
+    /* 세로 중앙 정렬 */
+}
+
+.button-container {
+    display: flex;
+    /* 버튼들을 가로로 나열합니다. */
+    gap: 8px;
+    /* 버튼 사이 간격 */
 }
 
 .campaign-header h3 {
