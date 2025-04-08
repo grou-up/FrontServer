@@ -4,7 +4,7 @@ import StatGraph from "./StatGraph";
 import StatGraphTable from "./StatGraphTable";
 import StatGraph2 from "./StatGraph2";
 import StatGraph3 from "./StatGraph3";
-import { getCampaignStats } from "../../services/keyword";
+import { getCampaignStats, getMemoAboutCampaign } from "../../services/keyword";
 import "../../styles/campaignStats/StatisticGrid.css";
 
 const StatisticGrid = ({ campaignId, startDate, endDate }) => {
@@ -13,19 +13,30 @@ const StatisticGrid = ({ campaignId, startDate, endDate }) => {
     const [campaignStats, setCampaignStats] = useState(null);
     const [aggregatedSearchStats, setAggregatedSearchStats] = useState({}); // 합산된 데이터를 위한 상태
     const [aggregatedNonSearchStats, setAggregatedNonSearchStats] = useState({}); // 합산된 데이터를 위한 상태
+    const [memoData, setMemoData] = useState();
 
     const fetchCampaignStat = async () => {
         try {
             const response = await getCampaignStats({ campaignId, start: startDate, end: endDate });
-            console.log(response.data);
+            // console.log(response.data);
             setCampaignStats(response.data);// 응답 데이터를 상태로 저장
         } catch (error) {
             console.error("Error fetching campaign stats:", error);
         }
     };
 
+    const fetchMemoData = async () => {
+        try {
+            const response = await getMemoAboutCampaign({ campaignId, start: startDate, end: endDate })
+            setMemoData(response.data);
+        } catch (error) {
+
+        }
+    }
+
     useEffect(() => {
-        fetchCampaignStat(); // 컴포넌트가 마운트될 때 데이터 가져오기
+        fetchCampaignStat();// 컴포넌트가 마운트될 때 데이터 가져오기
+        fetchMemoData();
     }, [campaignId, startDate, endDate]);
 
     useEffect(() => {
@@ -74,6 +85,7 @@ const StatisticGrid = ({ campaignId, startDate, endDate }) => {
                 <StatGraph
                     search={searchStats}
                     nonSearch={nonSearchStats}
+                    memoData={memoData}
                     startDate={startDate}
                     endDate={endDate}
                 />

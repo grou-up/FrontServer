@@ -1,35 +1,101 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, LineElement } from 'chart.js';
 
-// Chart.js 등록
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend, LineElement);
 
-// 이모티콘 플러그인 정의
-const emojiPlugin = {
-    id: 'emojiPlugin',
-    afterDatasetsDraw: (chart) => {
-        const { ctx, data, scales } = chart;
+const StatGraph = ({ search, nonSearch, memoData, startDate, endDate }) => {
+    const chartRef = useRef(null);
+    useEffect(() => {
+        console.log("memos", memoData)
 
-        // searchData는 첫 번째 데이터셋
-        const searchData = data.datasets[0].data;
+        const chart = chartRef.current;
+        if (!chart) return;
 
-        searchData.forEach((value, index) => {
-            const x = scales.x.getPixelForValue(index);
-            const y = scales.y.getPixelForValue(value);
+        const handleMouseMove = (event) => {
+            const canvas = chartRef.current?.canvas;
+            if (!canvas) {
+                console.warn("Canvas not found");
+                return;
+            }
 
-            ctx.save();
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'bottom';
-            ctx.font = '20px Arial';
-            ctx.fillText('⭐', x, y - 10);
-            ctx.restore();
-        });
-    }
-};
+            const rect = canvas.getBoundingClientRect();  // ⭐ 매번 새로 계산
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
+
+            const xAxis = chart.scales.x;
+            const xAxisArea = {
+                top: chart.chartArea.bottom + 5,
+                bottom: chart.height,
+                left: chart.chartArea.left,
+                right: chart.chartArea.right
+            };
+
+            if (
+                mouseY >= xAxisArea.top &&
+                mouseY <= xAxisArea.bottom &&
+                mouseX >= xAxisArea.left &&
+                mouseX <= xAxisArea.right
+            ) {
+                let minDist = Infinity;
+                let closestLabel = null;
+
+                for (let i = 0; i < chart.data.labels.length; i++) {
+                    const labelX = xAxis.getPixelForValue(i);
+                    const dist = Math.abs(mouseX - labelX);
+                    if (dist < minDist) {
+                        minDist = dist;
+                        closestLabel = chart.data.labels[i];
+                    }
+                }
+
+                if (closestLabel && memoData?.[closestLabel]) {
+                    let tooltipEl = document.getElementById('x-axis-tooltip');
+                    if (!tooltipEl) {
+                        tooltipEl = document.createElement('div');
+                        tooltipEl.id = 'x-axis-tooltip';
+                        tooltipEl.style.position = 'absolute';
+                        tooltipEl.style.background = 'rgba(0, 0, 0, 0.8)';
+                        tooltipEl.style.color = 'white';
+                        tooltipEl.style.padding = '8px 12px';
+                        tooltipEl.style.borderRadius = '6px';
+                        tooltipEl.style.pointerEvents = 'none';
+                        tooltipEl.style.whiteSpace = 'pre-line';
+                        tooltipEl.style.fontSize = '12px';
+                        tooltipEl.style.zIndex = 1000;
+                        document.body.appendChild(tooltipEl);
+                    }
+
+                    const content = Array.isArray(memoData[closestLabel])
+                        ? memoData[closestLabel].map(m => `• ${m}`).join('\n')
+                        : memoData[closestLabel];
+
+                    tooltipEl.innerHTML = `<strong>${closestLabel}</strong><br>${content}`;
+                    // 스크롤 위치를 고려하여 툴팁 위치 설정
+                    tooltipEl.style.left = `${rect.left + mouseX + 10 + window.scrollX}px`;
+                    tooltipEl.style.top = `${rect.top + mouseY - 40 + window.scrollY}px`;
+                    tooltipEl.style.display = 'block';
+                } else {
+                    const tooltipEl = document.getElementById('x-axis-tooltip');
+                    if (tooltipEl) tooltipEl.style.display = 'none';
+                }
+            } else {
+                const tooltipEl = document.getElementById('x-axis-tooltip');
+                if (tooltipEl) tooltipEl.style.display = 'none';
+            }
+        };
+
+        const canvas = chartRef.current?.canvas;
+        if (canvas) canvas.addEventListener('mousemove', handleMouseMove);
+
+        return () => {
+            if (canvas) canvas.removeEventListener('mousemove', handleMouseMove);
+            const tooltipEl = document.getElementById('x-axis-tooltip');
+            if (tooltipEl) tooltipEl.remove();
+        };
+    }, [memoData]);
 
 
-const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
     // 날짜를 배열로 생성
     const dateLabels = [];
     const start = new Date(startDate);
@@ -102,7 +168,6 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
             legend: {
                 position: 'top',
             },
-            emojiPlugin: {}, // 플러그인 활성화
         },
         scales: {
             x: {
@@ -110,6 +175,12 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
                     display: false,
                     text: 'Date',
                 },
+                ticks: {
+                    color: (context) => {
+                        const label = context.tick.label;
+                        return memoData && memoData[label] ? 'red' : 'black'; // memoData에 해당 날짜가 있으면 빨간색, 없으면 검은색
+                    }
+                }
             },
             y: {
                 title: {
@@ -139,12 +210,12 @@ const StatGraph = ({ search, nonSearch, startDate, endDate }) => {
     return (
         <div style={{ height: '100%' }}>
             <Bar
+                ref={chartRef}
                 data={data}
                 options={{ ...options, maintainAspectRatio: false }}
-                plugins={[emojiPlugin]} // 플러그인 등록
             />
         </div>
     );
 };
 
-export default StatGraph; 
+export default StatGraph;
