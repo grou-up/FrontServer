@@ -6,86 +6,95 @@ ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend,
 
 const StatGraph = ({ search, nonSearch, memoData, startDate, endDate }) => {
     const chartRef = useRef(null);
-
     useEffect(() => {
-        if (!chartRef.current) return;
+        console.log("memos", memoData)
 
         const chart = chartRef.current;
-        const canvas = chart.canvas;
+        if (!chart) return;
 
         const handleMouseMove = (event) => {
-            const xAxis = chart.scales.x; // x축 스케일 가져오기
+            const canvas = chartRef.current?.canvas;
+            if (!canvas) {
+                console.warn("Canvas not found");
+                return;
+            }
+
+            const rect = canvas.getBoundingClientRect();  // ⭐ 매번 새로 계산
+            const mouseX = event.clientX - rect.left;
+            const mouseY = event.clientY - rect.top;
+
+            const xAxis = chart.scales.x;
             const xAxisArea = {
-                top: chart.chartArea.bottom + 5, // x축 레이블 영역 시작 (임의 값 조정)
+                top: chart.chartArea.bottom + 5,
+                bottom: chart.height,
                 left: chart.chartArea.left,
-                right: chart.chartArea.right,
-                bottom: chart.height
+                right: chart.chartArea.right
             };
 
-            // 마우스 좌표가 x축 레이블 영역 안에 있는지 확인
-            if (event.y >= xAxisArea.top && event.y <= xAxisArea.bottom && event.x >= xAxisArea.left && event.x <= xAxisArea.right) {
-                // 가장 가까운 x축 레이블 찾기
+            if (
+                mouseY >= xAxisArea.top &&
+                mouseY <= xAxisArea.bottom &&
+                mouseX >= xAxisArea.left &&
+                mouseX <= xAxisArea.right
+            ) {
                 let minDist = Infinity;
                 let closestLabel = null;
 
                 for (let i = 0; i < chart.data.labels.length; i++) {
-                    const labelX = xAxis.getPixelForValue(i); // 각 레이블의 x좌표
-                    const dist = Math.abs(event.x - labelX);
-
+                    const labelX = xAxis.getPixelForValue(i);
+                    const dist = Math.abs(mouseX - labelX);
                     if (dist < minDist) {
                         minDist = dist;
                         closestLabel = chart.data.labels[i];
                     }
                 }
 
-                // 툴팁 표시
-                if (closestLabel && memoData && memoData[closestLabel]) {
-                    // 툴팁 엘리먼트 생성 또는 업데이트
-                    let tooltipEl = document.getElementById('chartjs-x-axis-tooltip');
-
+                if (closestLabel && memoData?.[closestLabel]) {
+                    let tooltipEl = document.getElementById('x-axis-tooltip');
                     if (!tooltipEl) {
                         tooltipEl = document.createElement('div');
-                        tooltipEl.id = 'chartjs-x-axis-tooltip';
-                        tooltipEl.style.background = 'rgba(0, 0, 0, 0.7)';
-                        tooltipEl.style.color = 'white';
-                        tooltipEl.style.borderRadius = '3px';
-                        tooltipEl.style.padding = '5px';
+                        tooltipEl.id = 'x-axis-tooltip';
                         tooltipEl.style.position = 'absolute';
-                        tooltipEl.style.zIndex = 10;
-                        canvas.parentNode.appendChild(tooltipEl);
+                        tooltipEl.style.background = 'rgba(0, 0, 0, 0.8)';
+                        tooltipEl.style.color = 'white';
+                        tooltipEl.style.padding = '8px 12px';
+                        tooltipEl.style.borderRadius = '6px';
+                        tooltipEl.style.pointerEvents = 'none';
+                        tooltipEl.style.whiteSpace = 'pre-line';
+                        tooltipEl.style.fontSize = '12px';
+                        tooltipEl.style.zIndex = 1000;
+                        document.body.appendChild(tooltipEl);
                     }
 
-                    // 툴팁 위치 설정
-                    tooltipEl.innerHTML = memoData[closestLabel];
-                    tooltipEl.style.top = (event.clientY - 50) + 'px'; // 마우스 위치 기준으로 툴팁 위치 조정
-                    tooltipEl.style.left = (event.clientX + 10) + 'px';
+                    const content = Array.isArray(memoData[closestLabel])
+                        ? memoData[closestLabel].map(m => `• ${m}`).join('\n')
+                        : memoData[closestLabel];
+
+                    tooltipEl.innerHTML = `<strong>${closestLabel}</strong><br>${content}`;
+                    // 스크롤 위치를 고려하여 툴팁 위치 설정
+                    tooltipEl.style.left = `${rect.left + mouseX + 10 + window.scrollX}px`;
+                    tooltipEl.style.top = `${rect.top + mouseY - 40 + window.scrollY}px`;
                     tooltipEl.style.display = 'block';
                 } else {
-                    // 툴팁 숨김
-                    const tooltipEl = document.getElementById('chartjs-x-axis-tooltip');
-                    if (tooltipEl) {
-                        tooltipEl.style.display = 'none';
-                    }
+                    const tooltipEl = document.getElementById('x-axis-tooltip');
+                    if (tooltipEl) tooltipEl.style.display = 'none';
                 }
             } else {
-                // 마우스가 x축 레이블 영역 밖에 있으면 툴팁 숨김
-                const tooltipEl = document.getElementById('chartjs-x-axis-tooltip');
-                if (tooltipEl) {
-                    tooltipEl.style.display = 'none';
-                }
+                const tooltipEl = document.getElementById('x-axis-tooltip');
+                if (tooltipEl) tooltipEl.style.display = 'none';
             }
         };
 
-        canvas.addEventListener('mousemove', handleMouseMove);
+        const canvas = chartRef.current?.canvas;
+        if (canvas) canvas.addEventListener('mousemove', handleMouseMove);
 
         return () => {
-            canvas.removeEventListener('mousemove', handleMouseMove);
-            const tooltipEl = document.getElementById('chartjs-x-axis-tooltip');
-            if (tooltipEl && canvas.parentNode) {
-                canvas.parentNode.removeChild(tooltipEl);
-            }
+            if (canvas) canvas.removeEventListener('mousemove', handleMouseMove);
+            const tooltipEl = document.getElementById('x-axis-tooltip');
+            if (tooltipEl) tooltipEl.remove();
         };
     }, [memoData]);
+
 
     // 날짜를 배열로 생성
     const dateLabels = [];
@@ -201,6 +210,7 @@ const StatGraph = ({ search, nonSearch, memoData, startDate, endDate }) => {
     return (
         <div style={{ height: '100%' }}>
             <Bar
+                ref={chartRef}
                 data={data}
                 options={{ ...options, maintainAspectRatio: false }}
             />
