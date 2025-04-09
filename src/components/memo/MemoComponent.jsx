@@ -13,7 +13,7 @@ const MemoComponent = () => {
 
     const fetchMemos = async () => {
         try {
-            console.log(campaignId)
+            // console.log(campaignId)
             const response = await getMemos({ campaignId });
             setMemos(response || []);
         } catch (error) {

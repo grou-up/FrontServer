@@ -11,6 +11,7 @@ import CampaignDetail from "./components/CampaignDetail";
 import MarginTabNavigation from "./components/Margin/MarginTabNavigation";
 import OtherComponent from "./components/memo/MemoComponent";
 import MemoButton from "./components/memo/MemoButton";
+import { MyContextProvider } from "../src/components/MyContext"
 
 class AppRoutes extends React.Component {
     constructor(props) {
@@ -67,18 +68,20 @@ class AppRoutes extends React.Component {
                         path="/campaigns/:campaignId"
                         element={
                             <PrivateRoute>
-                                {showOtherComponent ? (
-                                    <>
-                                        <OtherComponent />
-                                        <CampaignDetail />
-                                    </>
-                                ) : (
-                                    <>
-                                        <Sidebar />
-                                        <CampaignDetail />
-                                    </>
-                                )}
-                                <MemoButton onClick={this.toggleOtherComponent} />
+                                <MyContextProvider>
+                                    {showOtherComponent ? (
+                                        <>
+                                            <OtherComponent />
+                                            <CampaignDetail />
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Sidebar />
+                                            <CampaignDetail />
+                                        </>
+                                    )}
+                                    <MemoButton onClick={this.toggleOtherComponent} />
+                                </MyContextProvider>
                             </PrivateRoute>
                         }
                     />

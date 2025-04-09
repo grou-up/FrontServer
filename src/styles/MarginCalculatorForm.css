@@ -120,7 +120,7 @@
 
 .options-table th:first-child,
 .options-table td:first-child {
-    width: 3%;
+    width: 1%;
     /* 왼쪽 열은 자동 너비 */
     text-align: left;
     /* 왼쪽 정렬 */
@@ -140,7 +140,7 @@
 
 .options-table th,
 .options-table td {
-    padding: 10px;
+    padding: px;
     text-align: center;
 }
 

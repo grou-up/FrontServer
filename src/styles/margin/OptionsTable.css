@@ -1,0 +1,113 @@
+.options-table-component {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+
+}
+
+.options-table-component th,
+.options-table-component td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+    vertical-align: middle;
+    word-wrap: break-word;
+    font-size: 13px;
+    padding: 10px;
+}
+
+/* 열 너비 지정 */
+.options-table-component th:nth-child(1),
+.options-table-component td:nth-child(1) {
+    width: 3%;
+    /* 체크박스 */
+}
+
+.options-table-component th:nth-child(2),
+.options-table-component td:nth-child(2) {
+    width: 25%;
+    /* 옵션명 넓게 */
+}
+
+.options-table-component th:nth-child(3),
+.options-table-component td:nth-child(3) {
+    width: 8%;
+    /* 판매가 */
+}
+
+.options-table-component th:nth-child(4),
+.options-table-component td:nth-child(4) {
+    width: 9%;
+    /* 판매유형 넓게 */
+}
+
+.options-table-component th:nth-child(5),
+.options-table-component td:nth-child(5),
+.options-table-component th:nth-child(6),
+.options-table-component td:nth-child(6),
+.options-table-component th:nth-child(7),
+.options-table-component td:nth-child(7) {
+    width: 7%;
+    /* 총비용~반품비 */
+}
+
+.options-table-component th:nth-child(8),
+.options-table-component td:nth-child(8) {
+    width: 4.5%;
+    /* 입고비 */
+}
+
+.options-table-component th:nth-child(9),
+.options-table-component td:nth-child(9),
+.options-table-component th:nth-child(10),
+.options-table-component td:nth-child(10) {
+    width: 6%;
+    /* 마진, ROAS */
+}
+
+.options-table-component th:nth-child(11),
+.options-table-component td:nth-child(11) {
+    width: 6%;
+    /* 삭제 */
+}
+
+/* 입력 박스 스타일 */
+.options-table-input-name {
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.options-table-input,
+.options-table-dropdown {
+    width: 100%;
+    padding: 6px;
+    font-size: 13px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.options-table-text {
+    display: inline-block;
+    font-size: 13px;
+    padding: 6px;
+    color: #333;
+}
+
+.options-table-delete-button {
+    padding: 6px 10px;
+    background-color: #e74c3c;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.options-table-delete-button:hover {
+    background-color: #c0392b;
+}
