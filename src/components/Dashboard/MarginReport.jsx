@@ -62,45 +62,48 @@ const MarginReport = () => {
             </div>
 
             {/* 데이터가 없을 경우 안내 메시지 표시 */}
-            {data.length === 0 ? (
-                <div className="empty-message">
-                    광고 보고서를 업로드 해주세요
-                </div>
-            ) : (
-                <>
-                    {/* 매출 테이블 */}
-                    <table className="sales-table">
-                        <thead>
-                            <tr>
-                                <th onClick={() => changeSort("campaignName")}>
-                                    캠페인 이름 {sortConfig?.key === "campaignName" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                                </th>
-                                <th onClick={() => changeSort("yesterdaySales")}>
-                                    광고 마진 {sortConfig?.key === "yesterdaySales" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                                </th>
-                                <th onClick={() => changeSort("todaySales")}>
-                                    순 이익 {sortConfig?.key === "todaySales" && (sortConfig.direction === "asc" ? "↑" : "↓")}
-                                </th>
+            <table className="sales-table">
+                <thead>
+                    <tr>
+                        <th onClick={() => changeSort("campaignName")}>
+                            캠페인 이름 {sortConfig?.key === "campaignName" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                        </th>
+                        <th onClick={() => changeSort("yesterdaySales")}>
+                            광고 마진 {sortConfig?.key === "yesterdaySales" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                        </th>
+                        <th onClick={() => changeSort("todaySales")}>
+                            순 이익 {sortConfig?.key === "todaySales" && (sortConfig.direction === "asc" ? "↑" : "↓")}
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {paginatedData.length > 0 ? (
+                        paginatedData.map((item, index) => (
+                            <tr key={index}>
+                                <td>{item.marProductName}</td>
+                                <td>{formatNumber(item.marAdMargin)}</td>
+                                <td className={getSalesDifferenceClass(Math.round(item.marNetProfit))}>
+                                    {formatNumber(Math.round(item.marNetProfit))}
+                                </td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            {paginatedData.map((item, index) => (
-                                <tr key={index}>
-                                    <td>{item.marProductName}</td>
-                                    <td>{formatNumber(item.marAdMargin)}</td>
-                                    <td className={getSalesDifferenceClass(Math.round(item.marNetProfit))}>
-                                        {formatNumber(Math.round(item.marNetProfit))}
-                                    </td>
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                    <Pagination
-                        currentPage={page}
-                        totalPages={totalPages}
-                        onPageChange={changePage}
-                    />
-                </>
+                        ))
+                    ) : (
+                        <tr>
+                            <td colSpan="3">
+                                <div className="empty-message">광고 보고서를 업로드 해주세요</div>
+                            </td>
+                        </tr>
+                    )}
+                </tbody>
+            </table>
+
+            {/* 페이지네이션은 데이터 있을 때만 보여줌 */}
+            {paginatedData.length > 0 && (
+                <Pagination
+                    currentPage={page}
+                    totalPages={totalPages}
+                    onPageChange={changePage}
+                />
             )}
         </div>
     );
