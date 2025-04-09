@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import DatePicker from 'react-datepicker'; // DatePicker import
 import { useLocation } from 'react-router-dom'; // useLocation import
-import { addMemo } from '../../services/memo.js'; // addMemo 함수 import
+// import { addMemo } from '../../services/memo.js'; // addMemo 함수 import
 import '../../styles/memo/MemoCreate.css'; // 스타일을 위한 CSS 파일 import
+import { MyContext } from "../MyContext.jsx";
 
 const MemoCreate = ({ onAddMemo }) => {
+    const { addMemo } = useContext(MyContext); // Context에서 addMemo 함수 가져오기
     const location = useLocation(); // 현재 위치 정보 가져오기
     const campaignId = location.pathname.split('/')[2]; // URL 경로에서 campaignId 추출
 

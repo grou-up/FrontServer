@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import StatTable from "./StatTable";
 import StatGraph from "./StatGraph";
 import StatGraphTable from "./StatGraphTable";
 import StatGraph2 from "./StatGraph2";
 import StatGraph3 from "./StatGraph3";
-import { getCampaignStats, getMemoAboutCampaign } from "../../services/keyword";
+import { getCampaignStats } from "../../services/keyword";
 import "../../styles/campaignStats/StatisticGrid.css";
+import { MyContext } from "../MyContext.jsx";
 
 const StatisticGrid = ({ campaignId, startDate, endDate }) => {
+    const { memoData, getMemoAboutCampaign } = useContext(MyContext);
     const [nonSearchStats, setNonSearchStats] = useState({});
     const [searchStats, setSearchStats] = useState({});
     const [campaignStats, setCampaignStats] = useState(null);
     const [aggregatedSearchStats, setAggregatedSearchStats] = useState({}); // 합산된 데이터를 위한 상태
     const [aggregatedNonSearchStats, setAggregatedNonSearchStats] = useState({}); // 합산된 데이터를 위한 상태
-    const [memoData, setMemoData] = useState();
 
     const fetchCampaignStat = async () => {
         try {
@@ -25,19 +26,10 @@ const StatisticGrid = ({ campaignId, startDate, endDate }) => {
         }
     };
 
-    const fetchMemoData = async () => {
-        try {
-            const response = await getMemoAboutCampaign({ campaignId, start: startDate, end: endDate })
-            setMemoData(response.data);
-        } catch (error) {
-
-        }
-    }
-
     useEffect(() => {
         fetchCampaignStat();// 컴포넌트가 마운트될 때 데이터 가져오기
-        fetchMemoData();
-    }, [campaignId, startDate, endDate]);
+        getMemoAboutCampaign({ campaignId, start: startDate, end: endDate }); // fetchMemoData 대체
+    }, [campaignId, startDate, endDate, getMemoAboutCampaign]); // getMemoAboutCampaign 의존성 추가
 
     useEffect(() => {
         if (campaignStats && campaignStats.search) {
