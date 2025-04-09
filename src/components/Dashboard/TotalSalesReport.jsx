@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { getTotalSales } from "../../services/margin";
 import usePaginationAndSorting from "../../hooks/usePaginationAndSorting";
-import { ArrowRight, ArrowLeft } from "lucide-react";
 import "../../styles/SalesReport.css";
-import DatePicker from "react-datepicker";
+import DateControls from "../Date/DateControls";
 import { formatNumber } from "../../utils/formatUtils";
 
 const TotalSalesReport = ({ setTotalSalesData }) => {
@@ -57,20 +56,12 @@ const TotalSalesReport = ({ setTotalSalesData }) => {
         <div className="sales-report">
             <div className="report-header">
                 <h3 className="report-title">종합 보고서</h3>
-                <div className="date-controls">
-                    <button className="date-button" onClick={handlePrevDay}>
-                        <ArrowLeft />
-                    </button>
-                    <DatePicker
-                        selected={date}
-                        onChange={(date) => setDate(date)}
-                        dateFormat="yyyy-MM-dd"
-                        className="date-picker"
-                    />
-                    <button className="date-button" onClick={handleNextDay}>
-                        <ArrowRight />
-                    </button>
-                </div>
+                <DateControls
+                    date={date}
+                    onPrevDay={handlePrevDay}
+                    onNextDay={handleNextDay}
+                    onDateChange={(date) => setDate(date)}
+                />
             </div>
             <table className="sales-table">
                 <thead>
@@ -103,7 +94,7 @@ const TotalSalesReport = ({ setTotalSalesData }) => {
                         <tr>
                             <td colSpan="4" >
                                 <div className="empty-message">
-                                    종합 보고서를 업로드 해주세요
+                                    광고 보고서를 업로드 해주세요
                                 </div>
                             </td>
                         </tr>
