@@ -1,6 +1,6 @@
 import React from "react";
-import "../../../styles/MarginCalculatorForm.css"; // CSS 연결
-
+// import "../../../styles/MarginCalculatorForm.css"; // CSS 연결
+import "../../../styles/margin/OptionsTable.css"
 function OptionsTable({
     options,
     handleInputChange,
@@ -20,15 +20,15 @@ function OptionsTable({
         return 1000;
     };
     return (
-        <div className="options-table-wrapper">
-            <table className="options-table">
+        <div className="options-table-container">
+            <table className="options-table-component">
                 <thead>
                     <tr>
                         <th>
                             <input
                                 type="checkbox"
-                                checked={allSelected} // 전체 선택 상태에 따라 체크박스 상태 결정
-                                onChange={handleSelectAll} // 전체 선택 핸들러 호출
+                                checked={allSelected}
+                                onChange={handleSelectAll}
                             />
                         </th>
                         <th>옵션명</th>
@@ -40,7 +40,7 @@ function OptionsTable({
                         <th>입고비</th>
                         <th>마진</th>
                         <th>제로 ROAS</th>
-                        <th>삭제</th> {/* 삭제 열 추가 */}
+                        <th>삭제</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -58,7 +58,7 @@ function OptionsTable({
                                     type="text"
                                     value={option.mfcProductName || ""}
                                     onChange={(e) => handleInputChange(index, 'mfcProductName', e.target.value)}
-                                    className="option-input-name"
+                                    className="options-table-input-name"
                                 />
                             </td>
                             <td>
@@ -66,13 +66,12 @@ function OptionsTable({
                                     type="number"
                                     value={option.mfcSalePrice || ""}
                                     onChange={(e) => handleInputChange(index, 'mfcSalePrice', e.target.value)}
-                                    className="option-input"
+                                    className="options-table-input"
                                 />
                             </td>
-
                             <td>
                                 <select
-                                    className="margin-dropdown"
+                                    className="options-table-dropdown"
                                     value={option.mfcType || ""}
                                     onChange={(e) => handleInputChange(index, 'mfcType', e.target.value)}
                                 >
@@ -86,7 +85,7 @@ function OptionsTable({
                                     type="number"
                                     value={option.mfcTotalPrice || ""}
                                     onChange={(e) => handleInputChange(index, 'mfcTotalPrice', e.target.value)}
-                                    className="option-input"
+                                    className="options-table-input"
                                 />
                             </td>
                             <td>
@@ -94,7 +93,7 @@ function OptionsTable({
                                     type="number"
                                     value={option.mfcCostPrice || ""}
                                     onChange={(e) => handleInputChange(index, 'mfcCostPrice', e.target.value)}
-                                    className="option-input"
+                                    className="options-table-input"
                                 />
                             </td>
                             <td>
@@ -102,28 +101,28 @@ function OptionsTable({
                                     type="number"
                                     value={option.mfcReturnPrice || ""}
                                     onChange={(e) => handleInputChange(index, 'mfcReturnPrice', e.target.value)}
-                                    className="option-input"
+                                    className="options-table-input"
                                 />
                             </td>
                             <td>
-                                <span className="option-text">
-                                    {calculateShippingCost(option.mfcSalePrice || 0)} {/* 판매가에 따라 입고비 표시 */}
+                                <span className="options-table-text">
+                                    {calculateShippingCost(option.mfcSalePrice || 0)}
                                 </span>
                             </td>
                             <td>
-                                <span className="option-text">
+                                <span className="options-table-text">
                                     {option.mfcPerPiece !== "" ? option.mfcPerPiece : ""}
                                 </span>
                             </td>
                             <td>
-                                <span className="option-text">
+                                <span className="options-table-text">
                                     {option.mfcZeroRoas !== "" ? option.mfcZeroRoas.toFixed(2) : ""}
                                 </span>
                             </td>
                             <td>
                                 <button
-                                    onClick={() => handleDeleteOption(index)} // 삭제 핸들러 호출
-                                    className="delete-button"
+                                    onClick={() => handleDeleteOption(index)}
+                                    className="options-table-delete-button"
                                 >
                                     삭제
                                 </button>

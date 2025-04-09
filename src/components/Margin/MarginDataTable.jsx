@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect, useRef } from 'react';
 import "../../styles/margin/MarginDataTable.css";
 import { getMarginByCampaignId } from "../../services/margin";
 import { formatNumber } from "../../utils/formatUtils";
 
 const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
-    const [data, setData] = useState([]); // 데이터 상태
-    const [modifiedData, setModifiedData] = useState({}); // 변경된 데이터 상태 추가
+    const [data, setData] = useState([]);
+    const [modifiedData, setModifiedData] = useState({});
+    const tableContainerRef = useRef(null);
+    const todayRef = useRef(null);
+    const startDateRef = useRef(null);
 
     // 날짜 범위 생성
     const dateRange = [];
@@ -13,11 +16,11 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
     const end = new Date(endDate);
 
     while (currentDate <= end) {
-        const yearMonthDay = currentDate.toISOString().split('T')[0]; // YYYY-MM-DD 형식
-        const month = String(currentDate.getMonth() + 1).padStart(2, '0'); // 월을 2자리로 포맷
-        const day = String(currentDate.getDate()).padStart(2, '0'); // 일을 2자리로 포맷
-        dateRange.push({ fullDate: yearMonthDay, displayDate: `${month}-${day}` }); // 객체로 저장
-        currentDate.setDate(currentDate.getDate() + 1); // 하루씩 증가
+        const yearMonthDay = currentDate.toISOString().split('T')[0];
+        const month = String(currentDate.getMonth() + 1).padStart(2, '0');
+        const day = String(currentDate.getDate()).padStart(2, '0');
+        dateRange.push({ fullDate: yearMonthDay, displayDate: `${month}-${day}` });
+        currentDate.setDate(currentDate.getDate() + 1);
     }
 
     // 데이터 가져오기
@@ -25,16 +28,35 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
         const fetchData = async () => {
             try {
                 const response = await getMarginByCampaignId({ startDate, endDate, campaignId });
-                setData(response.data[0].data); // API 응답에서 데이터 설정
+                setData(response.data[0].data);
             } catch (error) {
                 console.error("데이터를 가져오는 중 오류 발생:", error);
             }
         };
-
         fetchData();
     }, [startDate, endDate, campaignId]);
 
-    // 고정된 옵션 이름과 백엔드에서 가져온 데이터 매핑
+    // 오늘 날짜로 스크롤 또는 시작일로 스크롤
+    useEffect(() => {
+        const today = new Date();
+        today.setDate(today.getDate() - 2); // 하루 빼기
+        const todayStr = today.toISOString().split('T')[0];
+        const isTodayInRange = dateRange.some(d => d.fullDate === todayStr);
+        if (tableContainerRef.current) {
+            if (isTodayInRange && todayRef.current) {
+                tableContainerRef.current.scrollTo({
+                    left: todayRef.current.offsetLeft - 100,
+                    behavior: 'smooth',
+                });
+            } else if (startDateRef.current) {
+                tableContainerRef.current.scrollTo({
+                    left: 0,
+                    behavior: 'smooth',
+                });
+            }
+        }
+    }, [data, dateRange]);
+
     const options = [
         { optionName: "목표효율", key: "marTargetEfficiency", editable: true },
         { optionName: "광고예산", key: "marAdBudget", editable: true },
@@ -51,6 +73,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
         { optionName: "광고 마진", key: "marAdMargin" },
         { optionName: "순이익", key: "marNetProfit" },
     ];
+
     const handleInputChange = (e, fullDate, key) => {
         const newValue = e.target.value;
         setData(prevData =>
@@ -58,29 +81,24 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                 item.marDate === fullDate ? { ...item, [key]: Number(newValue) } : item
             )
         );
-        // 변경된 데이터 전달
         setModifiedData(prev => {
             const updatedData = {
                 ...(prev[fullDate] || {}),
                 marDate: fullDate,
-                [key]: Number(newValue) // 변경된 값 저장
+                [key]: Number(newValue)
             };
 
             const itemForDate = data.find(item => item.marDate === fullDate);
-
-            // 광고예산이 변경된 경우 목표효율 포함
             if (key === "marAdBudget" && itemForDate) {
                 updatedData.marTargetEfficiency = itemForDate.marTargetEfficiency;
             }
-
-            // 목표효율이 변경된 경우 광고예산 포함
             if (key === "marTargetEfficiency" && itemForDate) {
                 updatedData.marAdBudget = itemForDate.marAdBudget;
             }
             updatedData.id = itemForDate.id;
             return {
                 ...prev,
-                [fullDate]: updatedData // 전체 업데이트된 데이터 반환
+                [fullDate]: updatedData
             };
         });
     };
@@ -89,28 +107,38 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
         onDataChange(modifiedData);
     }, [modifiedData]);
 
-
+    const todayStr = new Date().toISOString().split('T')[0];
 
     return (
-        <div className="table-container"> {/* 스크롤을 위한 컨테이너 추가 */}
+        <div className="table-container" ref={tableContainerRef}>
             <table className="campaign-data-table">
                 <thead>
                     <tr>
                         <th className="option-name-header sticky-column"></th>
-                        {dateRange.map(({ displayDate }) => (
-                            <th key={displayDate}>{displayDate}</th>
+                        {dateRange.map(({ fullDate, displayDate }, index) => (
+                            <th
+                                key={fullDate}
+                                ref={
+                                    fullDate === todayStr
+                                        ? todayRef
+                                        : index === 0
+                                            ? startDateRef
+                                            : null
+                                }
+                            >
+                                {displayDate}
+                            </th>
                         ))}
-                        <th className="sticky-column total-column">총합</th> {/* 총합 열 추가 */}
+                        <th className="sticky-column total-column">총합</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {options.map((option) => (
+                    {options.map(option => (
                         <tr key={option.optionName}>
                             <td className="sticky-column">{option.optionName}</td>
                             {dateRange.map(({ fullDate }) => {
                                 const itemForDate = data.find(item => item.marDate === fullDate);
                                 let value = '-';
-
                                 if (itemForDate) {
                                     if (option.key === "marAdRevenue") {
                                         value = itemForDate.marAdCost > 0
@@ -138,8 +166,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                                         value = formatNumber(Math.round(itemForDate.marNetProfit));
                                     } else if (option.key === "marReturnCost") {
                                         value = formatNumber(Math.round(itemForDate.marReturnCost));
-                                    }
-                                    else {
+                                    } else {
                                         value = itemForDate[option.key] || '-';
                                     }
                                 }
