@@ -38,20 +38,26 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
 
     // 오늘 날짜로 스크롤 또는 시작일로 스크롤
     useEffect(() => {
-        const today = new Date();
-        today.setDate(today.getDate() - 2);
-        const todayStr = today.toISOString().split('T')[0];
+        if (!data.length || !dateRange.length) return;
 
-        const isTodayInRange = dateRange.some(d => d.fullDate === todayStr);
+        // 데이터가 있는 마지막 날짜 구하기
+        const validDates = data
+            .map(item => item.marDate)
+            .filter(Boolean)
+            .sort(); // 문자열 날짜는 정렬 가능
+
+        const lastDataDate = validDates[validDates.length - 1];
+
+        const isLastDateInRange = dateRange.some(d => d.fullDate === lastDataDate);
 
         if (tableContainerRef.current) {
             const container = tableContainerRef.current;
 
-            if (isTodayInRange && todayRef.current) {
-                const todayElement = todayRef.current;
-                const scrollLeft = todayElement.offsetLeft
+            const lastRef = document.querySelector(`[data-date="${lastDataDate}"]`);
+            if (isLastDateInRange && lastRef) {
+                const scrollLeft = lastRef.offsetLeft
                     - container.clientWidth
-                    + todayElement.offsetWidth
+                    + lastRef.offsetWidth
                     + 100;
 
                 container.scrollTo({
@@ -135,6 +141,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                                             ? startDateRef
                                             : null
                                 }
+                                data-date={fullDate}
                             >
                                 {displayDate}
                             </th>
