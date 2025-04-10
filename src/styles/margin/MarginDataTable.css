@@ -108,3 +108,12 @@
     font-weight: bold;
     /* 텍스트를 굵게 표시 */
 }
+
+.fixed-width-cell {
+    min-width: 100px;
+    max-width: 100px;
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

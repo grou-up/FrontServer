@@ -142,7 +142,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                                             : null
                                 }
                                 data-date={fullDate}
-                                style={{ minWidth: '155px' }} // ✅ 여기에 추가!
+                                className="fixed-width-cell" // ✅ 클래스 추가
                             >
                                 {displayDate}
                             </th>
@@ -199,7 +199,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                                 }
 
                                 return (
-                                    <td key={fullDate} className={cellClass}>
+                                    <td key={fullDate} className={`fixed-width-cell ${cellClass}`}> {/* ✅ 클래스 수정 */}
                                         {option.editable && itemForDate ? (
                                             <input
                                                 type="number"
