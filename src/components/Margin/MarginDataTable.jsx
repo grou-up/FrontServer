@@ -38,18 +38,34 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
 
     // 오늘 날짜로 스크롤 또는 시작일로 스크롤
     useEffect(() => {
-        const today = new Date();
-        today.setDate(today.getDate() - 2); // 하루 빼기
-        const todayStr = today.toISOString().split('T')[0];
-        const isTodayInRange = dateRange.some(d => d.fullDate === todayStr);
+        if (!data.length || !dateRange.length) return;
+
+        // 데이터가 있는 마지막 날짜 구하기
+        const validDates = data
+            .map(item => item.marDate)
+            .filter(Boolean)
+            .sort(); // 문자열 날짜는 정렬 가능
+
+        const lastDataDate = validDates[validDates.length - 1];
+
+        const isLastDateInRange = dateRange.some(d => d.fullDate === lastDataDate);
+
         if (tableContainerRef.current) {
-            if (isTodayInRange && todayRef.current) {
-                tableContainerRef.current.scrollTo({
-                    left: todayRef.current.offsetLeft - 100,
+            const container = tableContainerRef.current;
+
+            const lastRef = document.querySelector(`[data-date="${lastDataDate}"]`);
+            if (isLastDateInRange && lastRef) {
+                const scrollLeft = lastRef.offsetLeft
+                    - container.clientWidth
+                    + lastRef.offsetWidth
+                    + 100;
+
+                container.scrollTo({
+                    left: scrollLeft,
                     behavior: 'smooth',
                 });
             } else if (startDateRef.current) {
-                tableContainerRef.current.scrollTo({
+                container.scrollTo({
                     left: 0,
                     behavior: 'smooth',
                 });
@@ -125,6 +141,8 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                                             ? startDateRef
                                             : null
                                 }
+                                data-date={fullDate}
+                                className="fixed-width-cell" // ✅ 클래스 추가
                             >
                                 {displayDate}
                             </th>
@@ -181,7 +199,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                                 }
 
                                 return (
-                                    <td key={fullDate} className={cellClass}>
+                                    <td key={fullDate} className={`fixed-width-cell ${cellClass}`}> {/* ✅ 클래스 수정 */}
                                         {option.editable && itemForDate ? (
                                             <input
                                                 type="number"
