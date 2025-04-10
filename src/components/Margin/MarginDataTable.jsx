@@ -39,17 +39,27 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
     // 오늘 날짜로 스크롤 또는 시작일로 스크롤
     useEffect(() => {
         const today = new Date();
-        today.setDate(today.getDate() - 2); // 하루 빼기
+        today.setDate(today.getDate() - 2);
         const todayStr = today.toISOString().split('T')[0];
+
         const isTodayInRange = dateRange.some(d => d.fullDate === todayStr);
+
         if (tableContainerRef.current) {
+            const container = tableContainerRef.current;
+
             if (isTodayInRange && todayRef.current) {
-                tableContainerRef.current.scrollTo({
-                    left: todayRef.current.offsetLeft - 100,
+                const todayElement = todayRef.current;
+                const scrollLeft = todayElement.offsetLeft
+                    - container.clientWidth
+                    + todayElement.offsetWidth
+                    + 100;
+
+                container.scrollTo({
+                    left: scrollLeft,
                     behavior: 'smooth',
                 });
             } else if (startDateRef.current) {
-                tableContainerRef.current.scrollTo({
+                container.scrollTo({
                     left: 0,
                     behavior: 'smooth',
                 });
