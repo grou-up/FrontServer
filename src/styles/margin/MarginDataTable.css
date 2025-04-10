@@ -24,7 +24,7 @@
 
 .campaign-data-table th,
 .campaign-data-table td {
-    padding: 2px 4px;
+    padding: 1px 2px;
     /* 패딩 설정 */
     text-align: left;
     /* 왼쪽 정렬 */

@@ -142,6 +142,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                                             : null
                                 }
                                 data-date={fullDate}
+                                style={{ minWidth: '155px' }} // ✅ 여기에 추가!
                             >
                                 {displayDate}
                             </th>
