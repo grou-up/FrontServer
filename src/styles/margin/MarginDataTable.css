@@ -24,7 +24,7 @@
 
 .campaign-data-table th,
 .campaign-data-table td {
-    padding: 2px 4px;
+    padding: 1px 2px;
     /* 패딩 설정 */
     text-align: left;
     /* 왼쪽 정렬 */
@@ -107,4 +107,13 @@
     /* 빨간색으로 텍스트 색상 설정 */
     font-weight: bold;
     /* 텍스트를 굵게 표시 */
+}
+
+.fixed-width-cell {
+    min-width: 100px;
+    max-width: 100px;
+    width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
