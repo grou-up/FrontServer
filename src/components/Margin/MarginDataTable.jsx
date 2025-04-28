@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import "../../styles/margin/MarginDataTable.css";
-import { getMarginByCampaignId } from "../../services/margin";
+import { getMarginByCampaignId, createMarginTable } from "../../services/margin";
 import { formatNumber } from "../../utils/formatUtils";
 
 const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
@@ -9,6 +9,8 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
     const tableContainerRef = useRef(null);
     const todayRef = useRef(null);
     const startDateRef = useRef(null);
+    const [isInitialLoading, setIsInitialLoading] = useState(true);
+
 
     // 날짜 범위 생성
     const dateRange = [];
@@ -36,26 +38,43 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
         fetchData();
     }, [startDate, endDate, campaignId]);
 
+
     // 오늘 날짜로 스크롤 또는 시작일로 스크롤
     useEffect(() => {
-        const today = new Date();
-        today.setDate(today.getDate() - 2); // 하루 빼기
-        const todayStr = today.toISOString().split('T')[0];
-        const isTodayInRange = dateRange.some(d => d.fullDate === todayStr);
+        if (!data.length || !dateRange.length || !isInitialLoading) return;
+
+        // 데이터가 있는 마지막 날짜 구하기
+        const validDates = data
+            .map(item => item.marDate)
+            .filter(Boolean)
+            .sort();
+
+        const lastDataDate = validDates[validDates.length - 1];
+        const isLastDateInRange = dateRange.some(d => d.fullDate === lastDataDate);
+
         if (tableContainerRef.current) {
-            if (isTodayInRange && todayRef.current) {
-                tableContainerRef.current.scrollTo({
-                    left: todayRef.current.offsetLeft - 100,
+            const container = tableContainerRef.current;
+
+            const lastRef = document.querySelector(`[data-date="${lastDataDate}"]`);
+            if (isLastDateInRange && lastRef) {
+                const scrollLeft = lastRef.offsetLeft
+                    - container.clientWidth
+                    + lastRef.offsetWidth
+                    + 100;
+
+                container.scrollTo({
+                    left: scrollLeft,
                     behavior: 'smooth',
                 });
             } else if (startDateRef.current) {
-                tableContainerRef.current.scrollTo({
+                container.scrollTo({
                     left: 0,
                     behavior: 'smooth',
                 });
             }
         }
-    }, [data, dateRange]);
+        setIsInitialLoading(false);
+    }, [data, dateRange, isInitialLoading]);
 
     const options = [
         { optionName: "목표효율", key: "marTargetEfficiency", editable: true },
@@ -103,6 +122,23 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
         });
     };
 
+    const handleCellClick = async (fullDate) => {
+        try {
+            console.log("선택한 날짜:", fullDate);
+            console.log("캠페인 ID:", campaignId);
+
+            const response = await createMarginTable({ targetDate: fullDate, campaignId });
+            const marginId = response.data; // 백엔드가 리턴한 marginId
+
+            const updateResponse = await getMarginByCampaignId({ startDate, endDate, campaignId });
+            setData(updateResponse.data[0].data);
+
+
+        } catch (error) {
+            console.error("셀 클릭 후 마진 테이블 생성 실패:", error);
+        }
+    };
+
     useEffect(() => {
         onDataChange(modifiedData);
     }, [modifiedData]);
@@ -125,6 +161,8 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                                             ? startDateRef
                                             : null
                                 }
+                                data-date={fullDate}
+                                className="fixed-width-cell" // ✅ 클래스 추가
                             >
                                 {displayDate}
                             </th>
@@ -142,7 +180,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                                 if (itemForDate) {
                                     if (option.key === "marAdRevenue") {
                                         value = itemForDate.marAdCost > 0
-                                            ? ((itemForDate.marAdMargin / itemForDate.marAdCost) * 100).toFixed(2) + '%'
+                                            ? ((itemForDate.marSales / itemForDate.marAdCost) * 100).toFixed(2) + '%'
                                             : '0.00%';
                                     } else if (option.key === "marAdCost") {
                                         value = formatNumber(Math.round(itemForDate.marAdCost * 1.1));
@@ -181,7 +219,15 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                                 }
 
                                 return (
-                                    <td key={fullDate} className={cellClass}>
+                                    <td
+                                        key={fullDate}
+                                        className={cellClass}
+                                        onClick={() => {
+                                            if (!(itemForDate)) {
+                                                handleCellClick(fullDate);
+                                            }
+                                        }}
+                                    >
                                         {option.editable && itemForDate ? (
                                             <input
                                                 type="number"
