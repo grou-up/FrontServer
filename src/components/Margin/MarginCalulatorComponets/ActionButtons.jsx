@@ -13,7 +13,6 @@ const ActionButtons = ({ selectedOptions, options, campaignId, handleCalculate }
                 option.mfcProductName &&
                 option.mfcSalePrice !== undefined &&
                 option.mfcTotalPrice !== undefined &&
-                option.mfcReturnPrice !== undefined &&
                 option.mfcType !== undefined &&
                 option.mfcCostPrice !== undefined;
         });
@@ -41,7 +40,6 @@ const ActionButtons = ({ selectedOptions, options, campaignId, handleCalculate }
                 !option.mfcProductName ||
                 option.mfcSalePrice === undefined || option.mfcSalePrice === "" ||
                 option.mfcTotalPrice === undefined || option.mfcTotalPrice === "" ||
-                option.mfcReturnPrice === undefined || option.mfcCostPrice === "" ||
                 option.mfcTotalPrice === undefined || option.mfcTotalPrice === "" ||
                 option.mfcType === undefined || option.mfcCostPrice === "";
         });
@@ -58,6 +56,7 @@ const ActionButtons = ({ selectedOptions, options, campaignId, handleCalculate }
             return;
         }
 
+
         // 마진과 제로 ROAS 계산 후 업데이트
         const updatedOptions = [...options]; // 원본 옵션 복사
         // 수정 하는경우, 앞에 3개 수정 후 계산하기 안 누르고 저장시, 바뀐 값으로 저장
@@ -70,6 +69,9 @@ const ActionButtons = ({ selectedOptions, options, campaignId, handleCalculate }
                 // 마진과 제로 ROAS 업데이트
                 option.mfcPerPiece = margin;
                 option.mfcZeroRoas = parseFloat(zeroROAS);
+            }
+            if (option.mfcReturnPrice === undefined || option.mfcReturnPrice === "") {
+                option.mfcReturnPrice = 0;
             }
         });
         // 선택된 옵션만 포함하도록 수정
