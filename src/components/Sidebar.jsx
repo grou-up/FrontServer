@@ -30,6 +30,8 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [] }) => {
         navigate("/margin-calculator");
       } else if (item.title === "설정") {
         navigate("/settings");
+      } else if (item.title === "데이터 관리") { // 데이터 관리 클릭 시
+        navigate("/data-setting");
       } else if (item.title === "로그아웃") {
         removeToken(); // 토큰 삭제
         navigate('/'); // 로그인 페이지로 리다이렉트
@@ -152,6 +154,11 @@ const Sidebar = () => {
       title: "설정",
       icon: <Settings size={16} />,
       showDivider: true,
+      children: [
+        {
+          title: "데이터 관리",
+        },
+      ],
     },
     {
       title: "로그아웃",

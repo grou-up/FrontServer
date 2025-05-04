@@ -11,6 +11,7 @@ import CampaignDetail from "./components/CampaignDetail";
 import MarginTabNavigation from "./components/Margin/MarginTabNavigation";
 import OtherComponent from "./components/memo/MemoComponent";
 import MemoButton from "./components/memo/MemoButton";
+import DataSetting from "./components/DataSetting/DataSettingComponent"
 import { MyContextProvider } from "../src/components/MyContext"
 
 class AppRoutes extends React.Component {
@@ -82,6 +83,15 @@ class AppRoutes extends React.Component {
                                     )}
                                     <MemoButton onClick={this.toggleOtherComponent} />
                                 </MyContextProvider>
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/data-setting"
+                        element={
+                            <PrivateRoute>
+                                <Sidebar />
+                                < DataSetting />
                             </PrivateRoute>
                         }
                     />
