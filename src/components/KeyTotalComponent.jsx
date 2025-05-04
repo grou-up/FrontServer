@@ -229,34 +229,32 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
         }
 
         try {
+            // --- URL에서 title 파라미터 추출 시작 ---
+            const urlParams = new URLSearchParams(window.location.search); // 현재 URL의 쿼리 문자열 파싱
+            const titleParam = urlParams.get('title'); // 'title' 파라미터 값 가져오기 (예: '방한마스크')
+
+            // title 파라미터 값이 있으면 사용하고, 없으면 기본값 '키워드' 사용
+            const baseFilename = titleParam ? titleParam : '키워드';
+            // 최종 파일 이름 조합 (예: "방한마스크_수동입찰가.xlsx")
+            const filename = `${baseFilename}_수동입찰가.xlsx`;
+            // --- URL에서 title 파라미터 추출 끝 ---
+
+
             // 1. SheetJS를 위한 데이터 준비 (배열의 배열 형식)
-            //    첫 번째 행은 헤더(제목), 그 다음 행부터 데이터입니다.
             const header = ['키워드', '입찰가']; // 엑셀 열 제목 정의
             const dataToExport = bidKeywords.map(keyword => [
                 keyword.keyKeyword,
                 keyword.bid
             ]);
-
-            // 헤더와 데이터를 합칩니다.
-            const worksheetData = [header, ...dataToExport];
+            const worksheetData = [header, ...dataToExport]; // 헤더와 데이터 결합
 
             // 2. 새 워크북을 만들고 워크시트를 추가합니다.
             const wb = XLSX.utils.book_new(); // 새 워크북 생성
             const ws = XLSX.utils.aoa_to_sheet(worksheetData); // 배열 데이터로부터 워크시트 생성
-
-            // 선택사항: 열 너비 조정 (예: 첫 번째 열 너비 설정)
-            // ws['!cols'] = [{ wch: 30 }, { wch: 15 }]; // 첫 2개 열 너비 설정
-
             XLSX.utils.book_append_sheet(wb, ws, '수동 입찰가'); // 워크북에 워크시트 추가, 시트 이름은 '수동 입찰가'
 
-            // 3. 다운로드될 파일 이름 정의
-            const filename = '수동 입찰가 키워드.xlsx'; // 다운로드될 엑셀 파일 이름
-
-            // 4. 엑셀 파일을 생성하고 다운로드를 시작합니다.
+            // 3. 엑셀 파일을 생성하고 다운로드를 시작합니다. (파일 이름은 위에서 동적으로 생성됨)
             XLSX.writeFile(wb, filename);
-
-            // 다운로드 성공 알림 (선택 사항)
-            // alert("엑셀 파일 다운로드가 시작됩니다.");
 
         } catch (error) {
             // 오류 발생 시 콘솔에 로그를 남기고 사용자에게 알림
