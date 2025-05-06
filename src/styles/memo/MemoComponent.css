@@ -2,7 +2,7 @@
     position: fixed;
     /* 왼쪽 고정 */
     left: 0;
-    width: 256px;
+    width: 210px;
     /* Sidebar와 동일한 너비 */
     height: 100%;
     /* 화면 전체 높이에서 Header 높이 제거 */
@@ -21,7 +21,7 @@
 }
 
 .memo-componet-header {
-    width: 256px;
+    width: 210px;
     /* Sidebar와 동일한 너비 */
     background-color: #5157AB;
     /* Sidebar와 동일한 너비 */

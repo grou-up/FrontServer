@@ -1,6 +1,6 @@
 /* 파일 업로드 Fileupload.css */
 .upload-content {
-    margin-left: 256px;
+    margin-left: 210px;
     padding: 25px;
     /* Sidebar 너비 */
     min-height: 100vh;
@@ -121,7 +121,7 @@
 .file-upload-label:hover {
     background-color: #eff6ff;
     /* 연한 파란색 */
-    border-color: #2563eb;
+    border-color: #2103eb;
     /* 더 진한 파란색 */
 }
 

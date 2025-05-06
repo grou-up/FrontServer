@@ -5,6 +5,7 @@ import StatGraphTable from "./StatGraphTable";
 import StatGraph2 from "./StatGraph2";
 import StatGraph3 from "./StatGraph3";
 import { getCampaignStats } from "../../services/keyword";
+import { getMarginByCampaignId } from "../../services/margin.js";
 import "../../styles/campaignStats/StatisticGrid.css";
 import { MyContext } from "../MyContext.jsx";
 
@@ -12,6 +13,7 @@ const StatisticGrid = ({ campaignId, startDate, endDate }) => {
     const { memoData, getMemoAboutCampaign } = useContext(MyContext);
     const [nonSearchStats, setNonSearchStats] = useState({});
     const [searchStats, setSearchStats] = useState({});
+    const [marginData, setMarginData] = useState({});
     const [campaignStats, setCampaignStats] = useState(null);
     const [aggregatedSearchStats, setAggregatedSearchStats] = useState({}); // 합산된 데이터를 위한 상태
     const [aggregatedNonSearchStats, setAggregatedNonSearchStats] = useState({}); // 합산된 데이터를 위한 상태
@@ -19,8 +21,12 @@ const StatisticGrid = ({ campaignId, startDate, endDate }) => {
     const fetchCampaignStat = async () => {
         try {
             const response = await getCampaignStats({ campaignId, start: startDate, end: endDate });
-            // console.log(response.data);
+            const marginResponse = await getMarginByCampaignId({ startDate: startDate, endDate: endDate, campaignId })
+
+            setMarginData(marginResponse.data)
             setCampaignStats(response.data);// 응답 데이터를 상태로 저장
+
+
         } catch (error) {
             console.error("Error fetching campaign stats:", error);
         }
@@ -84,6 +90,7 @@ const StatisticGrid = ({ campaignId, startDate, endDate }) => {
             </div>
             <div className="grid-item">
                 <StatGraphTable
+                    margin={marginData}
                     search={searchStats}
                     nonSearch={nonSearchStats}
                     startDate={startDate}

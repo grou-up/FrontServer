@@ -62,6 +62,26 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
             }
             const response = await updateEfficiencyAndAdBudget(data);
             alert("저장되었습니다.");
+
+            // 캠페인을 닫았다가 다시 여는 처리
+            setExpandedCampaignId(prev => {
+                const newSet = new Set(prev);
+                newSet.delete(selectedCampaign.campaignId);
+                return newSet;
+            });
+
+            // 데이터 다시 불러오기
+            await fetchMarginResults();
+
+            // 일정 시간 후 다시 열기
+            setTimeout(() => {
+                setExpandedCampaignId(prev => {
+                    const newSet = new Set(prev);
+                    newSet.add(selectedCampaign.campaignId);
+                    return newSet;
+                });
+            }, 50); // 100ms 후 다시 열기
+
         } catch (error) {
             console.error("저장 중 오류 발생:", error);
             alert("저장 실패");
