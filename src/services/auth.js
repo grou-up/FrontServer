@@ -16,8 +16,8 @@ export const signup = async ({ email, password, name }) => {
 };
 
 // role + nickname 요청
-export const getMyEmailAndRole = async() =>{
-  const data = await apiRequest('/members/getMyEmailAndRole',"GET")
+export const getMyName = async () => {
+  const data = await apiRequest('/members/getMyName', "GET")
   console.log(data)
 
   return data;
