@@ -2,7 +2,7 @@
 
 /* 메인 컨텐츠 */
 .main-content {
-    margin-left: 256px;
+    margin-left: 210px;
     /* Sidebar 너비 */
     min-height: 100vh;
     /* 화면 전체 높이 */
@@ -27,7 +27,7 @@
 /* 메인 컨텐츠 */
 .form-main-content {
     /* Sidebar 너비만큼 여백 */
-    margin-left: 256px;
+    margin-left: 210px;
     height: calc(100vh);
     /* 화면 전체 높이 */
     overflow: auto;

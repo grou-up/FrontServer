@@ -1,6 +1,6 @@
 import React from 'react';
 import '../../styles/campaignStats/StatTable.css'
-const StatGraphTable = ({ search, nonSearch, startDate, endDate }) => {
+const StatGraphTable = ({ margin, search, nonSearch, startDate, endDate }) => {
     // 날짜를 배열로 생성
     const dateLabels = [];
     const start = new Date(startDate);
@@ -15,13 +15,23 @@ const StatGraphTable = ({ search, nonSearch, startDate, endDate }) => {
     const getData = (key) => dateLabels.map(date => {
         const searchValue = search[date] ? search[date][key] : 0;
         const nonSearchValue = nonSearch[date] ? nonSearch[date][key] : 0;
+
         return searchValue + nonSearchValue; // 두 값을 더함
+    });
+
+    const getMarginData = (key) => dateLabels.map(date => {
+        if (!margin || !margin.length || !margin[0].data) return 0;
+        const marginForDate = margin[0].data.find(item => item.marDate === date);
+        return marginForDate ? marginForDate[key] : 0;
     });
 
     const AdCostData = getData('keyAdcost');
     const impressionData = getData('keyImpressions');
     const clicksData = getData('keyClicks');
     const totalSalesData = getData('keyTotalSales');
+
+    const marTargetEfficiencyData = getMarginData('marTargetEfficiency')
+    const marAdBudgetData = getMarginData('marAdBudget')
 
     // clickRateData 생성
     const clickRateData = impressionData.map((impressions, index) => {
@@ -58,6 +68,20 @@ const StatGraphTable = ({ search, nonSearch, startDate, endDate }) => {
                         </tr>
                     </thead>
                     <tbody>
+                        {/* 목표효율 Row */}
+                        <tr>
+                            <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>목표효율 (%)</td>
+                            {marTargetEfficiencyData.map((targetEfficiencyData, index) => (
+                                <td key={index} style={{ padding: '5px', border: '1px solid #ddd' }}>{targetEfficiencyData}</td>
+                            ))}
+                        </tr>
+                        {/* 광고예산 */}
+                        <tr>
+                            <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>광고예산</td>
+                            {marAdBudgetData.map((adBudgetData, index) => (
+                                <td key={index} style={{ padding: '5px', border: '1px solid #ddd' }}>{adBudgetData}</td>
+                            ))}
+                        </tr>
                         {/* CVR Row */}
                         <tr>
                             <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>전환율 (%)</td>

@@ -3,7 +3,7 @@
   /* 왼쪽 고정 */
   /* Header 아래로 배치 */
   left: 0;
-  width: 256px;
+  width: 210px;
   /* Sidebar 너비 */
   height: calc(100vh - 60px);
   /* 화면 전체 높이에서 Header 높이 제거 */

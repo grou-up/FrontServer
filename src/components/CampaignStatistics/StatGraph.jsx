@@ -185,7 +185,7 @@ const StatGraph = ({ search, nonSearch, memoData, startDate, endDate }) => {
             y: {
                 title: {
                     display: true,
-                    text: 'Ad Sales',
+                    text: '광고매출',
                 },
                 stacked: true,
                 min: 0,
