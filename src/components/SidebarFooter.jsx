@@ -25,7 +25,6 @@ const SidebarFooter = () => {
     return (
         <div className="sidebar-footer">
             <span className="user-name">{userInfo.email || 'Loading...'}</span>
-            <span className="user-role">{userInfo.role || 'Loading...'}</span>
         </div>
     );
 };
