@@ -21,7 +21,7 @@ const useFileUpload = (uploadFunction, successMessage, shouldNavigate = false, s
           throw new Error("파일 업로드 실패");
         }
       }
-      window.location.href = "/main";
+      window.location.href = "/upload";
       alert(successMessage);
       if (setFileData) {
         setFileData(file); // 데이터 반영

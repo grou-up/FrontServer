@@ -59,3 +59,15 @@ export const updateEfficiencyAndAdBudget = async (data) => {
         throw error; // 오류를 상위로 전달
     }
 };
+export const createMarginTable = async ({ targetDate, campaignId }) => {
+    try {
+        console.log("백엔드 호출");
+        const response = await apiRequest(
+            `/margin/createMarginTable?targetDate=${targetDate}&campaignId=${campaignId}`,
+            'POST'
+        );
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
