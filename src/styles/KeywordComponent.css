@@ -84,3 +84,29 @@ th svg {
     transform: scale(1.1);
     /* 마우스 오버 시 확대 */
 }
+
+.keyword-table {
+    max-height: 600px;
+    /* 예시: 테이블의 최대 높이를 지정해야 스크롤이 생깁니다. */
+    overflow-y: auto;
+    /* 세로 스크롤을 활성화합니다. */
+    position: relative;
+    /* 일부 브라우저/상황에서 sticky 기준점으로 필요할 수 있습니다. */
+    margin-top: 5px;
+}
+
+/* thead 안의 모든 th 요소에 sticky 속성 적용 */
+.keyword-table thead th {
+    position: sticky;
+    top: 0;
+    /* 스크롤 컨테이너(.keyword-table)의 상단에 고정 */
+    background-color: rgba(152, 179, 248, 0.993);
+    /* 중요: 스크롤되는 내용이 비치지 않도록 배경색 지정 */
+    /* z-index: 10;
+    다른 요소 위에 표시되도록 z-index 설정 (필요에 따라 조정) */
+    padding: 12px 8px;
+    /* text-align: center; */
+    /* 예시 정렬 */
+    font-weight: bold;
+    /* 예시 폰트 두께 */
+}

@@ -3,6 +3,8 @@ import "../styles/KeyTotal.css";
 import KeywordComponent from "./KeywordComponent";
 import ExclusionKeywordComponent from "./ExclusionKeywordComponent";
 import KeywordBidComponent from "./KeywordBidComponent";
+import * as XLSX from 'xlsx'; // xlsx 라이브러리 가져오기
+
 import {
     getKeywords, registerExclusionKeywords, registerKeywordBid,
     getBidKeywords, updateBidKeyword, deleteBodKeywords,
@@ -220,19 +222,45 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
     };
 
     const handleDownloadBid = () => {
+        // 다운로드할 키워드가 없으면 사용자에게 알림
         if (bidKeywords.length === 0) {
-            alert("복사할 입찰가 없습니다.");
+            alert("다운로드할 입찰가 키워드가 없습니다.");
             return;
         }
-        // console.log(exclusionKeywords);
-        const keywordsToCopy = bidKeywords.map(keyword => `${keyword.keyKeyword}\t${keyword.bid}`).join('\n'); // 제외 키워드와 가격을 탭으로 구분하여 같은 가로줄로 연결
-        navigator.clipboard.writeText(keywordsToCopy) // 클립보드에 복사
-            .then(() => {
-                alert("입찰가가가 클립보드에 복사되었습니다.");
-            })
-            .catch((error) => {
-                console.error("복사 실패:", error);
-            });
+
+        try {
+            // --- URL에서 title 파라미터 추출 시작 ---
+            const urlParams = new URLSearchParams(window.location.search); // 현재 URL의 쿼리 문자열 파싱
+            const titleParam = urlParams.get('title'); // 'title' 파라미터 값 가져오기 (예: '방한마스크')
+
+            // title 파라미터 값이 있으면 사용하고, 없으면 기본값 '키워드' 사용
+            const baseFilename = titleParam ? titleParam : '키워드';
+            // 최종 파일 이름 조합 (예: "방한마스크_수동입찰가.xlsx")
+            const filename = `${baseFilename}_수동입찰가.xlsx`;
+            // --- URL에서 title 파라미터 추출 끝 ---
+
+
+            // 1. SheetJS를 위한 데이터 준비 (배열의 배열 형식)
+            const header = ['키워드', '입찰가']; // 엑셀 열 제목 정의
+            const dataToExport = bidKeywords.map(keyword => [
+                keyword.keyKeyword,
+                keyword.bid
+            ]);
+            const worksheetData = [header, ...dataToExport]; // 헤더와 데이터 결합
+
+            // 2. 새 워크북을 만들고 워크시트를 추가합니다.
+            const wb = XLSX.utils.book_new(); // 새 워크북 생성
+            const ws = XLSX.utils.aoa_to_sheet(worksheetData); // 배열 데이터로부터 워크시트 생성
+            XLSX.utils.book_append_sheet(wb, ws, '수동 입찰가'); // 워크북에 워크시트 추가, 시트 이름은 '수동 입찰가'
+
+            // 3. 엑셀 파일을 생성하고 다운로드를 시작합니다. (파일 이름은 위에서 동적으로 생성됨)
+            XLSX.writeFile(wb, filename);
+
+        } catch (error) {
+            // 오류 발생 시 콘솔에 로그를 남기고 사용자에게 알림
+            console.error("엑셀 파일 생성 또는 다운로드 실패:", error);
+            alert("엑셀 파일을 생성하는 중 오류가 발생했습니다.");
+        }
     };
 
     return (
@@ -279,7 +307,7 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
                     {activeComponent === "bid" && (
                         <>
                             <button className="keyword-button primary-button" onClick={handleUpdateKeywordBids}>수정</button>
-                            <button className="keyword-button primary-button" onClick={handleDownloadBid}>복사</button>
+                            <button className="keyword-button primary-button" onClick={handleDownloadBid}>액셀 다운로드</button>
                             <button className="keyword-button primary-button" onClick={handleDeleteKeywordBids}>삭제</button>
                         </>
                     )}
