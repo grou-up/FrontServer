@@ -1,5 +1,6 @@
 import { React, useEffect } from "react";
 import DashboardGrid from "../components/Dashboard/DashboardGrid";
+import DashboardGridV2 from "./Dashboard_v2/DashboardGridV2";
 import "../styles/Mainform.css"; // 메인 폼 전용 스타일
 
 const MainForm = () => {
@@ -11,11 +12,7 @@ const MainForm = () => {
   }, []); // 빈 배열([])을 넣으면 컴포넌트가 처음 렌더링될 때만 실행됨
   return (
     <div className="form-main-content">
-      <div className="form-fixed-screen bg-gray-100">
-        <main className="form-dashboard-container">
-          <DashboardGrid />
-        </main>
-      </div>
+      <DashboardGridV2 />
     </div>
   );
 };
