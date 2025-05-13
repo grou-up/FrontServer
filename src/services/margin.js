@@ -71,3 +71,12 @@ export const createMarginTable = async ({ targetDate, campaignId }) => {
         throw error;
     }
 };
+
+export const findLatestMarginDateByEmail = async () => {
+    try {
+        const response = await apiRequest(`/margin/findLatestMarginDateByEmail`);
+        return response;
+    } catch (error) {
+        throw error
+    }
+}
