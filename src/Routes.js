@@ -13,6 +13,7 @@ import MarginTabNavigation from "./components/Margin/MarginTabNavigation";
 import OtherComponent from "./components/memo/MemoComponent";
 import MemoButton from "./components/memo/MemoButton";
 import { MyContextProvider } from "../src/components/MyContext"
+import SettingPage from "./components/Setting/SettingPage";
 
 class AppRoutes extends React.Component {
     constructor(props) {
@@ -62,6 +63,15 @@ class AppRoutes extends React.Component {
                             <PrivateRoute>
                                 <Sidebar />
                                 < MarginTabNavigation />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/settings"
+                        element={
+                            <PrivateRoute>
+                                <Sidebar />
+                                < SettingPage />
                             </PrivateRoute>
                         }
                     />
