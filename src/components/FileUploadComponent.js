@@ -9,7 +9,7 @@ const FileUploadComponent = ({ label, files, setFiles, multiple = false }) => {
   };
 
   return (
-    <div className="file-upload-container">
+    <>
       <div className="file-upload-wrapper">
         <label className="file-upload-label">
           <Upload className="file-upload-icon" />
@@ -19,18 +19,11 @@ const FileUploadComponent = ({ label, files, setFiles, multiple = false }) => {
             className="file-upload-input"
             accept=".xlsx, .xls"
             onChange={handleFileUpload}
-            multiple={multiple} // multiple 속성 반영
+            multiple={multiple}
           />
         </label>
       </div>
-      {files.length > 0 && (
-        <div className="file-upload-selected">
-          {files.map((file, index) => (
-            <p key={index}>선택된 파일: {file.name}</p>
-          ))}
-        </div>
-      )}
-    </div>
+    </>
   );
 };
 

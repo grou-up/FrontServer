@@ -35,9 +35,11 @@ export const uploadFile2 = (file, onUploadProgress) => {
   });
 };
 
-export const uploadFile3 = (file, onUploadProgress) => {
+export const uploadFile3 = (file, date, onUploadProgress) => {
   const formData = new FormData();
-  formData.append('file', file);
+
+  const renamed = `${date}_${file.name}`;
+  formData.append('file', file, renamed);
 
   // 토큰 가져오기
   const token = getToken();

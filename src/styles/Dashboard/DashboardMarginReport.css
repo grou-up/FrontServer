@@ -1,7 +1,7 @@
 /* DashboardMarginReport.css */
 
 .margin-report-content {
-    overflow-y: auto;
+    overflow-y: hidden;
     overflow-x: hidden;
     border-radius: 20px;
 }

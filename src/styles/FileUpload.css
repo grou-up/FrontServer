@@ -1,195 +1,154 @@
-/* 파일 업로드 Fileupload.css */
-.upload-content {
-    margin-left: 210px;
-    padding: 25px;
-    /* Sidebar 너비 */
-    min-height: 100vh;
-    /* 화면 전체 높이 */
-    height: auto;
-    /* 자동으로 높이 설정 */
-    overflow: hidden;
-    /* 스크롤 제거 */
-    background-color: #f3f4f6;
-    display: flex;
-    flex-direction: column;
-}
+/* FileUpload.css */
 
-/* 카드 스타일 */
-.upload-card {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 24px;
-    position: relative;
-}
-
-/* 제목 스타일 */
+/* 카드 제목 */
 .upload-title {
-    font-size: 1.25rem;
-    font-weight: 600;
-    margin-bottom: 16px;
+    font-size: 20px;
+    font-weight: 700;
+    color: #4c4c4c;
+    align-items: center;
+    justify-content: center;
 }
 
-/* 버튼 스타일 */
+.upload-title-row {
+    display: flex;
+    align-items: center;
+    /* 만약 좌우 여백이 필요하면 아래처럼 padding 추가 */
+    /* padding: 0 16px; */
+}
+
+.upload-title-row .upload-title {
+    margin: 0;
+    /* 제목과 아이콘 간격이 충분치 않다면 margin-right 추가 */
+    /* margin-right: 8px; */
+}
+
+.upload-title-row .help-icon {
+    margin-left: 8px;
+}
+
+/* date-input 클래스 추가 */
+.upload-title-row .date-input {
+    margin-left: auto;
+    /* <-- 여기서 오른쪽으로 밀어냄 */
+    padding: 4px 8px;
+    font-size: 14px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* 도움말 버튼 */
 .upload-button {
     position: absolute;
-    top: 16px;
-    right: 16px;
-    font-size: 0.875rem;
-    text-decoration: underline;
-    color: #4c547b;
-    /* 버튼 글자 색상 변경 */
+    top: 20px;
+    right: 20px;
+    font-size: 14px;
+    color: #4c4c4c;
+    background: none;
+    border: none;
     display: flex;
     align-items: center;
     cursor: pointer;
 }
 
 .upload-button:hover {
-    color: #5c62b8;
+    color: #3b6fe2;
 }
 
-/* 아이콘과 텍스트 정렬 */
 .icon-next-to {
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
-.icon-next-to:hover {
-    color: #5c62b8;
-    transform: scale(1.1);
-    /* 10% 커지게 */
-}
-
-/* 아이콘 색상 변경 */
 .icon-next-to svg {
-    color: #4c547b;
-    /* 아이콘 색상 */
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
 }
 
-/* 도움말 박스 스타일 */
-.help-box {
-    margin-top: 32px;
-    background-color: #dbeafe;
-    /* bg-blue-100 */
-    color: #1e3a8a;
-    /* text-blue-800 */
-    padding: 16px;
-    border-radius: 8px;
-    font-size: 16px;
-    font-weight: bold;
-}
-
-/* 도움말 이미지 스타일 */
-.help-box img {
-    width: 100%;
-    height: auto;
-    margin-bottom: 16px;
-}
-
-/* 파일 업로드 카드 내부 */
-.file-upload-container {
-    background-color: white;
-    padding: 24px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
+/* 업로드 영역 */
 .file-upload-wrapper {
     display: flex;
     justify-content: center;
+    /* 가로 가운데 */
     align-items: center;
+    /* 세로 가운데 (필요 시) */
     width: 100%;
 }
 
 .file-upload-label {
-    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 16px 32px;
-    background-color: white;
-    border-radius: 8px;
-    border: 2px solid #4c547b;
-    /* 파란색 테두리 */
     cursor: pointer;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-}
-
-.file-upload-label:hover {
-    background-color: #eff6ff;
-    /* 연한 파란색 */
-    border-color: #2103eb;
-    /* 더 진한 파란색 */
 }
 
 .file-upload-icon {
-    width: 32px;
-    height: 32px;
-    color: #4c547b;
-    /* 아이콘 색상 */
+    width: 36px;
+    height: 36px;
+    color: #3b6fe2;
 }
 
 .file-upload-text {
-    margin-top: 8px;
-    font-size: 16px;
-    color: #1e3a8a;
-    /* 진한 파란색 */
-    font-weight: bold;
+    margin-top: 12px;
+    font-size: 14px;
+    color: #6b7280;
 }
 
 .file-upload-input {
     display: none;
 }
 
-.file-upload-selected {
-    margin-top: 8px;
-    font-size: 14px;
-    color: #6b7280;
-    /* 회색 */
+/* 파일 업로드 버튼 */
+.upload-action-button {
+    padding: 5px 35px;
+    border-radius: 15px;
+    background-color: #3b6fe2;
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 12px;
+    border: none;
 }
 
-.overlay {
+.upload-action-button:hover {
+    background-color: rgb(25, 66, 180);
+}
+
+.upload-title-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.help-icon {
+    color: #576FA3;
+}
+
+.help-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.5);
-    /* 반투명 배경 */
+    z-index: 999;
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    z-index: 1000;
 }
 
-.spinner {
-    width: 50px;
-    height: 50px;
-    border: 5px solid rgba(255, 255, 255, 0.3);
-    border-top: 5px solid #fff;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-bottom: 20px;
-    /* grouup 텍스트와 간격 */
+.help-modal {
+    background-color: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    max-width: 80%;
+    max-height: 80%;
 }
 
-@keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-.overlay-text {
-    font-size: 2rem;
-    font-weight: bold;
-    color: white;
-    text-align: center;
+.help-modal img {
+    width: 100%;
+    height: auto;
+    display: block;
 }
