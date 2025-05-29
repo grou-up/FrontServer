@@ -6,7 +6,6 @@
     height: 100%;
     background: #EBEFF9;
     position: relative;
-    overflow: hidden;
 }
 
 .dashboard-grid {
@@ -91,7 +90,7 @@
 
 .dashboard-calendar {
     width: 11.7%;
-    height: 19.5%;
+    height: 19.2%;
     left: 55%;
     top: 4%;
     padding: 0;
@@ -156,7 +155,6 @@
     height: 50%;
     left: 49.9%;
     top: 45%;
-    overflow: auto;
 }
 
 .chart-container {
@@ -164,11 +162,6 @@
     height: 80%;
     margin-top: 15px;
 }
-
-
-
-
-
 
 .highlight-row {
     font-weight: bold;

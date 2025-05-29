@@ -1,0 +1,81 @@
+/* overlay */
+.file-history-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+/* 모달 박스 컨테이너 */
+.file-history-modal-container {
+    background: #fff;
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 600px;
+    width: 90%;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    position: relative;
+    animation: fadeInScale 0.2s ease-out;
+}
+
+@keyframes fadeInScale {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* 닫기 버튼 */
+.file-history-modal-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: #666;
+    transition: color 0.2s;
+}
+
+.file-history-modal-close:hover {
+    color: #333;
+}
+
+/* 제목 */
+.file-history-modal-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 16px;
+}
+
+/* 파일 리스트 */
+.file-history-modal-list>.file-history-item {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 12px;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.file-history-modal-list>.file-history-item:hover {
+    border-color: #ddd;
+    background: #fafafa;
+}
+
+.file-history-modal-item-type {
+    font-weight: 500;
+    margin-bottom: 8px;
+}
+
+.file-history-modal-item-detail {
+    font-size: 0.9rem;
+    line-height: 1.4;
+}
