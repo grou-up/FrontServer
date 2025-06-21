@@ -5,33 +5,27 @@ const useFileUpload = (uploadFunction, successMessage, shouldNavigate = false, s
   const [uploading, setUploading] = useState(false);
 
   const handleUploadFile = async () => {
-    if (file.length === 0) { // 변경
+    if (file.length === 0) {
       alert("파일을 업로드 해주세요.");
-      return;
+      return false;
     }
 
     setUploading(true);
     setUploadingGlobal(true);
 
     try {
-      for (let i = 0; i < file.length; i++) { // 여러 파일 처리 가능
+      for (let i = 0; i < file.length; i++) {
         const response = await uploadFunction(file[i]);
         if (response.status !== 200) {
-          window.location.href = "/main";
           throw new Error("파일 업로드 실패");
         }
       }
-      window.location.href = "/upload";
       alert(successMessage);
-      if (setFileData) {
-        setFileData(file); // 데이터 반영
-      }
-      if (shouldNavigate) {
-        window.location.href = "/main";
-      }
+      if (setFileData) setFileData(file);
+      return true;
     } catch (error) {
-      window.location.href = "/upload";
       alert("업로드 실패!");
+      return false;
     } finally {
       setUploading(false);
       setUploadingGlobal(false);
