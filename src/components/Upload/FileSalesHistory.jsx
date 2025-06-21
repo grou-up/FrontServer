@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { getHistory } from "../../services/file"
+import { getHistory } from "../../services/file";
 import FileHistoryModal from './FileHistoryModal';
 
 export default function FileSalesHistory() {
     const [currentDate, setCurrentDate] = useState(new Date());
     const [history, setHistory] = useState({
-        advertisingReport: {},   // { "2025-05-15": [ FileResponseDto, … ], … }
-        netSalesReport: {}
+        advertisingReport: [],   // ["2025-05-01", "2025-05-02", …]
+        netSalesReport: {}       // { "2025-05-10": { id:…, fileName:…, … }, … }
     });
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,10 +33,10 @@ export default function FileSalesHistory() {
         const { startDate, endDate } = getRange(currentDate);
         getHistory({ startDate, endDate })
             .then(res => {
-                const dto = res.data ?? res;
+                const data = res.data ?? res;
                 setHistory({
-                    advertisingReport: dto.advertisingReport || {},
-                    netSalesReport: dto.netSalesReport || {}
+                    advertisingReport: data.advertisingReport || [],
+                    netSalesReport: data.netSalesReport || {}
                 });
             })
             .catch(console.error);
@@ -57,11 +57,9 @@ export default function FileSalesHistory() {
     // 해당 날짜에 광고/순매출 데이터가 있는지
     const getFlags = date => {
         const key = formatDate(date);
-        const advArr = history.advertisingReport[key];
-        const netArr = history.netSalesReport[key];
         return {
-            isAdv: Array.isArray(advArr) && advArr.length > 0,
-            isNet: Array.isArray(netArr) && netArr.length > 0
+            isAdv: history.advertisingReport.includes(key),
+            isNet: history.netSalesReport[key] != null
         };
     };
 
@@ -70,19 +68,14 @@ export default function FileSalesHistory() {
         const key = formatDate(date);
         const out = [];
 
-        const advArr = history.advertisingReport[key] || [];
-        advArr.forEach(dto => {
-            out.push({ type: '광고 보고서', ...dto });
-        });
-
-        const netArr = history.netSalesReport[key] || [];
-        netArr.forEach(dto => {
-            out.push({ type: '순매출 보고서', ...dto });
-        });
+        // 순매출 보고서는 맵에서 DTO 꺼내기
+        const netDto = history.netSalesReport[key];
+        if (netDto) {
+            out.push({ type: '순매출 보고서', ...netDto });
+        }
 
         return out;
     };
-
     // 점 렌더링 (광고 빨강, 순매출 파랑)
     const renderIndicators = ({ isAdv, isNet }) => (
         <div className="flex gap-1 mt-1 justify-center">
@@ -126,13 +119,13 @@ export default function FileSalesHistory() {
                         const inMonth = day.getMonth() === title.getMonth();
                         const isToday = formatDate(day) === formatDate(new Date());
                         const flags = getFlags(day);
-                        const hasFiles = flags.isAdv || flags.isNet;
+                        const clickable = flags.isNet;
 
                         return (
                             <div
                                 key={idx}
                                 onClick={() => {
-                                    if (!hasFiles) return;
+                                    if (!clickable) return;
                                     setModalDate(formatDate(day));
                                     setModalFiles(getFilesForDate(day));
                                     setIsModalOpen(true);
@@ -141,7 +134,7 @@ export default function FileSalesHistory() {
                   relative group h-12 flex flex-col items-center justify-center text-sm rounded-md
                   ${inMonth ? 'text-gray-900' : 'text-gray-300'}
                   ${isToday ? 'bg-blue-100 font-semibold' : 'hover:bg-gray-50'}
-                  ${hasFiles ? 'cursor-pointer' : ''}
+                  ${clickable ? 'cursor-pointer hover:bg-gray-50' : ''}
                 `}
                             >
                                 <span>{day.getDate()}</span>
