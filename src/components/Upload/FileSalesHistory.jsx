@@ -200,9 +200,17 @@ export default function FileSalesHistory() {
 
             <FileHistoryModal
                 isOpen={isModalOpen}
-                onClose={() => setIsModalOpen(false)}
                 date={modalDate}
                 files={modalFiles}
+                onClose={() => setIsModalOpen(false)}
+                onDeleted={(deletedId) => {
+                    // 1) 모달 닫기
+                    setIsModalOpen(false);
+                    // 2) 리스트에서 해당 항목 제거 (선택 사항)
+                    setModalFiles(prev => prev.filter(f => f.id !== deletedId));
+                    // 3) 전체 히스토리 리로드
+                    reloadHistory();
+                }}
             />
         </>
     );
