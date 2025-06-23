@@ -56,35 +56,29 @@ const DateRangeCalendar = ({ onDateRangeChange, initialStartDate, initialEndDate
     const handleDateClick = date => {
         const clicked = new Date(date);
         clicked.setHours(0, 0, 0, 0);
-        console.log(1)
         if (!startDate || (startDate && endDate)) {
             // 시작일 재설정
             setStartDate(clicked);
             setEndDate(null);
             setIsSelectingEnd(true);
-            console.log(2)
 
         } else if (startDate && !endDate) {
             // 사용자가 끝 날짜 선택 중
             let selectedEnd = clicked;
-            console.log(3)
             // 1) 시작일보다 이전 클릭 시 → 시작일 재설정
             if (selectedEnd < startDate) {
                 setStartDate(selectedEnd);
                 setEndDate(null);
                 setIsSelectingEnd(true);
-                console.log(4)
                 return;
             }
 
             // 2) 오늘을 넘으면 오늘로
             if (selectedEnd > today) {
                 if (startDate < today) {
-                    console.log("앞")
                     selectedEnd = today;
                 }
                 else {
-                    console.log("뒤")
                     setStartDate(null)
                     setEndDate(null)
                     return
@@ -99,7 +93,6 @@ const DateRangeCalendar = ({ onDateRangeChange, initialStartDate, initialEndDate
             maxEnd.setDate(maxEnd.getDate() + 29);
             if (selectedEnd > maxEnd) {
                 setStartDate(maxEnd)
-                console.log(7)
             }
 
             setEndDate(selectedEnd);
