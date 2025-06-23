@@ -193,7 +193,7 @@ export default function FileSalesHistory() {
                     </div>
                 </div>
                 {/* 내부 스크롤이 필요하면 overflow-auto */}
-                <div className="calendars flex mt-2 overflow-x-auto">
+                <div className="calendars flex overflow-x-auto">
                     <Calendar offset={0} />
                 </div>
             </div>
