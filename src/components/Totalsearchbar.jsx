@@ -14,14 +14,22 @@ const Totalsearchbar = ({ title }) => {
     const [activeTab, setActiveTab] = useState("stats");
 
     // 오늘 기준 이번 달 1일 ~ 말일을 ISO 문자열로
+    // 컴포넌트 상단
     const today = new Date();
-    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1)
-        .toISOString()
-        .slice(0, 10);
-    const lastDay = new Date(today)
-        .toISOString()
-        .slice(0, 10);
 
+    // 1일 오전 12시가 아니라, 예시대로 12시에 맞추고 싶다면
+    const firstDayDate = new Date(today.getFullYear(), today.getMonth(), 1);
+    firstDayDate.setHours(12, 0, 0, 0);
+
+    // 마지막 일자를 “오늘”로 (23:59:59.999까지)
+    const lastDayDate = new Date(today);
+    lastDayDate.setHours(23, 59, 59, 999);
+
+    // ISO 문자열(YYYY-MM-DD)로 변환
+    const firstDay = firstDayDate.toISOString().slice(0, 10);
+    const lastDay = lastDayDate.toISOString().slice(0, 10);
+
+    // state 초기화 (문자열)
     const [startDate, setStartDate] = useState(firstDay);
     const [endDate, setEndDate] = useState(lastDay);
 
