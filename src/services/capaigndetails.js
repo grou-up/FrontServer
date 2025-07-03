@@ -3,8 +3,7 @@ import { apiRequest } from '../utils/apiClient';
 // 해당 캠패인의 전체옵션  조회
 export const getCampaignDetails = async ({ start, end, campaignId }) => {
   try {
-    const response = await apiRequest(`/cod/getMyCampaignDetails?startDate=${start}&endDate=${end}&campaignId=${campaignId}`);
-    // console.log(response); // 응답값을 콘솔에 출력
+    const response = await apiRequest(`/cod/getMyCampaignDetails?start=${start}&end=${end}&campaignId=${campaignId}`);
     return response;
   } catch (error) {
     console.error("Error fetching campaigns:", error); // 에러 핸들링
