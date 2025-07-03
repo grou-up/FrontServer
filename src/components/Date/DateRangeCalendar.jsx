@@ -24,9 +24,16 @@ const DateRangeCalendar = ({ onDateRangeChange, initialStartDate, initialEndDate
     // 부모에게 날짜 범위 변경 알려주기
     useEffect(() => {
         if (startDate && endDate && onDateRangeChange) {
+            // 날짜 시간 설정
+            const adjustedStart = new Date(startDate);
+            adjustedStart.setHours(12, 0, 0, 0); // 정오
+
+            const adjustedEnd = new Date(endDate);
+            adjustedEnd.setHours(23, 59, 59, 999); // 자정 직전
+
             onDateRangeChange({
-                startDate: startDate.toISOString().slice(0, 10),
-                endDate: endDate.toISOString().slice(0, 10),
+                startDate: adjustedStart.toISOString().slice(0, 10),
+                endDate: adjustedEnd.toISOString().slice(0, 10),
             });
         }
     }, [startDate, endDate, onDateRangeChange]);

@@ -47,11 +47,16 @@ const MarginTabNavigation = () => {
 
     // 달력에서 날짜 범위 선택 시 호출되는 함수
     const handleDateRangeChange = (dateRange) => {
-        setStartDate(dateRange.startDate);
-        setEndDate(dateRange.endDate);
+        const start = new Date(dateRange.startDate);
+        start.setHours(12, 0, 0, 0); // 시작일: 정오 (12:00:00.000)
 
+        const end = new Date(dateRange.endDate);
+        end.setHours(23, 59, 59, 999); // 종료일: 자정 직전 (23:59:59.999)
+
+        console.log(start, end)
+        setStartDate(start.toISOString().slice(0, 10));
+        setEndDate(end.toISOString().slice(0, 10));
     };
-
     // 날짜 선택 버튼 클릭 시 달력 토글
     const toggleDatePicker = () => {
         setShowDatePicker(!showDatePicker);
