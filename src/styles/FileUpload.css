@@ -138,17 +138,9 @@
     align-items: center;
 }
 
-.help-modal {
-    background-color: white;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    max-width: 80%;
-    max-height: 80%;
-}
 
 .help-modal img {
-    width: 100%;
+    width: 80%;
     height: auto;
     display: block;
 }
