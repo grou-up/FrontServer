@@ -14,8 +14,7 @@
     /* 달력 사이에 간격 */
     justify-content: center;
     /* 가운데 정렬 */
-    /* overflow-x: auto;  스크롤을 원치 않으면 제거하세요 */
-    /* flex-wrap: wrap;    반응형으로 세로로 쌓이게 하고 싶으면 주석 해제 */
+    margin-bottom: 8%;
 }
 
 .calendar-container {

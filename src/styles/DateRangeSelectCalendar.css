@@ -1,6 +1,7 @@
 .date-selection-container {
     position: relative;
     overflow: visible;
+    z-index: 20;
 }
 
 /* 연결된 날짜 버튼 컨테이너 */

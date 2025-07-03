@@ -4,7 +4,8 @@
     /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
     margin-bottom: 16px;
     border-radius: 16px;
-    overflow: hidden;
+    overflow: visible;
+    /* 자식 요소가 넘쳐도 보이도록 설정 */
     /* 컨테이너 밖으로 콘텐츠 넘침 방지 */
 
 }
