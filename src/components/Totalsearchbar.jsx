@@ -6,7 +6,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import "../styles/TabComponent.css";
 import { useParams } from "react-router-dom";
 import DateRangeCalendar from "./Date/DateRangeCalendar";
-import '../styles/DateRangeSelectCalendar.css'
+import '../styles/DateRangeSelectCalendar.css' // 이 CSS 파일에 z-index 설정이 중요합니다.
 
 const Totalsearchbar = ({ title }) => {
     const { campaignId } = useParams();
@@ -26,6 +26,10 @@ const Totalsearchbar = ({ title }) => {
     lastDayDate.setHours(23, 59, 59, 999);
 
     // ISO 문자열(YYYY-MM-DD)로 변환
+    // 현재 날짜가 2025-07-03이므로, initialStartDate를 '2025-07-01'로,
+    // initialEndDate를 '2025-07-02' (어제)로 초기화하는 것이 이전 요청에 더 부합합니다.
+    // 만약 항상 이번달 1일 ~ 오늘로 하고 싶다면 이 부분은 그대로 두세요.
+    // 여기서는 예시로 "오늘"까지 선택 가능하도록 두겠습니다.
     const firstDay = firstDayDate.toISOString().slice(0, 10);
     const lastDay = lastDayDate.toISOString().slice(0, 10);
 
@@ -89,14 +93,19 @@ const Totalsearchbar = ({ title }) => {
                     </button>
 
                     {showCalendar && (
-                        <div className="date-picker-modal">
-                            <DateRangeCalendar
-                                initialStartDate={startDate}
-                                initialEndDate={endDate}
-                                onDateRangeChange={handleDateRangeChange}
-                                onClose={toggleCalendar}
-                            />
-                        </div>
+                        <>
+                            {/* !!!!!!!! 이 부분이 추가되어야 합니다. !!!!!!!! */}
+                            {/* 오버레이를 추가하여 모달 뒷 배경 클릭 시 닫히도록 하고 z-index를 관리합니다. */}
+                            <div className="date-picker-overlay" onClick={toggleCalendar}></div>
+                            <div className="date-picker-modal">
+                                <DateRangeCalendar
+                                    initialStartDate={startDate}
+                                    initialEndDate={endDate}
+                                    onDateRangeChange={handleDateRangeChange}
+                                    onClose={toggleCalendar}
+                                />
+                            </div>
+                        </>
                     )}
                 </div>
             </div>
