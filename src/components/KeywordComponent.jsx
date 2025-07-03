@@ -1,25 +1,40 @@
-import React, { useState } from "react";
-import "../styles/KeywordComponent.css"; // 스타일 파일
+import React, { useState, useRef, useEffect } from "react";
+import "../styles/KeywordComponent.css";
 import SortableHeader from '../components/SortableHeader';
-import KeywordOptionModal from './KeywordOptionModal'; // 모달 컴포넌트 임포트
-
+import KeywordOptionModal from './KeywordOptionModal';
 
 const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, setSelectedKeywords, keywords, loading, error }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedKeyword, setSelectedKeyword] = useState(null);
-    // const [optionNames, setOptionNames] = useState({}); // 옵션 이름 저장용 상태 추가
-    const [sortConfig, setSortConfig] = useState({ key: 'keyKeyword', direction: 'asc' }); // 정렬 상태 추가
+    const [sortConfig, setSortConfig] = useState({ key: 'keyKeyword', direction: 'asc' });
 
+    // --- 기능 추가를 위한 State ---
+    const [isDragging, setIsDragging] = useState(false);
+    const [dragStartIndex, setDragStartIndex] = useState(null);
+    const [lastSelectedIndex, setLastSelectedIndex] = useState(null); // ✨ Shift 클릭 기준점 state
+    const tbodyRef = useRef(null);
+
+    // --- 드래그 중 텍스트 선택 방지 및 커서 변경 Effect ---
+    useEffect(() => {
+        if (isDragging) {
+            document.body.style.userSelect = 'none';
+            document.body.style.cursor = 'grabbing';
+        } else {
+            document.body.style.userSelect = 'auto';
+            document.body.style.cursor = 'auto';
+        }
+        return () => {
+            document.body.style.userSelect = 'auto';
+            document.body.style.cursor = 'auto';
+        };
+    }, [isDragging]);
+
+    // --- 정렬된 키워드 목록 ---
     const filteredKeywords = keywords.sort((a, b) => {
         const aValue = a[sortConfig.key];
         const bValue = b[sortConfig.key];
-
-        if (aValue < bValue) {
-            return sortConfig.direction === 'asc' ? -1 : 1;
-        }
-        if (aValue > bValue) {
-            return sortConfig.direction === 'asc' ? 1 : -1;
-        }
+        if (aValue < bValue) return sortConfig.direction === 'asc' ? -1 : 1;
+        if (aValue > bValue) return sortConfig.direction === 'asc' ? 1 : -1;
         return 0;
     });
 
@@ -31,28 +46,52 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
         setSortConfig({ key, direction });
     };
 
-    const handleCheckboxChange = (event, item) => {
-        event.stopPropagation(); // 이벤트 전파 중지
-        const keywordData = {
-            keyword: item.keyKeyword,
-            bid: item.keyCpc // keyBid를 keyCpc로 설정
-        };
+    // --- ✨ Shift 클릭 기능이 통합된 체크박스 핸들러 ---
+    const handleCheckboxChange = (event, clickedItem, index) => {
+        event.stopPropagation();
 
-        setSelectedKeywords((prev) => {
-            if (prev.some((kw) => kw.keyword === keywordData.keyword)) {
-                return prev.filter((kw) => kw.keyword !== keywordData.keyword);
-            } else {
-                return [...prev, keywordData];
-            }
-        });
+        // Shift 키가 눌렸고, 이전에 선택된 기준점이 있을 경우
+        if (event.nativeEvent.shiftKey && lastSelectedIndex !== null) {
+            const start = Math.min(lastSelectedIndex, index);
+            const end = Math.max(lastSelectedIndex, index);
+
+            const rangeItems = filteredKeywords.slice(start, end + 1);
+
+            setSelectedKeywords(prevSelected => {
+                // 현재 선택된 키워드 Set (빠른 조회를 위해)
+                const prevSelectedKeywords = new Set(prevSelected.map(kw => kw.keyword));
+
+                // 새로 추가될 아이템들
+                const newItemsToAdd = rangeItems
+                    .filter(item => !prevSelectedKeywords.has(item.keyKeyword))
+                    .map(item => ({ keyword: item.keyKeyword, bid: item.keyCpc }));
+
+                return [...prevSelected, ...newItemsToAdd];
+            });
+        } else {
+            // 일반 클릭 (Shift 키가 안 눌린 경우)
+            const keywordData = {
+                keyword: clickedItem.keyKeyword,
+                bid: clickedItem.keyCpc
+            };
+
+            setSelectedKeywords(prev => {
+                if (prev.some(kw => kw.keyword === keywordData.keyword)) {
+                    return prev.filter(kw => kw.keyword !== keywordData.keyword);
+                } else {
+                    return [...prev, keywordData];
+                }
+            });
+
+            // 마지막 선택 인덱스를 현재 인덱스로 업데이트!
+            setLastSelectedIndex(index);
+        }
     };
 
     const handleSelectAll = () => {
         if (selectedKeywords.length === filteredKeywords.length) {
-            // 전체 선택 해제
             setSelectedKeywords([]);
         } else {
-            // 전체 선택
             const allKeywords = filteredKeywords.map(item => ({
                 keyword: item.keyKeyword,
                 bid: item.keyCpc
@@ -62,45 +101,89 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
     };
 
     const handleRowClick = async (item) => {
-        setSelectedKeyword(item); // 선택된 키워드 설정
+        setSelectedKeyword(item);
         if (item.keyTotalSales == 0) {
             alert("판매 데이터가 없어요!")
         } else {
-            setIsModalOpen(true); // 모달 열기
+            setIsModalOpen(true);
         }
-        // API 호출하여 옵션 이름 가져오기
-        // try {
-        //     const keySalesOptions = item.keySalesOptions || {}; // 기본값으로 빈 객체 설정
-        //     const list = Object.keys(keySalesOptions); // 키 목록 가져오기
-
-        //     if (list.length === 0) {
-        //         console.warn("keySalesOptions가 비어 있습니다."); // 경고 메시지
-        //         return; // 더 이상 진행하지 않음
-        //     }
-
-        //     const formattedList = list.join(','); // 목록을 ','로 연결된 문자열로 변환
-
-        //     // API 호출 예시
-        //     const data = await getExeNames({ campaignId, keySalesOptions: formattedList }); // campaignId와 keySalesOptions 사용
-        //     // console.log(data);
-        //     setOptionNames(keySalesOptions); // API 응답으로 받은 옵션 이름 설정
-        // } catch (error) {
-        //     console.error("옵션 이름을 가져오는 데 실패했습니다:", error);
-        //     // 에러 처리 로직 추가 가능
-        // }
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
         setSelectedKeyword(null);
-        // setOptionNames({}); // 모달 닫을 때 옵션 이름 초기화
     };
 
-    if (loading) return <div>Loading...</div>; // 로딩 상태 표시
-    if (error) return <div>{error}</div>; // 에러 상태 표시
+    // --- 드래그 선택 기능 관련 핸들러들 ---
+    const handleMouseDown = (e, index) => {
+        if (e.target.type === 'checkbox' || e.target.tagName === 'BUTTON' || e.nativeEvent.shiftKey) {
+            return;
+        }
+        setIsDragging(true);
+        setDragStartIndex(index);
+
+        // 드래그 시작 시 해당 행의 체크박스 상태를 토글
+        const item = filteredKeywords[index];
+        const keywordData = { keyword: item.keyKeyword, bid: item.keyCpc };
+        setSelectedKeywords(prev => {
+            if (prev.some(kw => kw.keyword === keywordData.keyword)) {
+                return prev.filter(kw => kw.keyword !== keywordData.keyword);
+            } else {
+                return [...prev, keywordData];
+            }
+        });
+        // 드래그 시작 시점도 마지막 클릭으로 간주
+        setLastSelectedIndex(index);
+    };
+
+    const handleMouseMove = (e, index) => {
+        if (!isDragging || dragStartIndex === null) return;
+
+        const start = Math.min(dragStartIndex, index);
+        const end = Math.max(dragStartIndex, index);
+
+        const rangeItems = filteredKeywords.slice(start, end + 1);
+
+        setSelectedKeywords(prevSelected => {
+            const startItemKeyword = filteredKeywords[dragStartIndex].keyKeyword;
+            const wasInitiallySelected = prevSelected.some(kw => kw.keyword === startItemKeyword);
+
+            let newSelected = [...prevSelected];
+            const newSelectedKeywords = new Set(newSelected.map(kw => kw.keyword));
+
+            if (wasInitiallySelected) {
+                // 드래그 시작점이 선택된 상태였다면, 범위 내 아이템들을 모두 선택
+                rangeItems.forEach(item => {
+                    if (!newSelectedKeywords.has(item.keyKeyword)) {
+                        newSelected.push({ keyword: item.keyKeyword, bid: item.keyCpc });
+                    }
+                });
+            } else {
+                // 드래그 시작점이 선택 해제된 상태였다면, 범위 내 아이템들을 모두 선택 해제
+                const rangeKeywordsSet = new Set(rangeItems.map(item => item.keyKeyword));
+                newSelected = newSelected.filter(kw => !rangeKeywordsSet.has(kw.keyword));
+            }
+            return newSelected;
+        });
+    };
+
+    const handleMouseUp = () => {
+        setIsDragging(false);
+        setDragStartIndex(null);
+    };
+
+    const handleMouseLeave = () => {
+        if (isDragging) {
+            setIsDragging(false);
+            setDragStartIndex(null);
+        }
+    };
+
+    if (loading) return <div>Loading...</div>;
+    if (error) return <div>{error}</div>;
 
     return (
-        <div className="keyword-table">
+        <div className="keyword-table" onMouseLeave={handleMouseLeave}>
             <table>
                 <thead>
                     <tr>
@@ -117,81 +200,68 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
                         <th>
                             <input
                                 type="checkbox"
-                                checked={selectedKeywords.length === filteredKeywords.length}
-                                onChange={handleSelectAll} // 전체 선택/해제 로직
+                                checked={filteredKeywords.length > 0 && selectedKeywords.length === filteredKeywords.length}
+                                onChange={handleSelectAll}
                             />
                         </th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody ref={tbodyRef} onMouseUp={handleMouseUp}>
                     {filteredKeywords.map((item, index) => (
-                        <tr key={index} onClick={(e) => handleCheckboxChange(e, item)}>
-                            <td style={{
-                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit'
-                            }}>
+                        <tr
+                            key={item.keyKeyword} // key는 고유한 값으로 사용하는 것이 좋음
+                            className={isDragging && dragStartIndex !== null && (index >= Math.min(dragStartIndex, index) && index <= Math.max(dragStartIndex, index)) ? 'dragging-highlight' : ''}
+                            onMouseDown={(e) => handleMouseDown(e, index)}
+                            onMouseMove={(e) => handleMouseMove(e, index)}
+                        >
+                            {/* ... (td 내용들은 동일) ... */}
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
                                 {item.keyKeyword}
                                 {item.keyTotalSales >= 1 && <button
                                     className="icon-button"
                                     onClick={(e) => {
-                                        e.stopPropagation(); // 버튼 클릭 시 이벤트 전파 방지
+                                        e.stopPropagation();
                                         handleRowClick(item);
                                     }}
                                     aria-label="Search"
                                 >
                                     🔍
-                                </button>} {/* 돋보기 아이콘 추가 */}
-                                {item.keyBidFlag && <span className="badge">수동</span>} {/* 마진 추가로 간격 조정 */}
+                                </button>}
+                                {item.keyBidFlag && <span className="badge">수동</span>}
                             </td>
-                            <td style={{
-                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
-                            }}>
-                                {item.keyImpressions.toLocaleString()} {/* 천 단위 구분 기호 추가 */}
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                {item.keyImpressions.toLocaleString()}
                             </td>
-                            <td style={{
-                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
-                            }}>
-                                {item.keyClicks.toLocaleString()} {/* 천 단위 구분 기호 추가 */}
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                {item.keyClicks.toLocaleString()}
                             </td>
-                            <td style={{
-                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
-                            }}>
-                                {item.keyClickRate.toLocaleString()}% {/* 천 단위 구분 기호 추가 */}
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                {item.keyClickRate.toLocaleString()}%
                             </td>
-                            <td style={{
-                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
-                            }}>
-                                {item.keyTotalSales.toLocaleString()} {/* 천 단위 구분 기호 추가 */}
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                {item.keyTotalSales.toLocaleString()}
                             </td>
-                            <td style={{
-                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
-                            }}>
-                                {item.keyCvr.toLocaleString()}% {/* 천 단위 구분 기호 추가 */}
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                {item.keyCvr.toLocaleString()}%
                             </td>
-                            <td style={{
-                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
-                            }}>
-                                {item.keyCpc.toLocaleString()}원 {/* 천 단위 구분 기호 추가 */}
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                {item.keyCpc.toLocaleString()}원
                             </td>
-                            <td style={{
-                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
-                            }}>
-                                {item.keyAdcost.toLocaleString()}원 {/* 천 단위 구분 기호 추가 */}
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                {item.keyAdcost.toLocaleString()}원
                             </td>
-                            <td style={{
-                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
-                            }}>
-                                {item.keyAdsales.toLocaleString()}원 {/* 천 단위 구분 기호 추가 */}
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                {item.keyAdsales.toLocaleString()}원
                             </td>
-                            <td style={{
-                                color: item.keyExcludeFlag ? '#d3264f' : 'inherit',
-                            }}>
-                                {item.keyRoas.toLocaleString()}% {/* 천 단위 구분 기호 추가 */}
+                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                {item.keyRoas.toLocaleString()}%
                             </td>
                             <td>
                                 <input
                                     type="checkbox"
                                     checked={selectedKeywords.some(kw => kw.keyword === item.keyKeyword)}
-                                    onChange={(e) => handleCheckboxChange(e, item)}
+                                    // ✨ index를 인자로 전달하도록 수정!
+                                    onChange={(e) => handleCheckboxChange(e, item, index)}
                                     onClick={(e) => e.stopPropagation()}
                                 />
                             </td>
@@ -204,12 +274,9 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
                 <KeywordOptionModal
                     onClose={closeModal}
                     salesOptions={selectedKeyword.keySalesOptions}
-                    // optionNames={optionNames}
                     startDate={startDate}
                     endDate={endDate}
-                >
-                    {/* <h2>{selectedKeyword.keyKeyword}</h2> keyKeyword만 표시 */}
-                </KeywordOptionModal>
+                />
             )}
         </div>
     );
