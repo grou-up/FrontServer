@@ -19,21 +19,25 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
   const itemPath = [...currentPath, item.title];
   const navigate = useNavigate();
 
-  // ✅ isActive 개선: campaignId 기준으로 경로 비교
   const isActive = item.campaignId
     ? location.pathname === `/campaigns/${item.campaignId}`
     : activePath.join('/').startsWith(itemPath.join('/'));
 
   const [isOpen, setIsOpen] = useState(false);
 
-  // ✅ 처음 렌더링 시 activePath 기준으로 메뉴 열기
   useEffect(() => {
     if (hasChildren && isActive) {
       setIsOpen(true);
     }
   }, [hasChildren, isActive]);
 
+  // ✅ handleClick 함수 수정
   const handleClick = () => {
+    // item에 path가 지정되어 있으면 해당 경로로 이동
+    if (item.path) {
+      navigate(item.path);
+    }
+
     if (hasChildren) {
       setIsOpen(prev => !prev);
     } else {
@@ -65,7 +69,6 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
             : ['광고 캠페인 분석', '마진 계산기', '설정'].includes(item.title)
               ? '0px'
               : undefined,
-          //   : undefined
         }}
         onClick={handleClick}
       >
@@ -120,11 +123,13 @@ const Sidebar = () => {
     })();
   }, []);
 
-  // ✅ URL 기반 activePath 설정
   useEffect(() => {
     const path = location.pathname;
 
-    if (path.startsWith('/campaigns/')) {
+    // ✅ 광고 캠페인 분석 페이지 경로 추가
+    if (path.startsWith('/campaigns/analysis')) {
+      setActivePath(['광고 캠페인 분석']);
+    } else if (path.startsWith('/campaigns/')) {
       const title = new URLSearchParams(location.search).get('title') || '';
       setActivePath(['광고 캠페인 분석', title]);
     } else if (path === '/main') {
@@ -149,6 +154,8 @@ const Sidebar = () => {
       {
         title: "광고 캠페인 분석",
         icon: <Folder size={16} />,
+        // ✅ 이동할 경로(path) 추가
+        path: "/campaigns/analysis",
         children: campaigns.map(c => ({
           title: c.title,
           campaignId: c.campaignId
@@ -166,8 +173,6 @@ const Sidebar = () => {
 
   return (
     <aside className="sidebar">
-
-
       <nav className="sidebar-nav">
         <div className="sidebar-header">
           <div className="sidebar-logo-box">
