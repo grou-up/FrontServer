@@ -14,6 +14,7 @@ import OtherComponent from "./components/memo/MemoComponent";
 import MemoButton from "./components/memo/MemoButton";
 import { MyContextProvider } from "../src/components/MyContext"
 import SettingPage from "./components/Setting/SettingPage";
+import CampaignAmalysis from "./components/Campaign/CampaignAnalysis";
 
 class AppRoutes extends React.Component {
     constructor(props) {
@@ -96,6 +97,17 @@ class AppRoutes extends React.Component {
                             </PrivateRoute>
                         }
                     />
+                    <Route
+                        path="/campaigns/analysis"
+                        element={
+                            <PrivateRoute>
+                                <Sidebar />
+                                < CampaignAmalysis />
+                            </PrivateRoute>
+                        }
+                    />
+
+
                 </Routes>
             </Router>
         );
