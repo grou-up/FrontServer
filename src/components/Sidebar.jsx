@@ -34,23 +34,28 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
   }, [hasChildren, isActive]);
 
   const handleClick = () => {
+    // 1. 클릭된 메뉴 활성화 상태 업데이트
+    onSelect(itemPath);
+
+    // 2. 하위 메뉴가 있으면 펼치거나 닫음
     if (hasChildren) {
       setIsOpen(prev => !prev);
-    } else {
-      onSelect(itemPath);
-      switch (item.title) {
-        case "대시보드": return navigate("/main");
-        case "액셀 업로드": return navigate("/upload");
-        case "마진 계산기": return navigate("/margin-calculator");
-        case "설정": return navigate("/settings");
-        case "로그아웃":
-          removeToken();
-          return navigate('/');
-        default:
-          if (item.campaignId) {
-            return navigate(`/campaigns/${item.campaignId}?title=${encodeURIComponent(item.title)}`);
-          }
-      }
+    }
+
+    // 3. 로그아웃 처리 (특수 케이스)
+    if (item.path === '/logout') {
+      removeToken();
+      return navigate('/'); // 로그인 페이지로 이동
+    }
+
+    // 4. path가 있는 모든 메뉴 아이템에 대한 이동 처리
+    if (item.path) {
+      return navigate(item.path);
+    }
+
+    // 5. path는 없지만 campaignId가 있는 경우(광고 캠페인 분석 하위 메뉴) 이동 처리
+    if (item.campaignId) {
+      return navigate(`/campaigns/${item.campaignId}?title=${encodeURIComponent(item.title)}`);
     }
   };
 
@@ -65,13 +70,10 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
             : ['광고 캠페인 분석', '마진 계산기', '설정'].includes(item.title)
               ? '0px'
               : undefined,
-          //   : undefined
         }}
         onClick={handleClick}
       >
-        <span className="menu-item-icon">
-          {item.icon || (hasChildren ? <Folder size={16} /> : null)}
-        </span>
+        <span className="menu-item-icon">{item.icon || (hasChildren ? <Folder size={16} /> : null)}</span>
         <span className="menu-item-text">{item.title}</span>
       </div>
 
@@ -93,6 +95,7 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
     </div>
   );
 };
+
 
 const Sidebar = () => {
   const [activePath, setActivePath] = useState([]);
@@ -127,12 +130,16 @@ const Sidebar = () => {
     if (path.startsWith('/campaigns/')) {
       const title = new URLSearchParams(location.search).get('title') || '';
       setActivePath(['광고 캠페인 분석', title]);
+    } else if (path.startsWith('/margin-calculator/formula')) {
+      setActivePath(['마진 계산기', '계산식 입력']);
+    } else if (path.startsWith('/margin-calculator/result')) {
+      setActivePath(['마진 계산기', '마진 계산']);
+    } else if (path.startsWith('/margin-overview')) {
+      setActivePath(['마진 계산기']);
     } else if (path === '/main') {
       setActivePath(['대시보드']);
     } else if (path === '/upload') {
       setActivePath(['액셀 업로드']);
-    } else if (path === '/margin-calculator') {
-      setActivePath(['마진 계산기']);
     } else if (path === '/settings') {
       setActivePath(['설정']);
     } else {
@@ -142,8 +149,8 @@ const Sidebar = () => {
 
   const menuGroups = [
     [
-      { title: "대시보드", icon: <Home size={16} /> },
-      { title: "액셀 업로드", icon: <Upload size={16} /> }
+      { title: "대시보드", icon: <Home size={16} />, path: "/main" },
+      { title: "액셀 업로드", icon: <Upload size={16} />, path: "/upload" }
     ],
     [
       {
@@ -156,11 +163,19 @@ const Sidebar = () => {
       }
     ],
     [
-      { title: "마진 계산기", icon: <Calculator size={16} /> }
+      {
+        title: "마진 계산기",
+        icon: <Calculator size={16} />,
+        path: "/margin-overview",
+        children: [
+          { title: "계산식 입력", path: "/margin-calculator/formula" },
+          { title: "마진 계산", path: "/margin-calculator/result" }
+        ]
+      }
     ],
     [
-      { title: "설정", icon: <Settings size={16} /> },
-      { title: "로그아웃", icon: <LogOut size={16} /> }
+      { title: "설정", icon: <Settings size={16} />, path: "/settings" },
+      { title: "로그아웃", icon: <LogOut size={16} />, path: "/logout" }
     ]
   ];
 

@@ -12,9 +12,14 @@ import CampaignDetail from "./components/CampaignDetail";
 import MarginTabNavigation from "./components/Margin/MarginTabNavigation";
 import OtherComponent from "./components/memo/MemoComponent";
 import MemoButton from "./components/memo/MemoButton";
+import MarginCalculatorForm from "./components/Margin/MarginCalculatorForm";
+import MarginCalculatorResult from "./components/Margin/MarginCalculatorResult";
 import { MyContextProvider } from "../src/components/MyContext"
+import MarginOverview from "./components/Margin_v2/MarginOverview";
 
 class AppRoutes extends React.Component {
+    state = { campaigns: [] };
+
     constructor(props) {
         super(props);
         this.state = {
@@ -57,11 +62,29 @@ class AppRoutes extends React.Component {
                         }
                     />
                     <Route
-                        path="/margin-calculator"
+                        path="/margin-overview"
                         element={
                             <PrivateRoute>
                                 <Sidebar />
-                                < MarginTabNavigation />
+                                < MarginOverview />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/margin-calculator/formula"
+                        element={
+                            <PrivateRoute>
+                                <Sidebar />
+                                < MarginCalculatorForm />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/margin-calculator/result"
+                        element={
+                            <PrivateRoute>
+                                <Sidebar />
+                                < MarginCalculatorResult />
                             </PrivateRoute>
                         }
                     />
