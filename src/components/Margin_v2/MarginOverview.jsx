@@ -81,7 +81,7 @@ const MarginOverview = () => {
 
     return (
         <div className="form-main-content">
-            <div className="h-screen bg-[#EBEFF9] p-4 md:p-6 font-sans flex flex-col">
+            <div className="h-full p-4 md:p-6 font-sans flex flex-col">
                 <div className="w-full max-w-[1700px] mx-auto flex flex-col flex-grow">
                     {/* 헤더 */}
                     <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">

@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import logo from "../images/Logo.png";
 import '../styles/Sidebar.css';
-import { getMyCampaigns } from "../services/campaign";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { removeToken } from '../utils/tokenManager';
 
@@ -19,14 +18,12 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
   const itemPath = [...currentPath, item.title];
   const navigate = useNavigate();
 
-  // ✅ isActive 개선: campaignId 기준으로 경로 비교
   const isActive = item.campaignId
     ? location.pathname === `/campaigns/${item.campaignId}`
     : activePath.join('/').startsWith(itemPath.join('/'));
 
   const [isOpen, setIsOpen] = useState(false);
 
-  // ✅ 처음 렌더링 시 activePath 기준으로 메뉴 열기
   useEffect(() => {
     if (hasChildren && isActive) {
       setIsOpen(true);
@@ -34,26 +31,21 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
   }, [hasChildren, isActive]);
 
   const handleClick = () => {
-    // 1. 클릭된 메뉴 활성화 상태 업데이트
     onSelect(itemPath);
 
-    // 2. 하위 메뉴가 있으면 펼치거나 닫음
     if (hasChildren) {
       setIsOpen(prev => !prev);
     }
 
-    // 3. 로그아웃 처리 (특수 케이스)
     if (item.path === '/logout') {
       removeToken();
-      return navigate('/'); // 로그인 페이지로 이동
+      return navigate('/');
     }
 
-    // 4. path가 있는 모든 메뉴 아이템에 대한 이동 처리
     if (item.path) {
       return navigate(item.path);
     }
 
-    // 5. path는 없지만 campaignId가 있는 경우(광고 캠페인 분석 하위 메뉴) 이동 처리
     if (item.campaignId) {
       return navigate(`/campaigns/${item.campaignId}?title=${encodeURIComponent(item.title)}`);
     }
@@ -97,9 +89,8 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
 };
 
 
-const Sidebar = () => {
+const Sidebar = ({ campaigns }) => {
   const [activePath, setActivePath] = useState([]);
-  const [campaigns, setCampaigns] = useState([]);
   const [userInfo, setUserInfo] = useState({ name: '' });
   const location = useLocation();
 
@@ -112,18 +103,8 @@ const Sidebar = () => {
         console.error('Failed to fetch user info:', err);
       }
     })();
-
-    (async () => {
-      try {
-        const { data } = await getMyCampaigns();
-        setCampaigns(data || []);
-      } catch (err) {
-        console.error(err);
-      }
-    })();
   }, []);
 
-  // ✅ URL 기반 activePath 설정
   useEffect(() => {
     const path = location.pathname;
 
@@ -156,7 +137,7 @@ const Sidebar = () => {
       {
         title: "광고 캠페인 분석",
         icon: <Folder size={16} />,
-        children: campaigns.map(c => ({
+        children: (campaigns || []).map(c => ({
           title: c.title,
           campaignId: c.campaignId
         }))
@@ -181,8 +162,6 @@ const Sidebar = () => {
 
   return (
     <aside className="sidebar">
-
-
       <nav className="sidebar-nav">
         <div className="sidebar-header">
           <div className="sidebar-logo-box">
