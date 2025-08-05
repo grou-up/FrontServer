@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import OptionsTable from "./MarginCalulatorComponets/OptionsTable";
+import OptionsTable from "../Margin/MarginCalulatorComponets/OptionsTable";
 import { getExecutionAboutCampaign, deleteExecutionAboutCampaign } from "../../services/marginforcampaign";
-import ActionButtons from "./MarginCalulatorComponets/ActionButtons";
+import ActionButtons from "../Margin/MarginCalulatorComponets/ActionButtons";
 import "../../styles/MarginCalculatorForm.css";
 
 const MarginCalculatorForm = ({ campaigns, onCampaignOrderChange }) => {
@@ -150,67 +150,69 @@ const MarginCalculatorForm = ({ campaigns, onCampaignOrderChange }) => {
     };
 
     return (
-        <DragDropContext onDragEnd={handleOnDragEnd}>
-            <Droppable droppableId="campaigns">
-                {(provided) => (
-                    <div
-                        className="campaign-list"
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                    >
-                        {campaigns.map((campaign, index) => (
-                            <Draggable key={campaign.campaignId} draggableId={String(campaign.campaignId)} index={index}>
-                                {(provided) => (
-                                    <div
-                                        ref={provided.innerRef}
-                                        {...provided.draggableProps}
-                                        {...provided.dragHandleProps}
-                                        className={`campaign-card ${expandedCampaignId === campaign.campaignId ? "expanded" : ""}`}
-                                    >
+        <div className="form-main-content">
+            <DragDropContext onDragEnd={handleOnDragEnd}>
+                <Droppable droppableId="campaigns">
+                    {(provided) => (
+                        <div
+                            className="campaign-list"
+                            {...provided.droppableProps}
+                            ref={provided.innerRef}
+                        >
+                            {campaigns.map((campaign, index) => (
+                                <Draggable key={campaign.campaignId} draggableId={String(campaign.campaignId)} index={index}>
+                                    {(provided) => (
                                         <div
-                                            className="campaign-header"
-                                            onClick={() => toggleExpandCampaign(campaign.campaignId)}
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                            className={`campaign-card ${expandedCampaignId === campaign.campaignId ? "expanded" : ""}`}
                                         >
-                                            <h3>{campaign.title}</h3>
-                                            <button
-                                                className="add-button"
-                                                onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    addEmptyRow(campaign.campaignId);
-                                                }}
+                                            <div
+                                                className="campaign-header"
+                                                onClick={() => toggleExpandCampaign(campaign.campaignId)}
                                             >
-                                                마진입력
-                                            </button>
-                                        </div>
-                                        {expandedCampaignId === campaign.campaignId && (
-                                            <div className="campaign-details">
-                                                <OptionsTable
-                                                    options={calculatedOptions}
-                                                    handleInputChange={handleInputChange}
-                                                    handleCheckboxChange={handleCheckboxChange}
-                                                    selectedOptions={selectedOptions}
-                                                    handleDeleteOption={handleDeleteOption}
-                                                    handleSelectAll={handleSelectAll}
-                                                    allSelected={allSelected}
-                                                />
-                                                <ActionButtons
-                                                    selectedOptions={selectedOptions}
-                                                    options={calculatedOptions}
-                                                    campaignId={campaign.campaignId}
-                                                    handleCalculate={handleCalculate}
-                                                    handleDeleteOption={handleDeleteOption}
-                                                />
+                                                <h3>{campaign.title}</h3>
+                                                <button
+                                                    className="add-button"
+                                                    onClick={(e) => {
+                                                        e.stopPropagation();
+                                                        addEmptyRow(campaign.campaignId);
+                                                    }}
+                                                >
+                                                    마진입력
+                                                </button>
                                             </div>
-                                        )}
-                                    </div>
-                                )}
-                            </Draggable>
-                        ))}
-                        {provided.placeholder}
-                    </div>
-                )}
-            </Droppable>
-        </DragDropContext>
+                                            {expandedCampaignId === campaign.campaignId && (
+                                                <div className="campaign-details">
+                                                    <OptionsTable
+                                                        options={calculatedOptions}
+                                                        handleInputChange={handleInputChange}
+                                                        handleCheckboxChange={handleCheckboxChange}
+                                                        selectedOptions={selectedOptions}
+                                                        handleDeleteOption={handleDeleteOption}
+                                                        handleSelectAll={handleSelectAll}
+                                                        allSelected={allSelected}
+                                                    />
+                                                    <ActionButtons
+                                                        selectedOptions={selectedOptions}
+                                                        options={calculatedOptions}
+                                                        campaignId={campaign.campaignId}
+                                                        handleCalculate={handleCalculate}
+                                                        handleDeleteOption={handleDeleteOption}
+                                                    />
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </Draggable>
+                            ))}
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </Droppable>
+            </DragDropContext>
+        </div>
     );
 };
 

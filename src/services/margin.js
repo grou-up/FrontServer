@@ -80,3 +80,19 @@ export const findLatestMarginDateByEmail = async () => {
         throw error
     }
 }
+export const getMarginOverview = async ({ start, end }) => {
+    try {
+        const response = await apiRequest(`/margin/getMarginOverview?end=${end}&start=${start}`);
+        return response;
+    } catch (error) {
+        throw error
+    }
+}
+export const getMarginOverviewGraph = async ({ start, end }) => {
+    try {
+        const response = await apiRequest(`/margin/getMarginOverviewGraph?end=${end}&start=${start}`);
+        return response;
+    } catch (error) {
+        throw error
+    }
+}

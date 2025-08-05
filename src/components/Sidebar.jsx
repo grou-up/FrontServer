@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import logo from "../images/Logo.png";
 import '../styles/Sidebar.css';
-import { getMyCampaigns } from "../services/campaign";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { removeToken } from '../utils/tokenManager';
 
@@ -37,24 +36,23 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
     if (item.path) {
       navigate(item.path);
     }
+    onSelect(itemPath);
 
     if (hasChildren) {
       setIsOpen(prev => !prev);
-    } else {
-      onSelect(itemPath);
-      switch (item.title) {
-        case "대시보드": return navigate("/main");
-        case "액셀 업로드": return navigate("/upload");
-        case "마진 계산기": return navigate("/margin-calculator");
-        case "설정": return navigate("/settings");
-        case "로그아웃":
-          removeToken();
-          return navigate('/');
-        default:
-          if (item.campaignId) {
-            return navigate(`/campaigns/${item.campaignId}?title=${encodeURIComponent(item.title)}`);
-          }
-      }
+    }
+
+    if (item.path === '/logout') {
+      removeToken();
+      return navigate('/');
+    }
+
+    if (item.path) {
+      return navigate(item.path);
+    }
+
+    if (item.campaignId) {
+      return navigate(`/campaigns/${item.campaignId}?title=${encodeURIComponent(item.title)}`);
     }
   };
 
@@ -72,9 +70,7 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
         }}
         onClick={handleClick}
       >
-        <span className="menu-item-icon">
-          {item.icon || (hasChildren ? <Folder size={16} /> : null)}
-        </span>
+        <span className="menu-item-icon">{item.icon || (hasChildren ? <Folder size={16} /> : null)}</span>
         <span className="menu-item-text">{item.title}</span>
       </div>
 
@@ -97,9 +93,9 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
   );
 };
 
-const Sidebar = () => {
+
+const Sidebar = ({ campaigns }) => {
   const [activePath, setActivePath] = useState([]);
-  const [campaigns, setCampaigns] = useState([]);
   const [userInfo, setUserInfo] = useState({ name: '' });
   const location = useLocation();
 
@@ -110,15 +106,6 @@ const Sidebar = () => {
         setUserInfo({ name: res.data.name });
       } catch (err) {
         console.error('Failed to fetch user info:', err);
-      }
-    })();
-
-    (async () => {
-      try {
-        const { data } = await getMyCampaigns();
-        setCampaigns(data || []);
-      } catch (err) {
-        console.error(err);
       }
     })();
   }, []);
@@ -132,12 +119,16 @@ const Sidebar = () => {
     } else if (path.startsWith('/campaigns/')) {
       const title = new URLSearchParams(location.search).get('title') || '';
       setActivePath(['광고 캠페인 분석', title]);
+    } else if (path.startsWith('/margin-calculator/formula')) {
+      setActivePath(['마진 계산기', '계산식 입력']);
+    } else if (path.startsWith('/margin-calculator/result')) {
+      setActivePath(['마진 계산기', '마진 계산']);
+    } else if (path.startsWith('/margin-overview')) {
+      setActivePath(['마진 계산기']);
     } else if (path === '/main') {
       setActivePath(['대시보드']);
     } else if (path === '/upload') {
       setActivePath(['액셀 업로드']);
-    } else if (path === '/margin-calculator') {
-      setActivePath(['마진 계산기']);
     } else if (path === '/settings') {
       setActivePath(['설정']);
     } else {
@@ -147,8 +138,8 @@ const Sidebar = () => {
 
   const menuGroups = [
     [
-      { title: "대시보드", icon: <Home size={16} /> },
-      { title: "액셀 업로드", icon: <Upload size={16} /> }
+      { title: "대시보드", icon: <Home size={16} />, path: "/main" },
+      { title: "액셀 업로드", icon: <Upload size={16} />, path: "/upload" }
     ],
     [
       {
@@ -163,11 +154,19 @@ const Sidebar = () => {
       }
     ],
     [
-      { title: "마진 계산기", icon: <Calculator size={16} /> }
+      {
+        title: "마진 계산기",
+        icon: <Calculator size={16} />,
+        path: "/margin-overview",
+        children: [
+          { title: "계산식 입력", path: "/margin-calculator/formula" },
+          { title: "마진 계산", path: "/margin-calculator/result" }
+        ]
+      }
     ],
     [
-      { title: "설정", icon: <Settings size={16} /> },
-      { title: "로그아웃", icon: <LogOut size={16} /> }
+      { title: "설정", icon: <Settings size={16} />, path: "/settings" },
+      { title: "로그아웃", icon: <LogOut size={16} />, path: "/logout" }
     ]
   ];
 
