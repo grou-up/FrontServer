@@ -68,7 +68,7 @@ const CampaignOptionDetailsComponent = ({ campaignId, startDate, endDate }) => {
                         <SortableHeader label="광고비" sortKey="copAdcost" onSort={handleSort} />
                         <SortableHeader label="광고매출" sortKey="copAdsales" onSort={handleSort} />
                         <SortableHeader label="ROAS" sortKey="copRoas" onSort={handleSort} />
-                        <SortableHeader label="노출" sortKey="copimpressionss" onSort={handleSort} />
+                        <SortableHeader label="노출" sortKey="copImpressions" onSort={handleSort} />
                         <SortableHeader label="클릭수" sortKey="copClicks" onSort={handleSort} />
                         <SortableHeader label="클릭률" sortKey="copClickRate" onSort={handleSort} />
                         <SortableHeader label="전환율" sortKey="copCvr" onSort={handleSort} />
