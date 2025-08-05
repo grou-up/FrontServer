@@ -114,7 +114,7 @@ class AppRoutes extends React.Component {
                         path="/settings"
                         element={
                             <PrivateRoute>
-                                <Sidebar />
+                                <Sidebar campaigns={campaigns} />
                                 < SettingPage />
                             </PrivateRoute>
                         }
@@ -144,7 +144,7 @@ class AppRoutes extends React.Component {
                         path="/campaigns/analysis"
                         element={
                             <PrivateRoute>
-                                <Sidebar />
+                                <Sidebar campaigns={campaigns} />
                                 < CampaignAmalysis />
                             </PrivateRoute>
                         }

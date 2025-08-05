@@ -36,7 +36,7 @@ export const marginUpdatesByPeriod = async (data) => {
 
 export const getDailyMarginSummary = async ({ date }) => {
     try {
-        const response = await apiRequest(`/margin/getDailyMarginSummary?date=${date}`)
+        const response = await apiRequest(`/margin/getDailyMarginSummary?start=${date}&end=${date}`)
         return response;
     } catch (error) {
         throw error

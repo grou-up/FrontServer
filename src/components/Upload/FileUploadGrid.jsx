@@ -1,7 +1,6 @@
 import FileSalesReport from "./FileSalesReport";
 import FileMarginReport from "./FileMarginReport";
 import FileSalesHistory from "./FileSalesHistory";
-import FileMarginHistory from "./FileMarginHistory";
 
 import "../../styles/Upload/FileUploadGrid.css";
 
