@@ -36,7 +36,6 @@ const CampaignOptionDetailsComponent = ({ campaignId, startDate, endDate }) => {
 
         fetchCampaignDetails();
     }, [campaignId, startDate, endDate]); // 날짜가 변경될 때마다 API 호출
-
     const handleSort = (key) => {
         let direction = "asc";
         if (sortConfig.key === key && sortConfig.direction === "asc") {
@@ -84,7 +83,7 @@ const CampaignOptionDetailsComponent = ({ campaignId, startDate, endDate }) => {
                             <td>{formatNumber(item.copAdcost)}</td>
                             <td>{formatNumber(item.copAdsales)}</td>
                             <td>{formatNumber(item.copRoas)}%</td>
-                            <td>{formatNumber(item.copimpressionss)}</td>
+                            <td>{formatNumber(item.copImpressions)}</td>
                             <td>{formatNumber(item.copClicks)}</td>
                             <td>{formatNumber(item.copClickRate)}%</td>
                             <td>{formatNumber(item.copCvr)}%</td>
