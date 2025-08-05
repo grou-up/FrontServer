@@ -7,7 +7,7 @@
 }
 
 .margin-table-body-scroll {
-    max-height: 300px;
+    max-height: 250px;
     /* 원하는 높이 조정 */
     overflow-y: auto;
     overflow-x: hidden;

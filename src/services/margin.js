@@ -36,7 +36,7 @@ export const marginUpdatesByPeriod = async (data) => {
 
 export const getDailyMarginSummary = async ({ date }) => {
     try {
-        const response = await apiRequest(`/margin/getDailyMarginSummary?date=${date}`)
+        const response = await apiRequest(`/margin/getDailyMarginSummary?start=${date}&end=${date}`)
         return response;
     } catch (error) {
         throw error
@@ -75,6 +75,22 @@ export const createMarginTable = async ({ targetDate, campaignId }) => {
 export const findLatestMarginDateByEmail = async () => {
     try {
         const response = await apiRequest(`/margin/findLatestMarginDateByEmail`);
+        return response;
+    } catch (error) {
+        throw error
+    }
+}
+export const getMarginOverview = async ({ start, end }) => {
+    try {
+        const response = await apiRequest(`/margin/getMarginOverview?end=${end}&start=${start}`);
+        return response;
+    } catch (error) {
+        throw error
+    }
+}
+export const getMarginOverviewGraph = async ({ start, end }) => {
+    try {
+        const response = await apiRequest(`/margin/getMarginOverviewGraph?end=${end}&start=${start}`);
         return response;
     } catch (error) {
         throw error

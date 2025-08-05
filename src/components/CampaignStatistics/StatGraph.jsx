@@ -107,12 +107,12 @@ const StatGraph = ({ search, nonSearch, memoData, startDate, endDate }) => {
     }
 
     // search와 nonSearch 데이터를 각각의 배열로 변환
-    const searchData = dateLabels.map(date => (search[date] ? search[date].keyAdsales : 0));
-    const nonSearchData = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].keyAdsales : 0));
+    const searchData = dateLabels.map(date => (search[date] ? search[date].adSales : 0));
+    const nonSearchData = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].adSales : 0));
 
     // 광고비 데이터 생성
-    const searchAdCostData = dateLabels.map(date => (search[date] ? search[date].keyAdcost : 0));
-    const nonSearchAdCostData = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].keyAdcost : 0));
+    const searchAdCostData = dateLabels.map(date => (search[date] ? search[date].adCost : 0));
+    const nonSearchAdCostData = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].adCost : 0));
     const adCostData = dateLabels.map((date, index) => searchAdCostData[index] + nonSearchAdCostData[index]);
 
     // ROAS 데이터 생성

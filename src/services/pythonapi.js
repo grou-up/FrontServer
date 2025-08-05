@@ -2,8 +2,6 @@ import axios from 'axios';
 import { getToken } from '../utils/tokenManager';  // 토큰 가져오기 함수 사용
 import { PYTHON_URL } from '../config/api';
 export const uploadFile1 = (file, onUploadProgress) => {
-  console.log(1)
-  console.log(file)
   const formData = new FormData();
   formData.append('file', file);
 

@@ -17,12 +17,12 @@ const StatGraph3 = ({ search, nonSearch, startDate, endDate }) => {
     }
 
     // search와 nonSearch 데이터를 각각의 배열로 변환
-    const searchClicks = dateLabels.map(date => (search[date] ? search[date].keyClicks : 0));
-    const searchSales = dateLabels.map(date => (search[date] ? search[date].keyTotalSales : 0));
-    const nonSearchClicks = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].keyClicks : 0));
-    const nonSearchSales = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].keyTotalSales : 0));
-    const searchImpressions = dateLabels.map(date => (search[date] ? search[date].keyImpressions : 0));
-    const nonSearchImpressions = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].keyImpressions : 0));
+    const searchClicks = dateLabels.map(date => (search[date] ? search[date].clicks : 0));
+    const searchSales = dateLabels.map(date => (search[date] ? search[date].totalSales : 0));
+    const nonSearchClicks = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].clicks : 0));
+    const nonSearchSales = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].totalSales : 0));
+    const searchimpressionss = dateLabels.map(date => (search[date] ? search[date].impressions : 0));
+    const nonSearchimpressionss = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].impressions : 0));
 
     // CVR 데이터 생성
     const searchCvrData = dateLabels.map((date, index) => {
@@ -39,13 +39,13 @@ const StatGraph3 = ({ search, nonSearch, startDate, endDate }) => {
     // 클릭률 데이터 생성
     const searchClickRate = dateLabels.map((date, index) => {
         const clicks = searchClicks[index];
-        const impressions = searchImpressions[index];
-        return impressions > 0 ? (clicks / impressions) * 100 : 0; // 퍼센트로 표현
+        const impressionss = searchimpressionss[index];
+        return impressionss > 0 ? (clicks / impressionss) * 100 : 0; // 퍼센트로 표현
     });
     const nonSearchClickRate = dateLabels.map((date, index) => {
         const clicks = nonSearchClicks[index];
-        const impressions = nonSearchImpressions[index];
-        return impressions > 0 ? (clicks / impressions) * 100 : 0; // 퍼센트로 표현
+        const impressionss = nonSearchimpressionss[index];
+        return impressionss > 0 ? (clicks / impressionss) * 100 : 0; // 퍼센트로 표현
     });
 
     const data = {

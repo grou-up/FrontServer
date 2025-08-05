@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import TabNavigation from "./TabNavigation";
 import { getMyCampaigns } from "../../services/campaign";
-import MarginCalculatorForm from "./MarginCalculatorForm";
-import MarginCalculatorResult from "./MarginCalculatorResult";
+import MarginCalculatorForm from "../Margin_v2/MarginCalculatorForm";
+import MarginCalculatorResult from "../Margin_v2/MarginCalculatorResult";
 import DateRangeCalendar from "../Date/DateRangeCalendar";
 import '../../styles/DateRangeSelectCalendar.css';
 

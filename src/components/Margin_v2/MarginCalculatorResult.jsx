@@ -1,27 +1,44 @@
 import React, { useState, useEffect, useCallback } from "react";
-import CampaignDataTable from "./MarginDataTable";
-import MarginResultModal from "./MarginResultModal";
-import MarginNetTable from "./MarginNetTable";
+import CampaignDataTable from "../Margin/MarginDataTable";
+import MarginResultModal from "../Margin/MarginResultModal";
+import MarginNetTable from "../Margin_v2/MarginNetTable";
 import { getMarginByCampaignId } from "../../services/margin";
 import { updateEfficiencyAndAdBudget } from "../../services/margin";
-const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
+import { useDateRangePicker } from "../../hooks/useDateRangePicker"; // ✅ 1. 훅 import
+import '../../styles/margin/MarginCalculatorResult.css'
+
+// ✅ props에서 startDate, endDate 제거
+const MarginCalculatorResult = ({ campaigns }) => {
+    // ✅ 2. 훅을 사용하여 날짜 상태와 UI 컴포넌트를 가져옴
+    const { startDate, endDate, DatePickerButton, DatePickerModal } = useDateRangePicker();
+
     const [expandedCampaignId, setExpandedCampaignId] = useState(new Set());
     const [tableData, setTableData] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCampaign, setSelectedCampaign] = useState(null);
-    const [modifiedData, setModifiedData] = useState({}); // 변경된 데이터 저장
+    const [modifiedData, setModifiedData] = useState({});
 
     const fetchMarginResults = useCallback(async () => {
-        const allCampaignData = await Promise.all(campaigns.map(async ({ campaignId }) => {
-            const response = await getMarginByCampaignId({ startDate, endDate, campaignId });
-            return { campaignId, data: response?.data ?? [] };
-        }));
-        setTableData(allCampaignData);
+        // ✅ 훅에서 제공하는 startDate, endDate를 사용
+        if (!campaigns || campaigns.length === 0 || !startDate || !endDate) return;
+
+        try {
+            const allCampaignData = await Promise.all(campaigns.map(async ({ campaignId }) => {
+                const response = await getMarginByCampaignId({ startDate, endDate, campaignId });
+                return { campaignId, data: response?.data ?? [] };
+            }));
+            setTableData(allCampaignData);
+        } catch (error) {
+            console.error("마진 결과 데이터 로딩 중 에러 발생:", error);
+            // 에러 발생 시 tableData를 비워주는 것이 좋습니다.
+            setTableData([]);
+        }
     }, [startDate, endDate, campaigns]);
 
     useEffect(() => {
         fetchMarginResults();
-    }, [fetchMarginResults, startDate, endDate]);
+    }, [fetchMarginResults]); // startDate, endDate가 바뀌면 fetchMarginResults가 재생성되므로 의존성 배열이 간단해짐
+
 
     useEffect(() => {
         const initialExpandedIds = new Set(campaigns.map(campaign => campaign.campaignId));
@@ -97,10 +114,18 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
     };
 
     return (
-        <div>
+        <div className="form-main-content">
+            {/* 날짜 선택 UI 추가 */}
+            <div className="flex items-center justify-end mb-4">
+                <div className="date-selection-container">
+                    <DatePickerButton />
+                    <DatePickerModal />
+                </div>
+            </div>
+
             <MarginNetTable startDate={startDate} endDate={endDate} />
             <div className="campaign-list">
-                {campaigns.map((campaign) => (
+                {(campaigns || []).map((campaign) => (
                     <div
                         key={campaign.campaignId}
                         className={`campaign-card ${expandedCampaignId.has(campaign.campaignId) ? "expanded" : ""}`}
@@ -114,7 +139,7 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
                                 <button
                                     className="add-button"
                                     onClick={(e) => {
-                                        e.stopPropagation(); // 이벤트 버블링 막기
+                                        e.stopPropagation();
                                         handleSave(campaign);
                                     }}>
                                     목표효율/예산 저장
@@ -122,7 +147,7 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
                                 <button
                                     className="add-button"
                                     onClick={(e) => {
-                                        e.stopPropagation(); // 이벤트 버블링 막기
+                                        e.stopPropagation();
                                         handleOptionMarginClick(campaign);
                                     }}>
                                     기간별 원가 수정
@@ -136,7 +161,7 @@ const MarginCalculatorResult = ({ campaigns, startDate, endDate }) => {
                                 startDate={startDate}
                                 endDate={endDate}
                                 campaignId={campaign.campaignId}
-                                onDataChange={(newData) => handleDataChange(campaign.campaignId, newData)} // 데이터 변경 처리
+                                onDataChange={(newData) => handleDataChange(campaign.campaignId, newData)}
                             />
                         )}
                     </div>

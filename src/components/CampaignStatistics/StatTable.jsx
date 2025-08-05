@@ -2,8 +2,8 @@ import React from 'react';
 
 const StatTable = ({ search, nonSearch }) => {
     // 계산 함수
-    const calculateClickRate = (clicks, impressions) => {
-        return impressions > 0 ? ((clicks / impressions) * 100).toFixed(2) : 0;
+    const calculateClickRate = (clicks, impressionss) => {
+        return impressionss > 0 ? ((clicks / impressionss) * 100).toFixed(2) : 0;
     };
 
     const calculateConversionRate = (sales, clicks) => {
@@ -14,8 +14,8 @@ const StatTable = ({ search, nonSearch }) => {
         return clicks > 0 ? (adcost / clicks).toFixed(0) : 0;
     };
 
-    const calculateCPM = (adcost, impressions) => {
-        return impressions > 0 ? ((adcost / impressions) * 1000).toFixed(0) : 0;
+    const calculateCPM = (adcost, impressionss) => {
+        return impressionss > 0 ? ((adcost / impressionss) * 1000).toFixed(0) : 0;
     };
 
     const calculateROAS = (adsales, adcost) => {
@@ -53,45 +53,45 @@ const StatTable = ({ search, nonSearch }) => {
                 <tbody>
                     <tr>
                         <td>검색</td>
-                        <td>{formatNumber(search?.keyAdcost || 0)}원</td>
-                        <td>{formatNumber(search?.keyAdsales || 0)}원</td>
-                        <td>{formatNumber(search?.keyClicks || 0)}</td>
-                        <td>{formatNumber(search?.keyImpressions || 0)}</td>
-                        <td>{formatNumber(search?.keyTotalSales || 0)}</td>
-                        <td>{calculateClickRate(search?.keyClicks || 0, search?.keyImpressions || 0)}%</td>
-                        <td>{calculateConversionRate(search?.keyTotalSales || 0, search?.keyClicks || 0)}%</td>
-                        <td>{formatNumber(calculateCPC(search?.keyAdcost || 0, search?.keyClicks || 0))}원</td>
-                        <td>{formatNumber(calculateCPM(search?.keyAdcost || 0, search?.keyImpressions || 0))}원</td>
-                        <td>{calculateROAS(search?.keyAdsales || 0, search?.keyAdcost || 0)}%</td>
-                        <td>{formatNumber(calculateCostPerConversion(search?.keyAdcost || 0, search?.keyTotalSales || 0))}원</td>
+                        <td>{formatNumber(search?.adCost || 0)}원</td>
+                        <td>{formatNumber(search?.adSales || 0)}원</td>
+                        <td>{formatNumber(search?.clicks || 0)}</td>
+                        <td>{formatNumber(search?.impressions || 0)}</td>
+                        <td>{formatNumber(search?.totalSales || 0)}</td>
+                        <td>{calculateClickRate(search?.clicks || 0, search?.impressions || 0)}%</td>
+                        <td>{calculateConversionRate(search?.totalSales || 0, search?.clicks || 0)}%</td>
+                        <td>{formatNumber(calculateCPC(search?.adCost || 0, search?.clicks || 0))}원</td>
+                        <td>{formatNumber(calculateCPM(search?.adCost || 0, search?.impressions || 0))}원</td>
+                        <td>{calculateROAS(search?.adSales || 0, search?.adCost || 0)}%</td>
+                        <td>{formatNumber(calculateCostPerConversion(search?.adCost || 0, search?.totalSales || 0))}원</td>
                     </tr>
                     <tr>
                         <td>비 검색</td>
-                        <td>{formatNumber(nonSearch?.keyAdcost || 0)}원</td>
-                        <td>{formatNumber(nonSearch?.keyAdsales || 0)}원</td>
-                        <td>{formatNumber(nonSearch?.keyClicks || 0)}</td>
-                        <td>{formatNumber(nonSearch?.keyImpressions || 0)}</td>
-                        <td>{formatNumber(nonSearch?.keyTotalSales || 0)}</td>
-                        <td>{calculateClickRate(nonSearch?.keyClicks || 0, nonSearch?.keyImpressions || 0)}%</td>
-                        <td>{calculateConversionRate(nonSearch?.keyTotalSales || 0, nonSearch?.keyClicks || 0)}%</td>
-                        <td>{formatNumber(calculateCPC(nonSearch?.keyAdcost || 0, nonSearch?.keyClicks || 0))}원</td>
-                        <td>{formatNumber(calculateCPM(nonSearch?.keyAdcost || 0, nonSearch?.keyImpressions || 0))}원</td>
-                        <td>{calculateROAS(nonSearch?.keyAdsales || 0, nonSearch?.keyAdcost || 0)}%</td>
-                        <td>{formatNumber(calculateCostPerConversion(nonSearch?.keyAdcost || 0, nonSearch?.keyTotalSales || 0))}원</td>
+                        <td>{formatNumber(nonSearch?.adCost || 0)}원</td>
+                        <td>{formatNumber(nonSearch?.adSales || 0)}원</td>
+                        <td>{formatNumber(nonSearch?.clicks || 0)}</td>
+                        <td>{formatNumber(nonSearch?.impressions || 0)}</td>
+                        <td>{formatNumber(nonSearch?.totalSales || 0)}</td>
+                        <td>{calculateClickRate(nonSearch?.clicks || 0, nonSearch?.impressions || 0)}%</td>
+                        <td>{calculateConversionRate(nonSearch?.totalSales || 0, nonSearch?.clicks || 0)}%</td>
+                        <td>{formatNumber(calculateCPC(nonSearch?.adCost || 0, nonSearch?.clicks || 0))}원</td>
+                        <td>{formatNumber(calculateCPM(nonSearch?.adCost || 0, nonSearch?.impressions || 0))}원</td>
+                        <td>{calculateROAS(nonSearch?.adSales || 0, nonSearch?.adCost || 0)}%</td>
+                        <td>{formatNumber(calculateCostPerConversion(nonSearch?.adCost || 0, nonSearch?.totalSales || 0))}원</td>
                     </tr>
                     <tr>
                         <td>합계</td>
-                        <td>{formatNumber((search?.keyAdcost || 0) + (nonSearch?.keyAdcost || 0))}원</td>
-                        <td>{formatNumber((search?.keyAdsales || 0) + (nonSearch?.keyAdsales || 0))}원</td>
-                        <td>{formatNumber((search?.keyClicks || 0) + (nonSearch?.keyClicks || 0))}</td>
-                        <td>{formatNumber((search?.keyImpressions || 0) + (nonSearch?.keyImpressions || 0))}</td>
-                        <td>{formatNumber((search?.keyTotalSales || 0) + (nonSearch?.keyTotalSales || 0))}</td>
-                        <td>{calculateClickRate((search?.keyClicks || 0) + (nonSearch?.keyClicks || 0), (search?.keyImpressions || 0) + (nonSearch?.keyImpressions || 0))}%</td>
-                        <td>{calculateConversionRate((search?.keyTotalSales || 0) + (nonSearch?.keyTotalSales || 0), (search?.keyClicks || 0) + (nonSearch?.keyClicks || 0))}%</td>
-                        <td>{formatNumber(calculateCPC((search?.keyAdcost || 0) + (nonSearch?.keyAdcost || 0), (search?.keyClicks || 0) + (nonSearch?.keyClicks || 0)))}원</td>
-                        <td>{formatNumber(calculateCPM((search?.keyAdcost || 0) + (nonSearch?.keyAdcost || 0), (search?.keyImpressions || 0) + (nonSearch?.keyImpressions || 0)))}원</td>
-                        <td>{calculateROAS((search?.keyAdsales || 0) + (nonSearch?.keyAdsales || 0), (search?.keyAdcost || 0) + (nonSearch?.keyAdcost || 0))}%</td>
-                        <td>{formatNumber(calculateCostPerConversion((search?.keyAdcost || 0) + (nonSearch?.keyAdcost || 0), (search?.keyTotalSales || 0) + (nonSearch?.keyTotalSales || 0)))}원</td>
+                        <td>{formatNumber((search?.adCost || 0) + (nonSearch?.adCost || 0))}원</td>
+                        <td>{formatNumber((search?.adSales || 0) + (nonSearch?.adSales || 0))}원</td>
+                        <td>{formatNumber((search?.clicks || 0) + (nonSearch?.clicks || 0))}</td>
+                        <td>{formatNumber((search?.impressions || 0) + (nonSearch?.impressions || 0))}</td>
+                        <td>{formatNumber((search?.totalSales || 0) + (nonSearch?.totalSales || 0))}</td>
+                        <td>{calculateClickRate((search?.clicks || 0) + (nonSearch?.clicks || 0), (search?.impressions || 0) + (nonSearch?.impressions || 0))}%</td>
+                        <td>{calculateConversionRate((search?.totalSales || 0) + (nonSearch?.totalSales || 0), (search?.clicks || 0) + (nonSearch?.clicks || 0))}%</td>
+                        <td>{formatNumber(calculateCPC((search?.adCost || 0) + (nonSearch?.adCost || 0), (search?.clicks || 0) + (nonSearch?.clicks || 0)))}원</td>
+                        <td>{formatNumber(calculateCPM((search?.adCost || 0) + (nonSearch?.adCost || 0), (search?.impressions || 0) + (nonSearch?.impressions || 0)))}원</td>
+                        <td>{calculateROAS((search?.adSales || 0) + (nonSearch?.adSales || 0), (search?.adCost || 0) + (nonSearch?.adCost || 0))}%</td>
+                        <td>{formatNumber(calculateCostPerConversion((search?.adCost || 0) + (nonSearch?.adCost || 0), (search?.totalSales || 0) + (nonSearch?.totalSales || 0)))}원</td>
                     </tr>
                 </tbody>
             </table>

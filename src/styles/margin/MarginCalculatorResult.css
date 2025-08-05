@@ -1,0 +1,15 @@
+/* src/styles/MarginCalculatorResult.css */
+
+/* 전체적인 컨텐츠 레이아웃 */
+.form-main-content {
+    padding: 24px;
+    background-color: #f0f2f5;
+    /* 전체 배경색 */
+}
+
+/* 날짜 선택기 컨테이너 (우측 정렬을 위해) */
+.date-selection-container-wrapper {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 16px;
+}
