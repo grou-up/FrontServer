@@ -38,7 +38,7 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
     const handleCheckboxChange = (item) => {
         const keywordData = {
             keyword: item.keyKeyword,
-            bid: editableBids[item.keyKeyword] || item.keyCpc // 사용자가 입력한 값 또는 기본값 사용
+            bid: editableBids[item.keyKeyword] || item.cpc // 사용자가 입력한 값 또는 기본값 사용
         };
 
         setSelectedKeywords((prev) => {
@@ -59,6 +59,13 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
 
     if (loading) return <div>Loading...</div>; // 로딩 상태 표시
     if (error) return <div>{error}</div>; // 에러 상태 표시
+    if (filteredKeywords.length === 0) {
+        return (
+            <div className="keyword-table">
+                <p className="no-data-message">등록된 수동 입찰 키워드가 없습니다!</p>
+            </div>
+        );
+    }
 
     return (
         <div className="keyword-table">
@@ -66,15 +73,15 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
                 <thead>
                     <tr>
                         <SortableHeader label="키워드" sortKey="keyKeyword" onSort={handleSort} />
-                        <SortableHeader label="노출" sortKey="keyImpressions" onSort={handleSort} />
-                        <SortableHeader label="클릭" sortKey="keyClicks" onSort={handleSort} />
-                        <SortableHeader label="클릭률" sortKey="keyClickRate" onSort={handleSort} />
-                        <SortableHeader label="주문" sortKey="keyTotalSales" onSort={handleSort} />
-                        <SortableHeader label="전환율" sortKey="keyCvr" onSort={handleSort} />
-                        <SortableHeader label="광고매출" sortKey="keyAdsales" onSort={handleSort} />
-                        <SortableHeader label="광고비" sortKey="keyAdcost" onSort={handleSort} />
-                        <SortableHeader label="ROAS" sortKey="keyRoas" onSort={handleSort} />
-                        <SortableHeader label="CPC" sortKey="keyCpc" onSort={handleSort} />
+                        <SortableHeader label="노출" sortKey="impressions" onSort={handleSort} />
+                        <SortableHeader label="클릭" sortKey="clicks" onSort={handleSort} />
+                        <SortableHeader label="클릭률" sortKey="clickRate" onSort={handleSort} />
+                        <SortableHeader label="주문" sortKey="totalSales" onSort={handleSort} />
+                        <SortableHeader label="전환율" sortKey="cvr" onSort={handleSort} />
+                        <SortableHeader label="광고매출" sortKey="adSales" onSort={handleSort} />
+                        <SortableHeader label="광고비" sortKey="adCost" onSort={handleSort} />
+                        <SortableHeader label="ROAS" sortKey="roas" onSort={handleSort} />
+                        <SortableHeader label="CPC" sortKey="cpc" onSort={handleSort} />
                         <SortableHeader label="설정 입찰가" sortKey="bid" onSort={handleSort} />
                         <th>
                             <input
@@ -83,7 +90,7 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
                                 onChange={() => {
                                     const allKeywords = filteredKeywords.map(item => ({
                                         keyword: item.keyKeyword,
-                                        bid: editableBids[item.keyKeyword] || item.keyCpc // 사용자가 입력한 값 또는 기본값 사용
+                                        bid: editableBids[item.keyKeyword] || item.cpc // 사용자가 입력한 값 또는 기본값 사용
                                     }));
                                     setSelectedKeywords(allKeywords);
                                 }}
@@ -95,15 +102,15 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
                     {filteredKeywords.map((item, index) => (
                         <tr key={index}>
                             <td>{item.keyKeyword}</td>
-                            <td>{item.keyImpressions.toLocaleString()}</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.keyClicks.toLocaleString()}</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.keyClickRate.toLocaleString()}%</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.keyTotalSales.toLocaleString()}</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.keyCvr.toLocaleString()}%</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.keyAdsales.toLocaleString()}원</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.keyAdcost.toLocaleString()}원</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.keyRoas.toLocaleString()}%</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.keyCpc.toLocaleString()}원</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.impressions.toLocaleString()}</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.clicks.toLocaleString()}</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.clickRate.toLocaleString()}%</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.totalSales.toLocaleString()}</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.cvr.toLocaleString()}%</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.adSales.toLocaleString()}원</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.adCost.toLocaleString()}원</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.roas.toLocaleString()}%</td> {/* 천 단위 구분 기호 추가 */}
+                            <td>{item.cpc.toLocaleString()}원</td> {/* 천 단위 구분 기호 추가 */}
                             <td>
                                 <input
                                     type="number" // 숫자 입력 필드로 변경
@@ -115,7 +122,7 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
                                         boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // 그림자 추가
                                         transition: 'border-color 0.3s, box-shadow 0.3s', // 부드러운 변화 효과
                                     }}
-                                    value={editableBids[item.keyKeyword] !== undefined ? editableBids[item.keyKeyword] : Math.round(item.keyCpc)} // 사용자가 입력한 값 또는 기본값 사용
+                                    value={editableBids[item.keyKeyword] !== undefined ? editableBids[item.keyKeyword] : Math.round(item.cpc)} // 사용자가 입력한 값 또는 기본값 사용
                                     onChange={(e) => handleBidChange(item.keyKeyword, e.target.value)} // 입력값 변경 시 상태 업데이트
                                 />
                             </td>

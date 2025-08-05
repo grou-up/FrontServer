@@ -43,11 +43,11 @@ const StatisticGrid = ({ campaignId, startDate, endDate }) => {
 
             // campaignStats.search 순회
             Object.entries(campaignStats.search).forEach(([date, stats]) => {
-                newAggregatedStats.keyAdcost = (newAggregatedStats.keyAdcost || 0) + (stats.keyAdcost || 0);
-                newAggregatedStats.keyAdsales = (newAggregatedStats.keyAdsales || 0) + (stats.keyAdsales || 0);
-                newAggregatedStats.keyClicks = (newAggregatedStats.keyClicks || 0) + (stats.keyClicks || 0);
-                newAggregatedStats.keyImpressions = (newAggregatedStats.keyImpressions || 0) + (stats.keyImpressions || 0);
-                newAggregatedStats.keyTotalSales = (newAggregatedStats.keyTotalSales || 0) + (stats.keyTotalSales || 0);
+                newAggregatedStats.adCost = (newAggregatedStats.adCost || 0) + (stats.adCost || 0);
+                newAggregatedStats.adSales = (newAggregatedStats.adSales || 0) + (stats.adSales || 0);
+                newAggregatedStats.clicks = (newAggregatedStats.clicks || 0) + (stats.clicks || 0);
+                newAggregatedStats.impressions = (newAggregatedStats.impressions || 0) + (stats.impressions || 0);
+                newAggregatedStats.totalSales = (newAggregatedStats.totalSales || 0) + (stats.totalSales || 0);
             });
             // console.log(newAggregatedStats);
             setSearchStats(campaignStats.search);
@@ -58,11 +58,11 @@ const StatisticGrid = ({ campaignId, startDate, endDate }) => {
 
             // campaignStats.search 순회
             Object.entries(campaignStats.nonSearch).forEach(([date, stats]) => {
-                newAggregatedStats.keyAdcost = (newAggregatedStats.keyAdcost || 0) + (stats.keyAdcost || 0);
-                newAggregatedStats.keyAdsales = (newAggregatedStats.keyAdsales || 0) + (stats.keyAdsales || 0);
-                newAggregatedStats.keyClicks = (newAggregatedStats.keyClicks || 0) + (stats.keyClicks || 0);
-                newAggregatedStats.keyImpressions = (newAggregatedStats.keyImpressions || 0) + (stats.keyImpressions || 0);
-                newAggregatedStats.keyTotalSales = (newAggregatedStats.keyTotalSales || 0) + (stats.keyTotalSales || 0);
+                newAggregatedStats.adCost = (newAggregatedStats.adCost || 0) + (stats.adCost || 0);
+                newAggregatedStats.adSales = (newAggregatedStats.adSales || 0) + (stats.adSales || 0);
+                newAggregatedStats.clicks = (newAggregatedStats.clicks || 0) + (stats.clicks || 0);
+                newAggregatedStats.impressions = (newAggregatedStats.impressions || 0) + (stats.impressions || 0);
+                newAggregatedStats.totalSales = (newAggregatedStats.totalSales || 0) + (stats.totalSales || 0);
             });
             // console.log(newAggregatedStats);
             setNonSearchStats(campaignStats.nonSearch);

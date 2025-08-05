@@ -82,7 +82,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
         { optionName: "광고수익률", key: "marAdRevenue" },
         { optionName: "집행광고비 * 1.1", key: "marAdCost" },
         { optionName: "CPC 단가", key: "marCpcUnitCost" },
-        { optionName: "노출수", key: "marImpressions" },
+        { optionName: "노출수", key: "marimpressionss" },
         { optionName: "클릭률", key: "marClicks" },
         { optionName: "전환률", key: "marAdConversionSalesCount" },
         { optionName: "광고 전환 판매 수", key: "marAdConversionSales" },
@@ -188,11 +188,11 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                                         value = itemForDate.marClicks > 0
                                             ? formatNumber(Math.round(itemForDate.marAdCost / itemForDate.marClicks))
                                             : '0';
-                                    } else if (option.key === "marImpressions") {
-                                        value = formatNumber(itemForDate.marImpressions);
+                                    } else if (option.key === "marimpressionss") {
+                                        value = formatNumber(itemForDate.marimpressionss);
                                     } else if (option.key === "marClicks") {
-                                        value = itemForDate.marImpressions > 0
-                                            ? ((itemForDate.marClicks / itemForDate.marImpressions) * 100).toFixed(2) + '%'
+                                        value = itemForDate.marimpressionss > 0
+                                            ? ((itemForDate.marClicks / itemForDate.marimpressionss) * 100).toFixed(2) + '%'
                                             : '0%';
                                     } else if (option.key === "marAdConversionSalesCount") {
                                         value = itemForDate.marClicks > 0
@@ -249,7 +249,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                                                 if (option.key === "marAdRevenue") {
                                                     return total + ((item.marAdMargin / item.marAdCost) * 100) || 0;
                                                 } else if (option.key === "marClicks") {
-                                                    return total + ((item.marClicks / item.marImpressions) * 100) || 0;
+                                                    return total + ((item.marClicks / item.marimpressionss) * 100) || 0;
                                                 } else if (option.key === "marAdConversionSalesCount") {
                                                     return total + ((item.marAdConversionSalesCount / item.marClicks) * 100) || 0;
                                                 }
@@ -269,7 +269,7 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange }) => {
                                 ) : (
                                     formatNumber(
                                         Math.floor(data.reduce((total, item) => {
-                                            if (["marAdCost", "marImpressions", "marActualSales", "marReturnCount", "marAdMargin", "marNetProfit", "marAdConversionSales", "marReturnCost"].includes(option.key)) {
+                                            if (["marAdCost", "marimpressionss", "marActualSales", "marReturnCount", "marAdMargin", "marNetProfit", "marAdConversionSales", "marReturnCost"].includes(option.key)) {
                                                 return total + (item[option.key] || 0);
                                             }
                                             return total;

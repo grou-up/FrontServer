@@ -17,29 +17,29 @@ const StatGraph2 = ({ search, nonSearch, startDate, endDate }) => {
     }
 
     // search와 nonSearch 데이터를 각각의 배열로 변환
-    const searchImpressionData = dateLabels.map(date => (search[date] ? search[date].keyClicks : 0));
-    const searchKeyTotalSalesData = dateLabels.map(date => (search[date] ? search[date].keyTotalSales : 0));
-    const nonsearchImpressionData = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].keyClicks : 0));
-    const nonsearchKeyTotalSalesData = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].keyTotalSales : 0));
+    const searchimpressionsData = dateLabels.map(date => (search[date] ? search[date].clicks : 0));
+    const searchtotalSalesData = dateLabels.map(date => (search[date] ? search[date].totalSales : 0));
+    const nonsearchimpressionsData = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].clicks : 0));
+    const nonsearchtotalSalesData = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].totalSales : 0));
 
     // 광고비 데이터 생성
-    const searchAdCostData = dateLabels.map(date => (search[date] ? search[date].keyAdcost : 0));
-    const nonSearchAdCostData = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].keyAdcost : 0));
+    const searchAdCostData = dateLabels.map(date => (search[date] ? search[date].adCost : 0));
+    const nonSearchAdCostData = dateLabels.map(date => (nonSearch[date] ? nonSearch[date].adCost : 0));
 
     // cvr 데이터 생성
     const searchCvrData = dateLabels.map((date, index) => {
-        const keyClicks = searchImpressionData[index];
-        // console.log(impressions);
-        const adSales = searchKeyTotalSalesData[index];
+        const clicks = searchimpressionsData[index];
+        // console.log(impressionss);
+        const adSales = searchtotalSalesData[index];
         // console.log(adSales);
-        return keyClicks > 0 ? (adSales / keyClicks) * 100 : 0; // 퍼센트로 표현
+        return clicks > 0 ? (adSales / clicks) * 100 : 0; // 퍼센트로 표현
     });
     const nonsearchCvrData = dateLabels.map((date, index) => {
-        const keyClicks = nonsearchImpressionData[index];
-        // console.log(impressions);
-        const adSales = nonsearchKeyTotalSalesData[index];
+        const clicks = nonsearchimpressionsData[index];
+        // console.log(impressionss);
+        const adSales = nonsearchtotalSalesData[index];
         // console.log(adSales);
-        return keyClicks > 0 ? (adSales / keyClicks) * 100 : 0; // 퍼센트로 표현
+        return clicks > 0 ? (adSales / clicks) * 100 : 0; // 퍼센트로 표현
     });
 
 
