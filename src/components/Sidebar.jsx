@@ -10,7 +10,6 @@ import {
 } from 'lucide-react';
 import logo from "../images/Logo.png";
 import '../styles/Sidebar.css';
-import { getMyCampaigns } from "../services/campaign";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { removeToken } from '../utils/tokenManager';
 
@@ -19,14 +18,12 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
   const itemPath = [...currentPath, item.title];
   const navigate = useNavigate();
 
-  // ✅ isActive 개선: campaignId 기준으로 경로 비교
   const isActive = item.campaignId
     ? location.pathname === `/campaigns/${item.campaignId}`
     : activePath.join('/').startsWith(itemPath.join('/'));
 
   const [isOpen, setIsOpen] = useState(false);
 
-  // ✅ 처음 렌더링 시 activePath 기준으로 메뉴 열기
   useEffect(() => {
     if (hasChildren && isActive) {
       setIsOpen(true);
@@ -34,23 +31,23 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
   }, [hasChildren, isActive]);
 
   const handleClick = () => {
+    onSelect(itemPath);
+
     if (hasChildren) {
       setIsOpen(prev => !prev);
-    } else {
-      onSelect(itemPath);
-      switch (item.title) {
-        case "대시보드": return navigate("/main");
-        case "액셀 업로드": return navigate("/upload");
-        case "마진 계산기": return navigate("/margin-calculator");
-        case "설정": return navigate("/settings");
-        case "로그아웃":
-          removeToken();
-          return navigate('/');
-        default:
-          if (item.campaignId) {
-            return navigate(`/campaigns/${item.campaignId}?title=${encodeURIComponent(item.title)}`);
-          }
-      }
+    }
+
+    if (item.path === '/logout') {
+      removeToken();
+      return navigate('/');
+    }
+
+    if (item.path) {
+      return navigate(item.path);
+    }
+
+    if (item.campaignId) {
+      return navigate(`/campaigns/${item.campaignId}?title=${encodeURIComponent(item.title)}`);
     }
   };
 
@@ -65,13 +62,10 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
             : ['광고 캠페인 분석', '마진 계산기', '설정'].includes(item.title)
               ? '0px'
               : undefined,
-          //   : undefined
         }}
         onClick={handleClick}
       >
-        <span className="menu-item-icon">
-          {item.icon || (hasChildren ? <Folder size={16} /> : null)}
-        </span>
+        <span className="menu-item-icon">{item.icon || (hasChildren ? <Folder size={16} /> : null)}</span>
         <span className="menu-item-text">{item.title}</span>
       </div>
 
@@ -94,9 +88,9 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
   );
 };
 
-const Sidebar = () => {
+
+const Sidebar = ({ campaigns }) => {
   const [activePath, setActivePath] = useState([]);
-  const [campaigns, setCampaigns] = useState([]);
   const [userInfo, setUserInfo] = useState({ name: '' });
   const location = useLocation();
 
@@ -109,30 +103,24 @@ const Sidebar = () => {
         console.error('Failed to fetch user info:', err);
       }
     })();
-
-    (async () => {
-      try {
-        const { data } = await getMyCampaigns();
-        setCampaigns(data || []);
-      } catch (err) {
-        console.error(err);
-      }
-    })();
   }, []);
 
-  // ✅ URL 기반 activePath 설정
   useEffect(() => {
     const path = location.pathname;
 
     if (path.startsWith('/campaigns/')) {
       const title = new URLSearchParams(location.search).get('title') || '';
       setActivePath(['광고 캠페인 분석', title]);
+    } else if (path.startsWith('/margin-calculator/formula')) {
+      setActivePath(['마진 계산기', '계산식 입력']);
+    } else if (path.startsWith('/margin-calculator/result')) {
+      setActivePath(['마진 계산기', '마진 계산']);
+    } else if (path.startsWith('/margin-overview')) {
+      setActivePath(['마진 계산기']);
     } else if (path === '/main') {
       setActivePath(['대시보드']);
     } else if (path === '/upload') {
       setActivePath(['액셀 업로드']);
-    } else if (path === '/margin-calculator') {
-      setActivePath(['마진 계산기']);
     } else if (path === '/settings') {
       setActivePath(['설정']);
     } else {
@@ -142,32 +130,38 @@ const Sidebar = () => {
 
   const menuGroups = [
     [
-      { title: "대시보드", icon: <Home size={16} /> },
-      { title: "액셀 업로드", icon: <Upload size={16} /> }
+      { title: "대시보드", icon: <Home size={16} />, path: "/main" },
+      { title: "액셀 업로드", icon: <Upload size={16} />, path: "/upload" }
     ],
     [
       {
         title: "광고 캠페인 분석",
         icon: <Folder size={16} />,
-        children: campaigns.map(c => ({
+        children: (campaigns || []).map(c => ({
           title: c.title,
           campaignId: c.campaignId
         }))
       }
     ],
     [
-      { title: "마진 계산기", icon: <Calculator size={16} /> }
+      {
+        title: "마진 계산기",
+        icon: <Calculator size={16} />,
+        path: "/margin-overview",
+        children: [
+          { title: "계산식 입력", path: "/margin-calculator/formula" },
+          { title: "마진 계산", path: "/margin-calculator/result" }
+        ]
+      }
     ],
     [
-      { title: "설정", icon: <Settings size={16} /> },
-      { title: "로그아웃", icon: <LogOut size={16} /> }
+      { title: "설정", icon: <Settings size={16} />, path: "/settings" },
+      { title: "로그아웃", icon: <LogOut size={16} />, path: "/logout" }
     ]
   ];
 
   return (
     <aside className="sidebar">
-
-
       <nav className="sidebar-nav">
         <div className="sidebar-header">
           <div className="sidebar-logo-box">

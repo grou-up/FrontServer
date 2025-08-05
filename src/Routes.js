@@ -12,15 +12,34 @@ import CampaignDetail from "./components/CampaignDetail";
 import MarginTabNavigation from "./components/Margin/MarginTabNavigation";
 import OtherComponent from "./components/memo/MemoComponent";
 import MemoButton from "./components/memo/MemoButton";
+import MarginCalculatorForm from "./components/Margin_v2/MarginCalculatorForm";
+import MarginCalculatorResult from "./components/Margin_v2/MarginCalculatorResult";
 import { MyContextProvider } from "../src/components/MyContext"
-
+import MarginOverview from "./components/Margin_v2/MarginOverview";
+import { getMyCampaigns } from "./services/campaign";
 class AppRoutes extends React.Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            showOtherComponent: false, // OtherComponent 표시 여부
-        };
+    state = {
+        campaigns: [],
+        showOtherComponent: false,
+    };
+
+    componentDidMount() {
+        this.fetchCampaigns();
     }
+
+    fetchCampaigns = async () => {
+        try {
+            const { data } = await getMyCampaigns();
+            this.setState({ campaigns: data || [] });
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    // ✅ 캠페인 순서 변경을 처리할 함수를 여기에 추가합니다.
+    handleCampaignOrderChange = (newCampaigns) => {
+        this.setState({ campaigns: newCampaigns });
+    };
 
     toggleOtherComponent = () => {
         this.setState((prevState) => ({
@@ -28,7 +47,8 @@ class AppRoutes extends React.Component {
         }));
     };
     render() {
-        const { showOtherComponent } = this.state;
+        // ✅ state에서 campaigns를 가져와서 props로 전달할 준비를 합니다.
+        const { campaigns, showOtherComponent } = this.state;
         return (
             <Router>
                 <Routes>
@@ -37,12 +57,13 @@ class AppRoutes extends React.Component {
                     <Route path="/signup" element={<SignupForm />} />
                     <Route path="/oauth/kakao/callback" element={<LoginCallback />} />
                     <Route path="/oauth/google/callback" element={<LoginCallback />} />
-                    {/* 보호된 경로 */}
+
+                    {/* 보호된 경로 - ✅ 필요한 모든 곳에 campaigns를 props로 전달합니다. */}
                     <Route
                         path="/main"
                         element={
                             <PrivateRoute>
-                                <Sidebar />
+                                <Sidebar campaigns={campaigns} />
                                 <MainForm />
                             </PrivateRoute>
                         }
@@ -51,17 +72,39 @@ class AppRoutes extends React.Component {
                         path="/upload"
                         element={
                             <PrivateRoute>
-                                <Sidebar />
-                                < FileUploadGrid />
+                                <Sidebar campaigns={campaigns} />
+                                <FileUploadGrid />
                             </PrivateRoute>
                         }
                     />
                     <Route
-                        path="/margin-calculator"
+                        path="/margin-overview"
                         element={
                             <PrivateRoute>
-                                <Sidebar />
-                                < MarginTabNavigation />
+                                <Sidebar campaigns={campaigns} />
+                                <MarginOverview />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/margin-calculator/formula"
+                        element={
+                            <PrivateRoute>
+                                <Sidebar campaigns={campaigns} />
+                                {/* ✅ onCampaignOrderChange 함수를 props로 전달합니다. */}
+                                <MarginCalculatorForm
+                                    campaigns={campaigns}
+                                    onCampaignOrderChange={this.handleCampaignOrderChange}
+                                />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
+                        path="/margin-calculator/result"
+                        element={
+                            <PrivateRoute>
+                                <Sidebar campaigns={campaigns} />
+                                <MarginCalculatorResult campaigns={campaigns} />
                             </PrivateRoute>
                         }
                     />
@@ -77,7 +120,7 @@ class AppRoutes extends React.Component {
                                         </>
                                     ) : (
                                         <>
-                                            <Sidebar />
+                                            <Sidebar campaigns={campaigns} />
                                             <CampaignDetail />
                                         </>
                                     )}
@@ -91,5 +134,6 @@ class AppRoutes extends React.Component {
         );
     }
 }
+
 
 export default AppRoutes;
