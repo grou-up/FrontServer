@@ -64,7 +64,7 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
                 // 새로 추가될 아이템들
                 const newItemsToAdd = rangeItems
                     .filter(item => !prevSelectedKeywords.has(item.keyKeyword))
-                    .map(item => ({ keyword: item.keyKeyword, bid: item.keyCpc }));
+                    .map(item => ({ keyword: item.keyKeyword, bid: item.cpc }));
 
                 return [...prevSelected, ...newItemsToAdd];
             });
@@ -72,7 +72,7 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
             // 일반 클릭 (Shift 키가 안 눌린 경우)
             const keywordData = {
                 keyword: clickedItem.keyKeyword,
-                bid: clickedItem.keyCpc
+                bid: clickedItem.cpc
             };
 
             setSelectedKeywords(prev => {
@@ -94,7 +94,7 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
         } else {
             const allKeywords = filteredKeywords.map(item => ({
                 keyword: item.keyKeyword,
-                bid: item.keyCpc
+                bid: item.cpc
             }));
             setSelectedKeywords(allKeywords);
         }
@@ -102,7 +102,7 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
 
     const handleRowClick = async (item) => {
         setSelectedKeyword(item);
-        if (item.keyTotalSales == 0) {
+        if (item.totalSales == 0) {
             alert("판매 데이터가 없어요!")
         } else {
             setIsModalOpen(true);
@@ -124,7 +124,7 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
 
         // 드래그 시작 시 해당 행의 체크박스 상태를 토글
         const item = filteredKeywords[index];
-        const keywordData = { keyword: item.keyKeyword, bid: item.keyCpc };
+        const keywordData = { keyword: item.keyKeyword, bid: item.cpc };
         setSelectedKeywords(prev => {
             if (prev.some(kw => kw.keyword === keywordData.keyword)) {
                 return prev.filter(kw => kw.keyword !== keywordData.keyword);
@@ -155,7 +155,7 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
                 // 드래그 시작점이 선택된 상태였다면, 범위 내 아이템들을 모두 선택
                 rangeItems.forEach(item => {
                     if (!newSelectedKeywords.has(item.keyKeyword)) {
-                        newSelected.push({ keyword: item.keyKeyword, bid: item.keyCpc });
+                        newSelected.push({ keyword: item.keyKeyword, bid: item.cpc });
                     }
                 });
             } else {
@@ -188,15 +188,15 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
                 <thead>
                     <tr>
                         <SortableHeader label="키워드" sortKey="keyKeyword" onSort={handleSort} />
-                        <SortableHeader label="노출" sortKey="keyImpressions" onSort={handleSort} />
-                        <SortableHeader label="클릭" sortKey="keyClicks" onSort={handleSort} />
-                        <SortableHeader label="클릭률" sortKey="keyClickRate" onSort={handleSort} />
-                        <SortableHeader label="주문" sortKey="keyTotalSales" onSort={handleSort} />
-                        <SortableHeader label="전환율" sortKey="keyCvr" onSort={handleSort} />
-                        <SortableHeader label="CPC" sortKey="keyCpc" onSort={handleSort} />
-                        <SortableHeader label="광고비" sortKey="keyAdcost" onSort={handleSort} />
-                        <SortableHeader label="광고매출" sortKey="keyAdsales" onSort={handleSort} />
-                        <SortableHeader label="ROAS" sortKey="keyRoas" onSort={handleSort} />
+                        <SortableHeader label="노출" sortKey="impressions" onSort={handleSort} />
+                        <SortableHeader label="클릭" sortKey="clicks" onSort={handleSort} />
+                        <SortableHeader label="클릭률" sortKey="clickRate" onSort={handleSort} />
+                        <SortableHeader label="주문" sortKey="totalSales" onSort={handleSort} />
+                        <SortableHeader label="전환율" sortKey="cvr" onSort={handleSort} />
+                        <SortableHeader label="CPC" sortKey="cpc" onSort={handleSort} />
+                        <SortableHeader label="광고비" sortKey="adCost" onSort={handleSort} />
+                        <SortableHeader label="광고매출" sortKey="adSales" onSort={handleSort} />
+                        <SortableHeader label="ROAS" sortKey="roas" onSort={handleSort} />
                         <th>
                             <input
                                 type="checkbox"
@@ -214,47 +214,54 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
                             onMouseDown={(e) => handleMouseDown(e, index)}
                             onMouseMove={(e) => handleMouseMove(e, index)}
                         >
-                            {/* ... (td 내용들은 동일) ... */}
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.keyKeyword}
-                                {item.keyTotalSales >= 1 && <button
-                                    className="icon-button"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleRowClick(item);
-                                    }}
-                                    aria-label="Search"
-                                >
-                                    🔍
-                                </button>}
-                                {item.keyBidFlag && <span className="badge">수동</span>}
+                            <td style={{ color: item.keyExcludeFlag && item.keyKeyword !== '-' ? '#d3264f' : 'inherit' }}>
+                                {item.keyKeyword === '-' ? (
+                                    // 조건이 참일 때: "비검색" 텍스트를 회색으로 표시
+                                    <span style={{ color: '#888' }}>비검색</span>
+                                ) : (
+                                    // 조건이 거짓일 때: 기존 내용을 그대로 표시
+                                    <>
+                                        {item.keyKeyword}
+                                        {item.totalSales >= 1 && <button
+                                            className="icon-button"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleRowClick(item);
+                                            }}
+                                            aria-label="Search"
+                                        >
+                                            🔍
+                                        </button>}
+                                        {item.keyBidFlag && <span className="badge">수동</span>}
+                                    </>
+                                )}
                             </td>
                             <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.keyImpressions.toLocaleString()}
+                                {item.impressions.toLocaleString()}
                             </td>
                             <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.keyClicks.toLocaleString()}
+                                {item.clicks.toLocaleString()}
                             </td>
                             <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.keyClickRate.toLocaleString()}%
+                                {item.clickRate.toLocaleString()}%
                             </td>
                             <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.keyTotalSales.toLocaleString()}
+                                {item.totalSales.toLocaleString()}
                             </td>
                             <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.keyCvr.toLocaleString()}%
+                                {item.cvr.toLocaleString()}%
                             </td>
                             <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.keyCpc.toLocaleString()}원
+                                {item.cpc.toLocaleString()}원
                             </td>
                             <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.keyAdcost.toLocaleString()}원
+                                {item.adCost.toLocaleString()}원
                             </td>
                             <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.keyAdsales.toLocaleString()}원
+                                {item.adSales.toLocaleString()}원
                             </td>
                             <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.keyRoas.toLocaleString()}%
+                                {item.roas.toLocaleString()}%
                             </td>
                             <td>
                                 <input

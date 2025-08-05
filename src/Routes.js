@@ -15,6 +15,8 @@ import MemoButton from "./components/memo/MemoButton";
 import MarginCalculatorForm from "./components/Margin_v2/MarginCalculatorForm";
 import MarginCalculatorResult from "./components/Margin_v2/MarginCalculatorResult";
 import { MyContextProvider } from "../src/components/MyContext"
+import SettingPage from "./components/Setting/SettingPage";
+import CampaignAmalysis from "./components/Campaign/CampaignAnalysis";
 import MarginOverview from "./components/Margin_v2/MarginOverview";
 import { getMyCampaigns } from "./services/campaign";
 class AppRoutes extends React.Component {
@@ -109,6 +111,15 @@ class AppRoutes extends React.Component {
                         }
                     />
                     <Route
+                        path="/settings"
+                        element={
+                            <PrivateRoute>
+                                <Sidebar />
+                                < SettingPage />
+                            </PrivateRoute>
+                        }
+                    />
+                    <Route
                         path="/campaigns/:campaignId"
                         element={
                             <PrivateRoute>
@@ -129,6 +140,17 @@ class AppRoutes extends React.Component {
                             </PrivateRoute>
                         }
                     />
+                    <Route
+                        path="/campaigns/analysis"
+                        element={
+                            <PrivateRoute>
+                                <Sidebar />
+                                < CampaignAmalysis />
+                            </PrivateRoute>
+                        }
+                    />
+
+
                 </Routes>
             </Router>
         );

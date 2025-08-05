@@ -16,7 +16,7 @@ export const getKeywords = async ({ start, end, campaignId }) => {
 export const getExclusionKeywords = async ({ campaignId }) => {
   try {
     const response = await apiRequest(`/exclusionKeyword/getExclusionKeywords?campaignId=${campaignId}`);
-    console.log(response); // 응답값을 콘솔에 출력
+    // console.log(response); // 응답값을 콘솔에 출력
     return response;
   } catch (error) {
     console.error("Error fetching campaigns:", error); // 에러 핸들링
@@ -34,7 +34,7 @@ export const registerExclusionKeywords = async ({ selectedKeywords, campaignId }
     };
     // API 요청
     const response = await apiRequest(`/exclusionKeyword/addExclusionKeyword`, 'POST', requestData);
-    // console.log(response); // 응답값을 콘솔에 출력
+    console.log(response); // 응답값을 콘솔에 출력
     return response;
   } catch (error) {
     console.error("Error fetching campaigns:", error); // 에러 핸들링
@@ -51,7 +51,7 @@ export const removeExclsuionKeywords = async ({ selectedKeywords, campaignId }) 
     };
     // API 요청
     const response = await apiRequest(`/exclusionKeyword/remove`, 'DELETE', requestData);
-    console.log(response); // 응답값을 콘솔에 출력
+    // console.log(response); // 응답값을 콘솔에 출력
     return response;
   } catch (error) {
     console.error("Error fetching campaigns:", error); // 에러 핸들링
@@ -82,7 +82,7 @@ export const registerKeywordBid = async ({ selectedKeywords, campaignId }) => {
 export const getBidKeywords = async ({ start, end, campaignId }) => {
   try {
     const response = await apiRequest(`/bid/gets?start=${start}&end=${end}&campaignId=${campaignId}`);
-    console.log(response); // 응답값을 콘솔에 출력
+    // console.log(response); // 응답값을 콘솔에 출력
     return response;
   } catch (error) {
     console.error("Error fetching campaigns:", error); // 에러 핸들링

@@ -25,18 +25,18 @@ const StatGraphTable = ({ margin, search, nonSearch, startDate, endDate }) => {
         return marginForDate ? marginForDate[key] : 0;
     });
 
-    const AdCostData = getData('keyAdcost');
-    const impressionData = getData('keyImpressions');
-    const clicksData = getData('keyClicks');
-    const totalSalesData = getData('keyTotalSales');
+    const AdCostData = getData('adCost');
+    const impressionsData = getData('impressions');
+    const clicksData = getData('clicks');
+    const totalSalesData = getData('totalSales');
 
     const marTargetEfficiencyData = getMarginData('marTargetEfficiency')
     const marAdBudgetData = getMarginData('marAdBudget')
 
     // clickRateData 생성
-    const clickRateData = impressionData.map((impressions, index) => {
+    const clickRateData = impressionsData.map((impressionss, index) => {
         const clicks = clicksData[index] || 0;
-        return impressions > 0 ? ((clicks / impressions) * 100).toFixed(2) : 0; // 클릭율 계산
+        return impressionss > 0 ? ((clicks / impressionss) * 100).toFixed(2) : 0; // 클릭율 계산
     });
 
     // cvrData 생성
@@ -98,12 +98,12 @@ const StatGraphTable = ({ margin, search, nonSearch, startDate, endDate }) => {
                             ))}
                         </tr>
 
-                        {/* Impressions Row */}
+                        {/* impressionss Row */}
                         <tr>
                             <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>노출 수</td>
-                            {impressionData.map((impression, index) => (
+                            {impressionsData.map((impressions, index) => (
                                 <td key={index} style={{ padding: '5px', border: '1px solid #ddd', whiteSpace: 'nowrap' }}>
-                                    {formatNumber(impression)} {/* 포맷된 숫자 표시 */}
+                                    {formatNumber(impressions)} {/* 포맷된 숫자 표시 */}
                                 </td>
                             ))}
                         </tr>

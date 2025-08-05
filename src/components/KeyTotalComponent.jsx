@@ -35,7 +35,7 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
         setLoading(true);
         try {
             const response = await getKeywords({ start: startDate, end: endDate, campaignId });
-            console.log(response.data);
+            // console.log(response.data);
             setKeywords(response.data || []);
             setError(null);
         } catch (error) {
@@ -62,7 +62,10 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
     };
 
     useEffect(() => {
+        // 날짜 변경 시 자동 재 랜더링 코드
         fetchKeywords(); // activeComponent 변경 시 키워드 다시 가져오기
+        fetchBidKeywords();
+        fetchExclusionKeywords();
     }, [campaignId, startDate, endDate, activeComponent]); // activeComponent 추가
 
     useEffect(() => {

@@ -58,6 +58,13 @@ const ExclusionKeywordComponent = ({
 
     if (loading) return <div>Loading...</div>;
     if (error) return <div>{error}</div>;
+    if (filteredKeywords.length === 0) {
+        return (
+            <div className="keyword-table">
+                <p className="no-data-message">등록된 제외 키워드가 없습니다!</p>
+            </div>
+        );
+    }
 
     return (
         <div className="keyword-table">
