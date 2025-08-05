@@ -1,4 +1,4 @@
-import { apiRequest } from '../../utils/apiClient';
+import { apiRequest } from '../utils/apiClient';
 
 // 캠패인 이름 조회
 export const getMyCampaignsAnalysis = async ({ start, end }) => {

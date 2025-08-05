@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate } from 'react-router-dom';
-import "./CampaignAnalysis.css";
+import "../../styles/Campaign/CampaignAnalysis.css";
 import DateRangeCalendar from "../Date/DateRangeCalendar";
-import { getMyCampaignsAnalysis, getDailyMarginSummary } from "./CampaignService";
+import { getMyCampaignsAnalysis, getDailyMarginSummary } from "../../services/CampaignService";
 
-// [리팩토링] calculateRoas 함수를 컴포넌트 밖으로 분리!
-// 이 함수는 props나 state를 사용하지 않으므로 밖에 있어도 돼.
-// 이렇게 하면 리렌더링 시 함수가 새로 생성되는 것을 막을 수 있어.
+// 이 함수는 props나 state를 사용하지 않으므로 컴포넌트 밖에 두는 것이 좋아.
 const calculateRoas = (sales, cost) => {
     if (!cost || cost === 0) {
         return "0%";
@@ -15,7 +13,7 @@ const calculateRoas = (sales, cost) => {
 };
 
 const CampaignAnalysis = () => {
-    const navigate = useNavigate(); // 훅 호출은 컴포넌트 최상위에서!
+    const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState('total');
     const [campaignCardData, setCampaignCardData] = useState(null);
     const [productReportData, setProductReportData] = useState([]);
@@ -43,25 +41,21 @@ const CampaignAnalysis = () => {
             console.error("이동할 캠페인 ID가 없습니다.");
             return;
         }
-        // 상세 페이지의 URL 경로. 이 경로는 App.js 같은 곳에 미리 설정되어 있어야 해.
         navigate(`/campaigns/${campaignId}?title=${campaignName}`);
     };
 
+    // // [개선] 마진 계산 페이지 이동 함수는 이제 사용하지 않으므로 삭제하거나 주석 처리!
     const handleNavigateToMargin = () => {
-        // 상세 페이지의 URL 경로. 이 경로는 App.js 같은 곳에 미리 설정되어 있어야 해.
         navigate(`/margin-calculator`);
     };
-
 
     useEffect(() => {
         const fetchData = async () => {
             setLoading(true);
+            setError(null); // [개선] 새로운 fetch 시작 시 이전 에러 상태 초기화
             try {
-                // API 파라미터 키를 명세에 맞게 수정 ('start' -> 'startDate', 'end' -> 'endDate')
-                // 이건 네 API 서비스 함수에 따라 다를 수 있으니 확인해 봐!
+                // 1. 캠페인 분석 데이터 가져오기
                 const response = await getMyCampaignsAnalysis({ start: startDate, end: endDate });
-                // 👇 이 코드를 추가해서 실제 응답을 확인해보자!
-                // console.log("✅ 실제로 API에서 받은 응답:", response);
                 const apiCardData = response.sumOfAdSalesAndAdCostByCampaignType;
 
                 const formattedCardData = {
@@ -80,41 +74,35 @@ const CampaignAnalysis = () => {
                         adRevenue: apiCardData['수동 성과형']?.adSales?.toLocaleString() || '0',
                         roas: calculateRoas(apiCardData['수동 성과형']?.adSales, apiCardData['수동 성과형']?.adCost)
                     },
-                    // [수정 완료] '간편 매출 스타트' 데이터가 있을 때와 없을 때 모두 처리
                     easyStart: {
                         adSpend: apiCardData['간편 매출 스타트']?.adCost?.toLocaleString() || '0',
                         adRevenue: apiCardData['간편 매출 스타트']?.adSales?.toLocaleString() || '0',
                         roas: calculateRoas(apiCardData['간편 매출 스타트']?.adSales, apiCardData['간편 매출 스타트']?.adCost)
                     }
                 };
-
                 setCampaignCardData(formattedCardData);
 
-                //-- 👇 상품 보고서 데이터 가공(더 간단해진 버전!)-- -
+                // 2. 상품 보고서 데이터 가공하기
                 const apiProductData = response.adSalesAndAdCostByCampaignName || {};
-
-                // Object.entries()와 map을 사용해 객체를 우리가 원하는 형태의 배열로 변환
-                const formattedProductData = Object.entries(apiProductData).map(([name, data]) => {
-                    return {
-                        // [수정] 이제 API가 주는 정확한 타입을 사용!
-                        id: data.campaignId, // 👈 중요! 캠페인 ID를 받아와서 저장
-                        type: data.campAdType,
-                        name: name,
-                        adSpend: data.adCost.toLocaleString(),
-                        adRevenue: data.adSales.toLocaleString(),
-                        roas: calculateRoas(data.adSales, data.adCost),
-                    };
-                });
+                const formattedProductData = Object.entries(apiProductData).map(([name, data]) => ({
+                    id: data.campaignId,
+                    type: data.campAdType,
+                    name: name,
+                    adSpend: data.adCost.toLocaleString(),
+                    adRevenue: data.adSales.toLocaleString(),
+                    roas: calculateRoas(data.adSales, data.adCost),
+                }));
                 setProductReportData(formattedProductData);
 
-                // --- 👇 마진 보고서 데이터 가공 시작 ---
+                // 3. 마진 보고서 데이터 가져오기
                 const marginResponse = await getDailyMarginSummary({ start: startDate, end: endDate });
-                const apiMarginData = marginResponse || []; // API 응답이 배열 그 자체이므로 바로 사용
+                const apiMarginData = marginResponse || [];
 
+                // 4. 마진 보고서 데이터 가공하기
                 const formattedMarginData = apiMarginData.map(item => {
-                    // 중요: 마진 API는 캠페인 ID를 주지 않으므로,
-                    // 이미 받아놓은 상품 보고서 데이터에서 이름이 같은 캠페인의 ID를 찾아온다.
-                    const productInfo = productReportData.find(p => p.name === item.marProductName);
+                    // [핵심 수정] stale state인 productReportData 대신,
+                    // 바로 위에서 만든 최신 데이터인 formattedProductData를 사용!
+                    const productInfo = formattedProductData.find(p => p.name === item.marProductName);
 
                     return {
                         id: productInfo ? productInfo.id : null, // 찾은 ID를 할당
@@ -123,7 +111,6 @@ const CampaignAnalysis = () => {
                         netProfit: item.marNetProfit.toLocaleString(),
                     };
                 });
-
                 setMarginReportData(formattedMarginData);
 
             } catch (err) {
@@ -135,7 +122,7 @@ const CampaignAnalysis = () => {
         };
 
         fetchData();
-    }, [startDate, endDate]);
+    }, [startDate, endDate]); // navigate는 dependency에 포함할 필요 없어.
 
     const handleTabClick = (tabKey) => {
         setActiveTab(tabKey);
@@ -218,8 +205,9 @@ const CampaignAnalysis = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {productReportData.map((item, index) => (
-                                    <tr key={index}>
+                                {productReportData.map((item) => (
+                                    // [개선] key 속성에 고유한 id 값을 사용
+                                    <tr key={item.id}>
                                         <td><span className={`Tag ${item.type === '매출 최적화' ? 'TagBlue' : 'TagGreen'}`}>{item.type}</span></td>
                                         <td className="clickable-cell" onClick={() => handleNavigateToDetails(item.name, item.id)}>
                                             {item.name} <span className="ExternalLinkIcon">↗</span>
@@ -247,8 +235,8 @@ const CampaignAnalysis = () => {
                             </thead>
                             <tbody>
                                 {marginReportData.map((item) => (
-                                    // key는 고유한 id를 사용하고, 만약 id가 없다면 이름(name)을 사용
                                     <tr key={item.id || item.name}>
+                                        {/* [개선] 마진 보고서도 클릭하면 상세 페이지로 이동하도록 통일 */}
                                         <td className="clickable-cell" onClick={() => handleNavigateToMargin()}>
                                             {item.name} <span className="ExternalLinkIcon">↗</span>
                                         </td>
