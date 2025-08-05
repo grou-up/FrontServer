@@ -40,7 +40,11 @@ const FileSalesReport = () => {
             />
 
             <div className="file-upload-wrapper">
-                <UploadButton onClick={handleUploadFile1} className="upload-action-button">
+                <UploadButton
+                    onClick={handleUploadFile1}
+                    className="upload-action-button"
+                    disabled={file1.length === 0}
+                >
                     파일 업로드
                 </UploadButton>
             </div>

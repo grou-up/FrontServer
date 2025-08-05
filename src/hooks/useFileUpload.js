@@ -21,6 +21,7 @@ const useFileUpload = (uploadFunction, successMessage, shouldNavigate = false, s
         }
       }
       alert(successMessage);
+      window.location.reload();
       if (setFileData) setFileData(file);
       return true;
     } catch (error) {

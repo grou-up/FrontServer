@@ -104,7 +104,7 @@ const FileMarginReport = () => {
                 <UploadButton
                     onClick={handleUploadAndAdvance}
                     className="upload-action-button"
-                    disabled={uploadingGlobal}
+                    disabled={file3.length === 0 || uploadingGlobal}
                 >
                     파일 업로드
                 </UploadButton>
