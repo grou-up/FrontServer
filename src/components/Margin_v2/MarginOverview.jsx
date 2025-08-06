@@ -1,11 +1,10 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import '../../styles/DateRangeSelectCalendar.css';
 import { getMarginOverview, getMarginOverviewGraph } from '../../services/margin';
 import DailyTrendChart from './DailyTrendChart';
-import DashboardPieChartCard from './DashboardPieChartCard'; // Import
-import DashboardDetailCard from './DashboardDetailCard'; // Import
-import { useDateRangePicker } from '../../hooks/useDateRangePicker';
-
+import DashboardPieChartCard from './DashboardPieChartCard';
+import DashboardDetailCard from './DashboardDetailCard';
+import DateRangeCalendar from '../Date/DateRangeCalendar';
+import '../../styles/margin/MarginOverview.css';
 
 const formatCurrency = (value) => {
     if (typeof value !== 'number') return '0';
@@ -14,10 +13,22 @@ const formatCurrency = (value) => {
 
 const COLORS = ['#CADBFF', '#628CE8', '#F48785', '#FFD16F', '#816D79', '#5C62B8'];
 
-
 const MarginOverview = () => {
-    const { startDate, endDate, DatePickerButton, DatePickerModal } = useDateRangePicker();
-    console.log("ss", startDate, endDate)
+    const today = new Date();
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().slice(0, 10);
+    const todayDate = today.toISOString().slice(0, 10);
+
+    const [startDate, setStartDate] = useState(firstDayOfMonth);
+    const [endDate, setEndDate] = useState(todayDate);
+    const [showCalendar, setShowCalendar] = useState(false);
+
+    const toggleCalendar = () => setShowCalendar(v => !v);
+
+    const handleDateRangeChange = ({ startDate, endDate }) => {
+        setStartDate(startDate);
+        setEndDate(endDate);
+    };
+
     const [overviewData, setOverviewData] = useState([]);
     const [graphData, setGraphData] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -63,71 +74,78 @@ const MarginOverview = () => {
     const firstCampaignName = processedData.pieDataRevenue[0]?.name;
     const detailDisplayData = hoveredProduct ? processedData.detailData[hoveredProduct] : (firstCampaignName ? processedData.detailData[firstCampaignName] : null);
 
-
-
     const PieTooltip = ({ active, payload }) => {
         if (active && payload && payload.length) {
             return (
-                <div className="bg-white p-2 border border-gray-200 rounded-md shadow-lg text-sm">
-                    <p className="font-medium">{`${payload[0].name}: ${formatCurrency(payload[0].value)}원`}</p>
+                <div className="pie-tooltip-custom">
+                    <p>{`${payload[0].name}: ${formatCurrency(payload[0].value)}원`}</p>
                 </div>
             );
         }
         return null;
     };
 
-    if (loading) return <div className="flex justify-center items-center h-screen">로딩 중...</div>;
-    if (error) return <div className="flex justify-center items-center h-screen text-red-500">{error}</div>;
+    if (loading) return <div className="loading-container">로딩 중...</div>;
+    if (error) return <div className="loading-container error-message">{error}</div>;
 
     return (
         <div className="form-main-content">
-            <div className="h-full p-4 md:p-6 font-sans flex flex-col">
-                <div className="w-full max-w-[1700px] mx-auto flex flex-col flex-grow">
-                    {/* 헤더 */}
-                    <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
-                        <h1 className="text-2xl font-bold text-[#576FA3] mb-3 md:mb-0">마진 계산기 - 대시보드</h1>
+            <header className="dashboard-header">
+                <h1 className="dashboard-title">마진 계산기 - 대시보드</h1>
 
-                        {/* ✅ 매우 간결해진 날짜 선택 UI */}
-                        <div className="date-selection-container">
-                            <DatePickerButton />
-                            <DatePickerModal />
-                        </div>
-                    </header>
+                <div className="date-selection-container">
+                    <button className="date-selection-button" onClick={toggleCalendar}>
+                        {startDate.replaceAll('-', '.')} ~ {endDate.replaceAll('-', '.')}
+                    </button>
+                    {showCalendar && (
+                        <>
+                            <div className="date-picker-overlay" onClick={toggleCalendar}></div>
+                            <div className="date-picker-modal">
+                                <DateRangeCalendar
+                                    initialStartDate={startDate}
+                                    initialEndDate={endDate}
+                                    onDateRangeChange={handleDateRangeChange}
+                                    onClose={toggleCalendar}
+                                />
+                            </div>
+                        </>
+                    )}
+                </div>
+            </header>
 
-                    {/* 상단 3개 카드 섹션: 컴포넌트로 교체 */}
-                    <section className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4">
-                        <DashboardPieChartCard
-                            title="매출"
-                            data={processedData.pieDataRevenue}
-                            totalValue={processedData.totalRevenue}
-                            onHover={setHoveredProduct}
-                            formatCurrency={formatCurrency}
-                            COLORS={COLORS}
-                            PieTooltip={PieTooltip}
-                        />
-                        <DashboardPieChartCard
-                            title="순이익"
-                            data={processedData.pieDataNetProfit}
-                            totalValue={processedData.totalNetProfit}
-                            onHover={setHoveredProduct}
-                            formatCurrency={formatCurrency}
-                            COLORS={COLORS}
-                            PieTooltip={PieTooltip}
-                        />
-                        <DashboardDetailCard
-                            data={detailDisplayData}
-                            hoveredProduct={hoveredProduct}
-                            formatCurrency={formatCurrency}
-                        />
-                    </section>
-
-                    {/* 하단 증감 추이 그래프 */}
-                    <DailyTrendChart
-                        chartApiData={graphData}
-                        title="일별 매출 / 순이익 추이"
+            {/* 이제 나머지 컨텐츠는 헤더의 '형제'가 됩니다. */}
+            <div className="dashboard-page-container">
+                <section className="dashboard-cards-section">
+                    <DashboardPieChartCard
+                        title="매출"
+                        data={processedData.pieDataRevenue}
+                        totalValue={processedData.totalRevenue}
+                        onHover={setHoveredProduct}
+                        formatCurrency={formatCurrency}
+                        COLORS={COLORS}
+                        PieTooltip={PieTooltip}
+                    />
+                    <DashboardPieChartCard
+                        title="순이익"
+                        data={processedData.pieDataNetProfit}
+                        totalValue={processedData.totalNetProfit}
+                        onHover={setHoveredProduct}
+                        formatCurrency={formatCurrency}
+                        COLORS={COLORS}
+                        PieTooltip={PieTooltip}
+                    />
+                    <DashboardDetailCard
+                        data={detailDisplayData}
+                        hoveredProduct={hoveredProduct}
                         formatCurrency={formatCurrency}
                     />
-                </div>
+                </section>
+
+                <DailyTrendChart
+                    chartApiData={graphData}
+                    title="일별 매출 / 순이익 추이"
+                    formatCurrency={formatCurrency}
+                />
             </div>
         </div>
     );
