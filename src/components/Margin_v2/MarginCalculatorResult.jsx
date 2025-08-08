@@ -1,16 +1,14 @@
 import React, { useState, useEffect, useCallback } from "react";
-import CampaignDataTable from "../Margin/MarginDataTable";
+// import CampaignDataTable from "./MarginDataTable";
+import MarginDataTable from "./MarginDataTable";
 import MarginResultModal from "../Margin/MarginResultModal";
 import MarginNetTable from "../Margin_v2/MarginNetTable";
 import { getMarginByCampaignId } from "../../services/margin";
 import { updateEfficiencyAndAdBudget } from "../../services/margin";
-import { useDateRangePicker } from "../../hooks/useDateRangePicker"; // ✅ 1. 훅 import
+import DateRangeCalendar from "../Date/DateRangeCalendar";
 import '../../styles/margin/MarginCalculatorResult.css'
 
-// ✅ props에서 startDate, endDate 제거
 const MarginCalculatorResult = ({ campaigns }) => {
-    // ✅ 2. 훅을 사용하여 날짜 상태와 UI 컴포넌트를 가져옴
-    const { startDate, endDate, DatePickerButton, DatePickerModal } = useDateRangePicker();
 
     const [expandedCampaignId, setExpandedCampaignId] = useState(new Set());
     const [tableData, setTableData] = useState([]);
@@ -18,10 +16,24 @@ const MarginCalculatorResult = ({ campaigns }) => {
     const [selectedCampaign, setSelectedCampaign] = useState(null);
     const [modifiedData, setModifiedData] = useState({});
 
+    const today = new Date();
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().slice(0, 10);
+    const todayDate = today.toISOString().slice(0, 10);
+
+    const [startDate, setStartDate] = useState(firstDayOfMonth);
+    const [endDate, setEndDate] = useState(todayDate);
+    const [showCalendar, setShowCalendar] = useState(false);
+
+    const toggleCalendar = () => setShowCalendar(v => !v);
+
+    const handleDateRangeChange = ({ startDate, endDate }) => {
+        setStartDate(startDate);
+        setEndDate(endDate);
+    };
+
     const fetchMarginResults = useCallback(async () => {
         // ✅ 훅에서 제공하는 startDate, endDate를 사용
         if (!campaigns || campaigns.length === 0 || !startDate || !endDate) return;
-
         try {
             const allCampaignData = await Promise.all(campaigns.map(async ({ campaignId }) => {
                 const response = await getMarginByCampaignId({ startDate, endDate, campaignId });
@@ -34,10 +46,9 @@ const MarginCalculatorResult = ({ campaigns }) => {
             setTableData([]);
         }
     }, [startDate, endDate, campaigns]);
-
     useEffect(() => {
         fetchMarginResults();
-    }, [fetchMarginResults]); // startDate, endDate가 바뀌면 fetchMarginResults가 재생성되므로 의존성 배열이 간단해짐
+    }, [fetchMarginResults]);
 
 
     useEffect(() => {
@@ -58,32 +69,39 @@ const MarginCalculatorResult = ({ campaigns }) => {
         setIsModalOpen(true);
     };
 
-    const handleSave = async (selectedCampaign) => {
+    const handleSave = async (campaignId) => {
+
         try {
-            const changedData = modifiedData[selectedCampaign.campaignId] || {};
+            // ✅ selectedCampaign.campaignId 대신, 인자로 받은 campaignId를 바로 사용합니다.
+            const changedData = modifiedData[campaignId] || {};
+
+            // ... (이하 로직은 거의 동일)
             if (typeof changedData !== 'object' || Array.isArray(changedData)) {
                 throw new Error("변경된 데이터의 형식이 올바르지 않습니다.");
             }
             const data = {
-                campaignId: selectedCampaign.campaignId,
-                data: Object.values(changedData).map(item => ({
-                    id: item.id, // ID
-                    mardate: item.marDate, // 날짜
-                    marTargetEfficiency: item.marTargetEfficiency, // 목표효율
-                    marAdBudget: item.marAdBudget // 광고예산
-                })),
+                campaignId: campaignId, // ✅ campaignId를 그대로 사용
+                data: Object.values(changedData).map(item => {
+                    return {
+                        id: item?.id,
+                        mardate: item.marDate,
+                        marTargetEfficiency: item.marTargetEfficiency,
+                        marAdBudget: item.marAdBudget
+                    };
+                }),
             };
-            if (data.data.length == 0) {
-                alert("바뀐 데이터가 없습니다.")
-                return
+            if (data.data.length === 0) {
+                alert("바뀐 데이터가 없습니다.");
+                return;
             }
-            const response = await updateEfficiencyAndAdBudget(data);
+
+            await updateEfficiencyAndAdBudget(data);
             alert("저장되었습니다.");
 
             // 캠페인을 닫았다가 다시 여는 처리
             setExpandedCampaignId(prev => {
                 const newSet = new Set(prev);
-                newSet.delete(selectedCampaign.campaignId);
+                newSet.delete(campaignId);
                 return newSet;
             });
 
@@ -94,7 +112,7 @@ const MarginCalculatorResult = ({ campaigns }) => {
             setTimeout(() => {
                 setExpandedCampaignId(prev => {
                     const newSet = new Set(prev);
-                    newSet.add(selectedCampaign.campaignId);
+                    newSet.add(campaignId);
                     return newSet;
                 });
             }, 50); // 100ms 후 다시 열기
@@ -104,22 +122,37 @@ const MarginCalculatorResult = ({ campaigns }) => {
             alert("저장 실패");
         }
     };
+    useEffect(() => {
+    }, [modifiedData]); // 의존성 배열에 modifiedData를 넣습니다.
 
-
-    const handleDataChange = (campaignId, newData) => {
+    const handleDataChange = useCallback((campaignId, newData) => {
         setModifiedData(prev => ({
             ...prev,
             [campaignId]: newData
         }));
-    };
+    }, []); // 의존성 배열이 비어있으면 이 함수는 단 한번만 생성됩니다.
 
     return (
         <div className="form-main-content">
             {/* 날짜 선택 UI 추가 */}
             <div className="flex items-center justify-end mb-4">
                 <div className="date-selection-container">
-                    <DatePickerButton />
-                    <DatePickerModal />
+                    <button className="date-selection-button" onClick={toggleCalendar}>
+                        {startDate.replaceAll('-', '.')} ~ {endDate.replaceAll('-', '.')}
+                    </button>
+                    {showCalendar && (
+                        <>
+                            <div className="date-picker-overlay" onClick={toggleCalendar}></div>
+                            <div className="date-picker-modal">
+                                <DateRangeCalendar
+                                    initialStartDate={startDate}
+                                    initialEndDate={endDate}
+                                    onDateRangeChange={handleDateRangeChange}
+                                    onClose={toggleCalendar}
+                                />
+                            </div>
+                        </>
+                    )}
                 </div>
             </div>
 
@@ -135,7 +168,7 @@ const MarginCalculatorResult = ({ campaigns }) => {
                             onClick={() => toggleExpandCampaign(campaign.campaignId)}
                         >
                             <h3>{campaign.title}</h3>
-                            <div className="button-container">
+                            {/* <div className="button-container">
                                 <button
                                     className="add-button"
                                     onClick={(e) => {
@@ -152,16 +185,17 @@ const MarginCalculatorResult = ({ campaigns }) => {
                                     }}>
                                     기간별 원가 수정
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
 
                         {expandedCampaignId.has(campaign.campaignId) && (
-                            <CampaignDataTable
+                            <MarginDataTable
                                 data={tableData.find(item => item.campaignId === campaign.campaignId)?.data || []}
                                 startDate={startDate}
                                 endDate={endDate}
                                 campaignId={campaign.campaignId}
-                                onDataChange={(newData) => handleDataChange(campaign.campaignId, newData)}
+                                onDataChange={handleDataChange}
+                                onSave={handleSave} // ✅ onSave라는 이름으로 함수를 내려줍니다.
                             />
                         )}
                     </div>

@@ -16,6 +16,7 @@
     /* 제목과 버튼들을 양쪽 끝으로 보냅니다. */
     align-items: center;
     /* 세로 중앙 정렬 */
+    padding: 10px
 }
 
 .campaign-header {
