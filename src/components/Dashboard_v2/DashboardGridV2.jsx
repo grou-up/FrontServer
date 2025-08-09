@@ -1,4 +1,11 @@
-import { React, useState, useEffect, useMemo } from "react";
+// src/components/Dashboard_v2/DashboardGridV2.jsx (최종본)
+
+import React from "react";
+import Joyride, { ACTIONS, EVENTS, STATUS } from 'react-joyride'; // Joyride import 수정
+
+import { useProductTour } from "../../hooks/useProductTour";
+import { useDashboardData } from "../../hooks/useDashboardData";
+
 import DashboardCalendar from "./DashboardCalendar";
 import DashboardSales from "./DashboardSales";
 import DashboardActualSales from "./DashboardActualSales";
@@ -10,119 +17,72 @@ import DashboardSun from "./DashboardSun";
 import DashboardCampaign from "./DashboardCampaign";
 import DashboardSalesReport from "./DashboardSalesReport";
 import DashboardMarginReport from "./DashboardMarginReport";
-import { getMyCampaigns } from "../../services/campaign";
-import {
-    getMarginByCampaignId,
-    getNetProfitAndReturnCost,
-    findLatestMarginDateByEmail
-} from "../../services/margin";
+import { dashboardTourSteps } from "../constants/tourSteps";
 import "../../styles/Dashboard/DashboardGridV2.css";
 
 const DashboardGridV2 = () => {
-    const [campaigns, setCampaigns] = useState([]);
-    const [tableData, setTableData] = useState([]);
-    const [dailyNetProfitData, setDailyNetProfitData] = useState([]);
-    const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
+    // 1. '데이터 총괄 브레인'을 호출해서 데이터 관련 모든 것을 받아옵니다.
+    const {
+        isLoading,
+        startDate,
+        campaigns,
+        tableData,
+        latestDate,
+        totalSales,
+        totalActualSales,
+        totalReturnCount,
+        margin,
+        totalAdCost,
+        roas,
+        sun,
+        handleDateChange
+    } = useDashboardData();
 
-    const { startDate, endDate } = dateRange;
+    // '투어 전문가'에게 대본과 고유 키를 전달하며 호출
+    const { runTour, steps, stepIndex, handleJoyrideCallback } = useProductTour({
+        steps: dashboardTourSteps,
+        isLoading: isLoading,
+        tourKey: 'hasCompletedDashboardTour' // 대시보드 투어 전용 키
+    });
 
-    const formatDate = (d) => d.toISOString().split("T")[0];
+    // 데이터 로딩 중에는 로딩 화면을 보여줍니다.
+    if (isLoading) {
+        return <div className="dashboard-loading">데이터를 불러오는 중입니다...</div>;
+    }
 
-    useEffect(() => {
-        const initialize = async () => {
-            try {
-                const dateRes = await findLatestMarginDateByEmail();
-                const latest = dateRes?.data ? new Date(dateRes.data) : new Date();
-
-                const campaignsRes = await getMyCampaigns();
-                const loadedCampaigns = campaignsRes.data || [];
-
-                setDateRange({ startDate: latest, endDate: latest });
-                setCampaigns(loadedCampaigns);
-
-                fetchAll(latest, loadedCampaigns);
-            } catch (err) {
-                console.error("초기화 실패:", err);
-            }
-        };
-        initialize();
-    }, []);
-
-    const fetchAll = async (selectedDate, campaignList) => {
-        const end = new Date(selectedDate);
-        const start = new Date(selectedDate);
-        start.setDate(end.getDate() - 6);
-
-        const sd = formatDate(start);
-        const ed = formatDate(end);
-
-        try {
-            const marginPromises = campaignList.map(async ({ campaignId }) => {
-                try {
-                    const resp = await getMarginByCampaignId({ startDate: sd, endDate: ed, campaignId });
-                    const dtoList = resp.data || [];
-                    const results = dtoList.length > 0 ? dtoList[0].data : [];
-                    return { campaignId, data: results };
-                } catch (err) {
-                    console.warn(`⚠️ margin load error for campaignId ${campaignId}:`, err);
-                    return { campaignId, data: [] };
-                }
-            });
-
-            const marginData = await Promise.all(marginPromises);
-            setTableData(marginData);
-
-            const profitResp = await getNetProfitAndReturnCost({ startDate: sd, endDate: ed });
-            const profitData = Array.isArray(profitResp.data) ? profitResp.data : [];
-            setDailyNetProfitData(profitData);
-
-        } catch (err) {
-            console.error("데이터 불러오기 오류:", err);
-        }
-    };
-
-    const handleDateChange = ({ startDate, endDate }) => {
-        const selected = startDate;
-        setDateRange({ startDate: selected, endDate: endDate ?? selected });
-        fetchAll(selected, campaigns);
-    };
-
-    const latestDate = startDate ? formatDate(startDate) : null;
-
-    const flatData = useMemo(() => tableData.flatMap(group => group.data), [tableData]);
-
-    const latestData = useMemo(() => {
-        return flatData.filter(x => formatDate(new Date(x.marDate)) === latestDate);
-    }, [flatData, latestDate]);
-
-    const totalSales = latestData.reduce((sum, x) => sum + (x.marSales || 0), 0);
-    const totalActualSales = latestData.reduce((sum, x) => sum + (x.marActualSales || 0), 0);
-    const totalReturnCount = latestData.reduce((sum, x) => sum + (x.marReturnCount || 0), 0);
-    const totalAdCost = latestData.reduce((sum, x) => sum + (x.marAdCost || 0), 0);
-    const roas = totalAdCost ? (totalSales / totalAdCost) * 100 : 0;
-    const margin = dailyNetProfitData?.find(d => d.marDate === latestDate)?.margin ?? 0;
-    const sun = 2;
-
+    // 3. 받아온 정보들로 화면을 그리기만 합니다.
     return (
         <div className="dashboard-container">
-            {startDate && (
-                <DashboardCalendar
-                    initialDate={startDate}
-                    onDateChange={handleDateChange}
-                />
-            )}
+            <Joyride
+                run={runTour}
+                steps={steps}
+                stepIndex={stepIndex}
+                callback={handleJoyrideCallback}
+                continuous
+                showProgress
+                showSkipButton
+                disableScrollParentFix
+                styles={{
+                    options: { zIndex: 10000, primaryColor: '#5E87E3' },
+                    tooltip: { borderRadius: '12px', fontSize: '15px' },
+                    buttonNext: { backgroundColor: '#5E87E3', borderRadius: '20px' }
+                }}
+                locale={{ back: '이전', close: '닫기', last: '완료', next: '다음', skip: '건너뛰기' }}
+            />
 
-            <DashboardSales value={totalSales} />
-            <DashboardActualSales value={totalActualSales} />
-            <DashboardReturnCount value={totalReturnCount} />
-            <DashboardMargin value={margin} />
-            <DashboardAdCost value={totalAdCost} />
-            <DashboardRoas value={roas} />
-            <DashboardSun value={sun} />
-            <DashboardCampaign count={campaigns.length} />
-
-            <DashboardSalesReport tableData={tableData} />
-            <DashboardMarginReport selectedDate={latestDate} />
+            <div className="tour-step-calendar">
+                {startDate && (<DashboardCalendar initialDate={startDate} onDateChange={handleDateChange} />)}
+            </div>
+            <div className="tour-step-sales"> <DashboardSales value={totalSales} /> </div>
+            <div className="tour-step-actual-sales"> <DashboardActualSales value={totalActualSales} /> </div>
+            <div className="tour-step-return-count"> <DashboardReturnCount value={totalReturnCount} /> </div>
+            <div className="tour-step-margin"> <DashboardMargin value={margin} /> </div>
+            <div className="tour-step-ad-cost"> <DashboardAdCost value={totalAdCost} /> </div>
+            <div className="tour-step-roas"> <DashboardRoas value={roas} /> </div>
+            <div className="tour-step-sun"> <DashboardSun value={sun} /> </div>
+            <div className="tour-step-campaign"> <DashboardCampaign count={campaigns.length} /> </div>
+            <div className="tour-step-sales-report"> <DashboardSalesReport tableData={tableData} /> </div>
+            <div className="tour-step-margin-report"> <DashboardMarginReport selectedDate={latestDate} /> </div>
         </div>
     );
 };
