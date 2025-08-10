@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback } from "react";
 // import CampaignDataTable from "./MarginDataTable";
 import MarginDataTable from "./MarginDataTable";
-import MarginResultModal from "../Margin/MarginResultModal";
+import MarginResultModal from "./MarginResultModal";
 import MarginNetTable from "../Margin_v2/MarginNetTable";
 import { getMarginByCampaignId } from "../../services/margin";
 import { updateEfficiencyAndAdBudget } from "../../services/margin";
@@ -13,7 +13,6 @@ const MarginCalculatorResult = ({ campaigns }) => {
     const [expandedCampaignId, setExpandedCampaignId] = useState(new Set());
     const [tableData, setTableData] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [selectedCampaign, setSelectedCampaign] = useState(null);
     const [modifiedData, setModifiedData] = useState({});
 
     const today = new Date();
@@ -64,8 +63,7 @@ const MarginCalculatorResult = ({ campaigns }) => {
         });
     };
 
-    const handleOptionMarginClick = (campaign) => {
-        setSelectedCampaign(campaign);
+    const handleOptionMarginClick = () => {
         setIsModalOpen(true);
     };
 
@@ -136,6 +134,12 @@ const MarginCalculatorResult = ({ campaigns }) => {
         <div className="form-main-content">
             {/* 날짜 선택 UI 추가 */}
             <div className="flex items-center justify-end mb-4">
+                <button
+                    className="add-button" // 스타일은 필요에 맞게 조정하세요.
+                    onClick={handleOptionMarginClick} // ✅ campaign 객체 전달을 제거합니다.
+                >
+                    기간별 원가 수정
+                </button>
                 <div className="date-selection-container">
                     <button className="date-selection-button" onClick={toggleCalendar}>
                         {startDate.replaceAll('-', '.')} ~ {endDate.replaceAll('-', '.')}
@@ -168,24 +172,17 @@ const MarginCalculatorResult = ({ campaigns }) => {
                             onClick={() => toggleExpandCampaign(campaign.campaignId)}
                         >
                             <h3>{campaign.title}</h3>
-                            {/* <div className="button-container">
-                                <button
+                            <div className="button-container">
+                                {/* <button
                                     className="add-button"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         handleSave(campaign);
                                     }}>
                                     목표효율/예산 저장
-                                </button>
-                                <button
-                                    className="add-button"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleOptionMarginClick(campaign);
-                                    }}>
-                                    기간별 원가 수정
-                                </button>
-                            </div> */}
+                                </button> */}
+
+                            </div>
                         </div>
 
                         {expandedCampaignId.has(campaign.campaignId) && (
@@ -202,13 +199,10 @@ const MarginCalculatorResult = ({ campaigns }) => {
                 ))}
             </div>
 
-            {selectedCampaign && (
-                <MarginResultModal
-                    isOpen={isModalOpen}
-                    onClose={() => setIsModalOpen(false)}
-                    campaignId={selectedCampaign.campaignId}
-                />
-            )}
+            <MarginResultModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+            />
         </div>
     );
 };

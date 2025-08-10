@@ -13,3 +13,28 @@
     justify-content: flex-end;
     margin-bottom: 16px;
 }
+
+.add-button {
+    background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+    padding: 6px 10px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    color: white;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: all 0.3s ease;
+    min-width: 160px;
+    justify-content: center;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+    position: relative;
+    overflow: hidden;
+    margin-right: 2%;
+}
+
+.add-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+}
