@@ -1,101 +1,70 @@
+// Totalsearchbar.js (리팩토링 버전)
+
 import React, { useState } from "react";
+import { useParams } from "react-router-dom";
 import CampaignOptionDetailsComponent from "./CampaignOptionDetailsComponent";
 import KeytotalComponent from "./KeyTotalComponent";
 import StatisticGrid from "./CampaignStatistics/StatisticGrid";
+import DateRangeCalendar from "./Date/DateRangeCalendar";
 import "react-datepicker/dist/react-datepicker.css";
 import "../styles/TabComponent.css";
-import { useParams } from "react-router-dom";
-import DateRangeCalendar from "./Date/DateRangeCalendar";
-import '../styles/DateRangeSelectCalendar.css' // 이 CSS 파일에 z-index 설정이 중요합니다.
+import "../styles/DateRangeSelectCalendar.css";
+
+// 탭에 따라 보여줄 컴포넌트를 미리 매핑해두자.
+const tabComponents = {
+    stats: StatisticGrid,
+    campaign: CampaignOptionDetailsComponent,
+    keywords: KeytotalComponent,
+};
+
+// 탭의 영문 이름을 한글로 바꿔줄 객체
+const tabLabels = {
+    stats: "통계",
+    campaign: "옵션",
+    keywords: "키워드",
+};
 
 const Totalsearchbar = ({ title }) => {
     const { campaignId } = useParams();
     const tabs = ["stats", "campaign", "keywords"];
     const [activeTab, setActiveTab] = useState("stats");
 
-    // 오늘 기준 이번 달 1일 ~ 말일을 ISO 문자열로
-    // 컴포넌트 상단
+    // --- 날짜 관련 로직 (기존과 동일) ---
     const today = new Date();
-
-    // 1일 오전 12시가 아니라, 예시대로 12시에 맞추고 싶다면
     const firstDayDate = new Date(today.getFullYear(), today.getMonth(), 1);
-    firstDayDate.setHours(12, 0, 0, 0);
-
-    // 마지막 일자를 “오늘”로 (23:59:59.999까지)
     const lastDayDate = new Date(today);
-    lastDayDate.setHours(23, 59, 59, 999);
 
-    // ISO 문자열(YYYY-MM-DD)로 변환
-    // 현재 날짜가 2025-07-03이므로, initialStartDate를 '2025-07-01'로,
-    // initialEndDate를 '2025-07-02' (어제)로 초기화하는 것이 이전 요청에 더 부합합니다.
-    // 만약 항상 이번달 1일 ~ 오늘로 하고 싶다면 이 부분은 그대로 두세요.
-    // 여기서는 예시로 "오늘"까지 선택 가능하도록 두겠습니다.
-    const firstDay = firstDayDate.toISOString().slice(0, 10);
-    const lastDay = lastDayDate.toISOString().slice(0, 10);
+    const formatDate = (date) => date.toISOString().slice(0, 10);
 
-    // state 초기화 (문자열)
-    const [startDate, setStartDate] = useState(firstDay);
-    const [endDate, setEndDate] = useState(lastDay);
+    const [startDate, setStartDate] = useState(formatDate(firstDayDate));
+    const [endDate, setEndDate] = useState(formatDate(lastDayDate));
 
-    // 달력 모달 토글
     const [showCalendar, setShowCalendar] = useState(false);
-    const toggleCalendar = () => setShowCalendar((v) => !v);
+    const toggleCalendar = () => setShowCalendar((prev) => !prev);
 
-    const handleTabChange = (tab) => {
-        setActiveTab(tab);
-    };
+    const handleTabChange = (tab) => setActiveTab(tab);
 
-    // DateRangeCalendar에서 선택된 값을 string 날짜 범위로 받아옴
     const handleDateRangeChange = ({ startDate, endDate }) => {
         setStartDate(startDate);
         setEndDate(endDate);
     };
 
+    // 렌더링할 현재 활성화된 탭의 컴포넌트를 가져온다.
+    const ActiveComponent = tabComponents[activeTab];
+
     return (
         <div className="tab-container">
-            <div className="tabs-and-dates">
-                <div className="tabs">
-                    {tabs.map((tab, i) => {
-                        let cls = "tab";
-                        if (activeTab === tab) {
-                            cls += " active";
-                            if (i === 0) cls += " left";
-                            else if (i === tabs.length - 1) cls += " right";
-                            else cls += " middle";
-                        }
-                        const label =
-                            tab === "stats"
-                                ? "통계"
-                                : tab === "campaign"
-                                    ? "옵션"
-                                    : "키워드";
-                        return (
-                            <button
-                                key={tab}
-                                className={cls}
-                                onClick={() => handleTabChange(tab)}
-                            >
-                                {label}
-                            </button>
-                        );
-                    })}
-                </div>
-
-                <h2 className="text-xl font-bold mb-4">{title}</h2>
-
+            <div className="title-and-datePicker">
+                <h2 className="title">
+                    <span className="analysis-title-prefix">광고 캠패인 분석  </span>
+                    <span className="analysis-title-main">{title}</span>
+                </h2>
                 <div className="date-selection-container">
-                    <button
-                        className="date-selection-button"
-                        onClick={toggleCalendar}
-                    >
-                        {startDate} ~ {endDate}{" "}
-                        <span className="dropdown-arrow">▼</span>
+                    <button className="date-selection-button" onClick={toggleCalendar}>
+                        {startDate} ~ {endDate} <span className="dropdown-arrow">▼</span>
                     </button>
-
                     {showCalendar && (
                         <>
-                            {/* !!!!!!!! 이 부분이 추가되어야 합니다. !!!!!!!! */}
-                            {/* 오버레이를 추가하여 모달 뒷 배경 클릭 시 닫히도록 하고 z-index를 관리합니다. */}
                             <div className="date-picker-overlay" onClick={toggleCalendar}></div>
                             <div className="date-picker-modal">
                                 <DateRangeCalendar
@@ -110,35 +79,28 @@ const Totalsearchbar = ({ title }) => {
                 </div>
             </div>
 
-            <div
-                className={`tab-content ${activeTab === "stats"
-                    ? "stats-active"
-                    : activeTab === "campaign"
-                        ? "campaign-active"
-                        : "keywords-active"
-                    }`}
-            >
-                {activeTab === "stats" && (
-                    <StatisticGrid
-                        campaignId={campaignId}
-                        startDate={startDate}
-                        endDate={endDate}
-                    />
-                )}
-                {activeTab === "campaign" && (
-                    <CampaignOptionDetailsComponent
-                        campaignId={campaignId}
-                        startDate={startDate}
-                        endDate={endDate}
-                    />
-                )}
-                {activeTab === "keywords" && (
-                    <KeytotalComponent
-                        campaignId={campaignId}
-                        startDate={startDate}
-                        endDate={endDate}
-                    />
-                )}
+            <div className="tabs-container">
+                <div className="tabs">
+                    {tabs.map((tab) => (
+                        <button
+                            key={tab}
+                            // 클래스 이름을 만드는 로직을 훨씬 간결하게!
+                            className={`tab ${activeTab === tab ? "active" : ""}`}
+                            onClick={() => handleTabChange(tab)}
+                        >
+                            {tabLabels[tab]} {/* 객체에서 라벨을 가져온다 */}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            <div className={`tab-content ${activeTab}-active`}>
+                {/* 컴포넌트를 여기서 한 번에 렌더링! */}
+                <ActiveComponent
+                    campaignId={campaignId}
+                    startDate={startDate}
+                    endDate={endDate}
+                />
             </div>
         </div>
     );

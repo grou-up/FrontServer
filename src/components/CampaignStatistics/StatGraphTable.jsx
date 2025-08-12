@@ -57,16 +57,16 @@ const StatGraphTable = ({ margin, search, nonSearch, startDate, endDate }) => {
 
     return (
         <div>
-            <div style={{ overflowX: 'auto', padding: '0px' }}>
-                <table style={{ fontSize: '8px', width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
+            <div style={{ overflowX: 'auto', padding: '0px', width: 'auto' }}>
+                <table style={{ fontSize: '8px', borderCollapse: 'collapse' }}>
+                    <tbody>
                         <tr>
                             <td className="sticky-cell" style={{ padding: '5px', border: '1px solid #ddd' }}>날짜</td>
                             {dateLabels.map((date, index) => (
                                 <th key={index} style={{ padding: '5px', border: '1px solid #ddd', whiteSpace: 'nowrap' }}>{date.slice(5)}</th>
                             ))}
                         </tr>
-                    </thead>
+                    </tbody>
                     <tbody>
                         {/* 목표효율 Row */}
                         <tr>

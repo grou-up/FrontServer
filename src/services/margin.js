@@ -19,6 +19,7 @@ export const getTotalSales = async ({ date }) => {
 export const getMarginByCampaignId = async ({ startDate, endDate, campaignId }) => {
     try {
         const response = await apiRequest(`/margin/getMargin?startDate=${startDate}&endDate=${endDate}&campaignId=${campaignId}`);
+        console.log(response);
         return response;
     } catch (error) {
         throw error;

@@ -1,103 +1,83 @@
 /* 탭 컨테이너 */
 .tab-container {
     width: 100%;
-    /* box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); */
     margin-bottom: 16px;
     border-radius: 16px;
     overflow: visible;
-    /* 자식 요소가 넘쳐도 보이도록 설정 */
-    /* 컨테이너 밖으로 콘텐츠 넘침 방지 */
-
 }
 
+.analysis-title-prefix {
+    color: #576FA3;
+    font-size: 1.5rem;
+    line-height: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.analysis-title-main {
+    align-items: center;
+    padding: 0px 18px;
+    gap: 10px;
+    background: #576FA3;
+    border-radius: 8px;
+    color: white;
+    font-weight: 400;
+    font-size: 1rem;
+}
+
+
 /* 탭 및 날짜 선택기 영역 */
-.tabs-and-dates {
+.tabs-container {
     display: flex;
     align-items: center;
     justify-content: space-between;
+}
+
+.title-and-datePicker {
+    display: flex;
+    justify-content: space-between;
+    /* 이게 핵심! 양쪽 끝으로 보내줌 */
+    align-items: center;
+    margin-bottom: 2%;
 }
 
 /* 탭 버튼 영역 */
 .tabs {
     display: flex;
     gap: 7px;
-    /* 탭 버튼 간 간격 */
     margin: 0;
-    /* 상단 여백 제거 */
-
+    flex-grow: 1;
 }
 
 /* 개별 탭 버튼 */
 .tab {
-    padding: 10px 50px;
-    background-color: #c5c1c16e;
+    padding-top: 10px;
+    padding-right: 80px;
+    padding-bottom: 10px;
     border: none;
     cursor: pointer;
     font-weight: bold;
-    color: #888;
-    text-align: center;
+    color: #6E6E6E;
     transition: background-color 0.3s ease, color 0.3s ease;
-    border-radius: 50px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     margin-bottom: 10px;
+    border-bottom: 1.6px solid #6E6E6E;
 }
 
 /* 활성화된 탭 스타일 */
 .tab.active {
-    background-color: #ffffff;
-    color: #5C62B8;
-    border-radius: 16px 16px 0 0;
-    font-size: 22px;
-    margin-bottom: 0px;
+    border-bottom: 1.6px solid #3B6FE2;
+    color: #3B6FE2;
+}
+
+.tab:last-child {
+    flex-grow: 1;
+    text-align: left;
 }
 
 /* 콘텐츠 영역 */
 .tab-content {
-    padding: 0;
-    /* 내부 패딩 제거 */
-    background-color: #ffffff;
+    /* padding: 8px; */
     border-radius: 0 0 16px 16px;
-    /* 아래쪽 둥근 모서리 */
-}
-
-/* 좌측 활성화 탭 */
-.tab.active.left {
-    border-radius: 0 50px 0 0;
-}
-
-/* 우측 활성화 탭 */
-.tab.active.right {
-    border-radius: 16px 50px 0 0;
-}
-
-/* 중간 활성화 탭 */
-.tab.active.middle {
-    border-radius: 16px 50px 0 0;
-}
-
-/* 콘텐츠 영역 */
-.tab-content {
-    padding: 8px;
-    background-color: #ffffff;
-    border-radius: 0 0 16px 16px;
-}
-
-/* 통계 탭 활성화 시 */
-.tab-content.stats-active {
-    padding: 8px;
-    border-radius: 0x 0 0 0;
-}
-
-/* 캠페인 탭 활성화 시 */
-.tab-content.campaign-active {
-    border-radius: 32px 0 0 0;
-}
-
-/* 키워드 탭 활성화 시 */
-.tab-content.keywords-active {
-    border-radius: 32px 0 0 0;
 }
 
 .date-picker-container {

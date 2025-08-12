@@ -122,7 +122,7 @@ export const deleteBodKeywords = async ({ selectedKeywords, campaignId }) => {
       }))
     };
     const response = await apiRequest(`/bid/delete`, "DELETE", requestData);
-    console.log(response); // 응답값을 콘솔에 출력
+    // console.log(response); // 응답값을 콘솔에 출력
     return response;
   } catch (error) {
     console.error("Error delete bid:", error); // 에러 핸들링
