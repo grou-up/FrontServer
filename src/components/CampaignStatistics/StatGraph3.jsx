@@ -101,7 +101,7 @@ const StatGraph3 = ({ search, nonSearch, startDate, endDate }) => {
                 position: 'top',
             },
             title: {
-                display: true,
+                display: false,
                 text: '전환율 및 클릭률 그래프',
             },
         },

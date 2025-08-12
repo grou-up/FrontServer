@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "../styles/KeywordComponent.css"; // 스타일 파일
-import "../styles/Table.css";
+// import "../styles/Table.css";
 import SortableHeader from '../components/SortableHeader';
 
 const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loading, error }) => {

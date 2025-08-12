@@ -168,6 +168,10 @@ const StatGraph = ({ search, nonSearch, memoData, startDate, endDate }) => {
             legend: {
                 position: 'top',
             },
+            title: {
+                display: false,
+                text: '광고비 그래프',
+            },
         },
         scales: {
             x: {
@@ -180,7 +184,7 @@ const StatGraph = ({ search, nonSearch, memoData, startDate, endDate }) => {
                         const label = context.tick.label;
                         return memoData && memoData[label] ? 'red' : 'black'; // memoData에 해당 날짜가 있으면 빨간색, 없으면 검은색
                     }
-                }
+                },
             },
             y: {
                 title: {
@@ -212,7 +216,7 @@ const StatGraph = ({ search, nonSearch, memoData, startDate, endDate }) => {
             <Bar
                 ref={chartRef}
                 data={data}
-                options={{ ...options, maintainAspectRatio: false }}
+                options={{ ...options, maintainAspectRatio: false }} // ⭐ 여기에 다시 설정되어 있네.
             />
         </div>
     );

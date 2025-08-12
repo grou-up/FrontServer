@@ -39,7 +39,7 @@ const CampaignDetail = () => {
 
   return (
     <div className="main-content">
-      <div className="min-h-screen bg-gray-100">
+      <div className="min-h-screen">
         <main className="container mx-auto p-6">
           <Totalsearchbar
             onComponentChange={handleComponentChange}
