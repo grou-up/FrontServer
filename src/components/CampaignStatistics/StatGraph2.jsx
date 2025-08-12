@@ -73,7 +73,7 @@ const StatGraph2 = ({ search, nonSearch, startDate, endDate }) => {
                 position: 'top',
             },
             title: {
-                display: true,
+                display: false,
                 text: '광고비 그래프',
             },
         },

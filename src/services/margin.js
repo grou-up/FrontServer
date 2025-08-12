@@ -19,6 +19,7 @@ export const getTotalSales = async ({ date }) => {
 export const getMarginByCampaignId = async ({ startDate, endDate, campaignId }) => {
     try {
         const response = await apiRequest(`/margin/getMargin?startDate=${startDate}&endDate=${endDate}&campaignId=${campaignId}`);
+        console.log(response);
         return response;
     } catch (error) {
         throw error;
@@ -61,7 +62,6 @@ export const updateEfficiencyAndAdBudget = async (data) => {
 };
 export const createMarginTable = async ({ targetDate, campaignId }) => {
     try {
-        console.log("백엔드 호출");
         const response = await apiRequest(
             `/margin/createMarginTable?targetDate=${targetDate}&campaignId=${campaignId}`,
             'POST'

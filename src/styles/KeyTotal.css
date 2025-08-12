@@ -1,9 +1,19 @@
 .keyword-component {
-    padding: 16px;
+    padding: 10px;
     border: none;
     /* 테두리 제거 */
     box-shadow: none;
     /* 그림자 제거 (필요 시) */
+    /* background-color: #ffffff; */
+
+    border-radius: 30px;
+}
+
+.keyword-content {
+    background-color: #ffffff;
+    padding: 10px;
+    border-radius: 30px;
+    margin-top: 10px;
 }
 
 .button-container {
@@ -15,11 +25,11 @@
 }
 
 .keyword-button {
-    padding: 4px 16px;
+    padding: 2px 10px;
     /* 세로 패딩을 줄여 높이를 낮춤 */
     border: 1px solid #5C62B8;
     /* 테두리 스타일 */
-    border-radius: 10px;
+    border-radius: 18px;
     /* 모서리 둥글게 */
     background-color: #ffffff;
     /* 배경색 */
@@ -30,11 +40,13 @@
     /* 호버 효과 */
     white-space: nowrap;
     /* 자동 줄바꿈 방지 */
+    text-size-adjust: auto;
+    height: 30px;
 }
 
 
 .keyword-button:hover {
-    background-color: #9da7d3;
+    background-color: #859fd8;
     /* 호버 시 배경색 변화 */
     border: 1px solid #9da7d3;
     color: #ffffff;
@@ -42,8 +54,14 @@
     /* 글씨를 굵게 */
 }
 
+.keyword-input::placeholder {
+    color: white;
+    /* 투명도를 살짝 주고 싶다면 opacity 사용 가능 */
+    /* opacity: 0.8; */
+}
+
 .keyword-button.active {
-    background-color: #5C62B8;
+    background-color: #3B6FE2;
     /* 클릭된 버튼의 배경색 */
     color: #ffffff;
     /* 클릭된 버튼의 글씨 색상 */
@@ -63,10 +81,9 @@
 
 
 .keyword-input {
-    color: #888CA0;
-    background-color: #EAECF9;
+    color: #ffffff;
+    background-color: rgba(59, 111, 226, 0.6);
     padding: 8px;
-    border: 1px solid #EAECF9;
     border-radius: 20px;
     width: 350px;
     margin-left: 8rem;

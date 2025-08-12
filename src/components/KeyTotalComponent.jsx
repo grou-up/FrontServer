@@ -316,42 +316,44 @@ const KeytotalComponent = ({ campaignId, startDate, endDate }) => {
                     )}
                 </div>
             </div>
-            {activeComponent === "keyword" && (
-                <KeywordComponent
-                    campaignId={campaignId}
-                    startDate={startDate}
-                    endDate={endDate}
-                    selectedKeywords={selectedKeywords}
-                    setSelectedKeywords={setSelectedKeywords}
-                    keywords={keywords.filter(item => item.keyKeyword.includes(keyKeyword))} // 객체의 keyword 프로퍼티로 필터링                    loading={loading}
-                    error={error}
-                />
-            )}
-            {activeComponent === "exclusion" && (
-                <ExclusionKeywordComponent
-                    keywords={exclusionKeywords.filter(item => item.exclusionKeyword.includes(keyKeyword))}
-                    selectedKeywords={selectedKeywords}
-                    setSelectedKeywords={setSelectedKeywords}
-                    isAllSelected={isAllSelected}
-                    setIsAllSelected={setIsAllSelected}
-                    sortConfig={sortConfig}
-                    setSortConfig={setSortConfig}
-                    loading={loading}
-                    error={error}
-                />
-            )}
-            {activeComponent === "bid" && (
-                <KeywordBidComponent
-                    campaignId={campaignId}
-                    startDate={startDate}
-                    endDate={endDate}
-                    selectedKeywords={selectedKeywords}
-                    setSelectedKeywords={setSelectedKeywords}
-                    keywords={bidKeywords.filter(item => item.keyKeyword.includes(keyKeyword))} // 변경: 입찰 키워드 전달
-                    loading={loading}
-                    error={error}
-                />
-            )}
+            <div className="keyword-content">
+                {activeComponent === "keyword" && (
+                    <KeywordComponent
+                        campaignId={campaignId}
+                        startDate={startDate}
+                        endDate={endDate}
+                        selectedKeywords={selectedKeywords}
+                        setSelectedKeywords={setSelectedKeywords}
+                        keywords={keywords.filter(item => item.keyKeyword.includes(keyKeyword))} // 객체의 keyword 프로퍼티로 필터링                    loading={loading}
+                        error={error}
+                    />
+                )}
+                {activeComponent === "exclusion" && (
+                    <ExclusionKeywordComponent
+                        keywords={exclusionKeywords.filter(item => item.exclusionKeyword.includes(keyKeyword))}
+                        selectedKeywords={selectedKeywords}
+                        setSelectedKeywords={setSelectedKeywords}
+                        isAllSelected={isAllSelected}
+                        setIsAllSelected={setIsAllSelected}
+                        sortConfig={sortConfig}
+                        setSortConfig={setSortConfig}
+                        loading={loading}
+                        error={error}
+                    />
+                )}
+                {activeComponent === "bid" && (
+                    <KeywordBidComponent
+                        campaignId={campaignId}
+                        startDate={startDate}
+                        endDate={endDate}
+                        selectedKeywords={selectedKeywords}
+                        setSelectedKeywords={setSelectedKeywords}
+                        keywords={bidKeywords.filter(item => item.keyKeyword.includes(keyKeyword))} // 변경: 입찰 키워드 전달
+                        loading={loading}
+                        error={error}
+                    />
+                )}
+            </div>
         </div>
     );
 };

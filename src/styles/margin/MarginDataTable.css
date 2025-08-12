@@ -1,119 +1,148 @@
-/* MarginResultModal.css */
-.table-container {
-    max-height: 800px;
-    /* 원하는 최대 높이 설정 */
-    overflow-y: auto;
-    /* 세로 방향 스크롤 추가 */
+/* MarginDataTable.css 전체 코드 (2025-08-07 최종 수정본) */
+
+.margin-table-wrapper {
     overflow-x: auto;
-    /* 가로 방향 스크롤 추가 */
-    margin-top: 10px;
-    /* 여백 추가 */
+    border: 1px solid #e9eefd;
+    border-radius: 30px;
+    background-color: #fff;
 }
 
-.campaign-data-table {
+.margin-table-data {
     width: 100%;
-    /* 테이블 너비 설정 */
-    border-collapse: collapse;
-    /* 경계 합치기 */
-    margin-top: 25px;
-    /* 상단 여백 */
+    border-collapse: separate;
+    border-spacing: 0;
     font-size: 14px;
-    /* 글자 크기 줄이기 */
-    table-layout: auto;
+    table-layout: fixed;
 }
 
-.campaign-data-table th,
-.campaign-data-table td {
-    padding: 1px 2px;
-    /* 패딩 설정 */
-    text-align: left;
-    /* 왼쪽 정렬 */
+
+/* ★★★ 핵심 방어 코드 ★★★ */
+.margin-table-data,
+.margin-table-data tbody,
+.margin-table-data thead,
+.margin-table-data tr {
+    display: revert;
+    /* 브라우저 기본 테이블 스타일로 강제 복원 */
 }
 
-.campaign-data-table th {
-    background-color: #f2f2f2;
-    /* 기본 헤더 배경색 */
-}
-
-.option-name-header {
-    width: 150px;
-    /* 폭을 늘려서 줄바꿈 방지 */
-    background-color: #e0e0e0;
-    /* 옵션 이름 헤더 배경색 */
+.margin-table-data th,
+.margin-table-data td {
+    display: table-cell;
+    /* 명시적으로 테이블 셀로 지정 */
+    padding: 3px 2px;
+    text-align: center;
     white-space: nowrap;
-    /* 줄바꿈 방지 */
+    border: none;
+    vertical-align: middle;
 }
 
-/* 날짜 헤더 스타일 */
-.campaign-data-table th {
-    min-width: 100px;
-    /* 최소 너비 설정 */
-    white-space: nowrap;
-    /* 줄바꿈 방지 */
+/* --- 헤더 스타일 --- */
+.margin-table-header-cell {
+    background-color: #fff;
+    color: #8c8c8c;
+    font-weight: 500;
+    border-bottom: 1px solid #e9eefd;
 }
 
-/* 첫 번째 열 색칠 */
-.campaign-data-table td:first-child,
-.campaign-data-table th:first-child {
-    background-color: #d6dbf2;
-    /* 원하는 색상 */
+.margin-table-data .margin-table-date-cell {
+    width: 120px;
+    /* ✅ 이 한 줄을 추가해서 각 날짜 열의 최소 너비를 확보합니다. */
+    border-left: 1.5px dashed #e0e0e0;
 }
 
-/* 첫 번째 열 고정 */
-.sticky-column {
+/* --- 고정 컬럼 --- */
+.margin-table-sticky-col {
     position: sticky;
-    /* 고정 설정 */
-    left: 0;
-    /* 왼쪽에 고정 */
-    background-color: #d6dbf2;
-    /* 고정된 열 배경색 */
     z-index: 2;
-    /* 다른 요소 위에 표시되도록 설정 */
-    margin: 0;
-    /* 마진 제거 */
-    padding-left: 0;
-    /* 왼쪽 패딩 제거 */
+    background-color: #fff;
 }
 
-.total-column {
-    right: 0;
-    /* 오른쪽 고정 */
-    background-color: #d6dbf2;
-    /* 배경색 설정 (옵션) */
+.margin-table-first-col {
+    left: 0;
+    width: 180px;
+    text-align: left !important;
+    padding-left: 20px !important;
+    font-weight: 1000;
+    /* 좌측에 여백을 주어 보기 좋게 만듭니다. */
 }
 
-/* 마진 음수일경우 */
-.negative-profit {
-    color: red;
-    /* 음수일 때 빨간색 */
-    font-weight: bold;
-    /* 글씨 두껍게 */
-    font-size: 1em;
-    /* 글씨 크기 증가 */
+tr.margin-table-highlight-row>td {
+    background-color: #ECEEF6;
+    /* 원하시는 다른 색으로 변경 가능합니다. (예: #f0f2f5) */
 }
 
-/* 마진 양수일경우 */
-.positive-profit {
-    color: blue;
-    /* 양수일 때 파란색 */
-    font-weight: bold;
-    /* 글씨 두껍게 */
-    font-size: 1em;
-    /* 글씨 크기 증가 */
+
+.margin-table-second-col {
+    left: 180px;
+    width: 130px;
+    font-weight: 800;
+    background-color: #ECEEF6;
+    /* ✅ 배경색 추가 */
+    color: black;
+    /* ✅ 글자색을 흰색으로 추가 */
+    background-clip: padding-box;
 }
 
-.red-return-count {
-    color: red;
-    /* 빨간색으로 텍스트 색상 설정 */
-    font-weight: bold;
-    /* 텍스트를 굵게 표시 */
+/* 고정된 헤더 컬럼이 스크롤 시 다른 내용 위로 올라오도록 z-index를 확실히 지정합니다. */
+.margin-table-header-cell.margin-table-first-col,
+.margin-table-header-cell.margin-table-second-col {
+    z-index: 3;
 }
 
-.fixed-width-cell {
-    min-width: 100px;
-    max-width: 100px;
-    width: 100px;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+
+/* --- 행 그룹 --- */
+/* 그룹의 시작을 알리는 점선입니다. 레이아웃 안정성을 위해 표준 dashed 스타일을 사용합니다. */
+.margin-table-group-start>td {
+    border-top: 1.5px dashed #e0e0e0;
+}
+
+
+/* --- 셀 내용 --- */
+.margin-table-option-name {
+    display: flex;
+    justify-content: space-between;
+    color: #595959;
+}
+
+.margin-table-total-cell b,
+.margin-table-data-cell b {
+    color: #262626;
+    font-weight: 700;
+}
+
+.margin-table-save-button {
+    border: 1px solid #d9d9d9;
+    background-color: #5E87E3;
+    color: white;
+    padding: 1px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-left: 8px;
+}
+
+.margin-table-save-button:hover {
+    border-color: #6d55ff;
+    color: #6d55ff;
+}
+
+.margin-table-data input {
+    width: 80%;
+    border: 1px solid #d9d9d9;
+    border-radius: 6px;
+    padding: 8px;
+    text-align: right;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.margin-table-data input:focus {
+    outline: none;
+    border-color: #6d55ff;
+}
+
+/* 조건부 스타일링 */
+.margin-table-negative-profit b {
+    color: #ff4d4f;
 }
