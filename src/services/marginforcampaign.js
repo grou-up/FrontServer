@@ -4,7 +4,16 @@ import { apiRequest } from '../utils/apiClient';
 export const getExecutionAboutCampaign = async ({ campaignId }) => {
     try {
         const response = await apiRequest(`/marginforcam/getExecutionAboutCampaign?campaignId=${campaignId}`);
-        console.log(response)
+
+        return response;
+    } catch (error) {
+        console.error("Error fetching campaigns:", error);
+        throw error;
+    }
+}
+export const getMyAllExecution = async ({ }) => {
+    try {
+        const response = await apiRequest(`/marginforcam/getMyAllExecution`);
         return response;
     } catch (error) {
         console.error("Error fetching campaigns:", error);
@@ -15,7 +24,6 @@ export const getExecutionAboutCampaign = async ({ campaignId }) => {
 export const updateExecutionAboutCampaign = async (data) => {
     try {
         const response = await apiRequest('/marginforcam/updateExecutionAboutCampaign', 'PATCH', data);
-        console.log(response)
         return response; // 성공 시 반환
     } catch (error) {
         console.error('데이터 생성 중 오류 발생:', error.message);
@@ -25,10 +33,8 @@ export const updateExecutionAboutCampaign = async (data) => {
 
 
 export const deleteExecutionAboutCampaign = async ({ id }) => {
-    console.log(id)
     try {
         const response = await apiRequest(`/marginforcam/deleteExecutionAboutCampaign?id=${id}`, 'DELETE', id);
-        console.log(response)
         return response; // 성공 시 반환
     } catch (error) {
         console.error('데이터 생성 중 오류 발생:', error.message);

@@ -8,12 +8,9 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     margin-bottom: 24px;
     scrollbar-width: thin;
-    scrollbar-color: transparent transparent;
 }
 
-.net-profit-table-wrapper:hover {
-    scrollbar-color: #c1c1c1 #f1f1f1;
-}
+
 
 .net-profit-table-wrapper table {
     width: 100%;
@@ -86,11 +83,11 @@
 }
 
 .header-total {
-    background-color: #f8f9fa;
+    background-color: #ECEEF6;
 }
 
 .total-cell {
-    background-color: #f1f3f4;
+    background-color: #ECEEF6;
 }
 
 /* --- ▲▲▲ 1열, 2열 고정(Sticky)을 위한 핵심 코드 ▲▲▲ --- */
@@ -151,9 +148,6 @@
     /* ✅ 고정되지 않는 열에만 relative 적용 */
 }
 
-.net-profit-table-wrapper tbody tr:hover {
-    background-color: #f8f9fa;
-}
 
 /* ✅ 고정되지 않는 일반 데이터 셀에만 relative 적용 */
 .net-profit-table-wrapper tbody td:not(.row-header):not(.total-cell) {

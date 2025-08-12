@@ -62,7 +62,6 @@ export const updateEfficiencyAndAdBudget = async (data) => {
 };
 export const createMarginTable = async ({ targetDate, campaignId }) => {
     try {
-        console.log("백엔드 호출");
         const response = await apiRequest(
             `/margin/createMarginTable?targetDate=${targetDate}&campaignId=${campaignId}`,
             'POST'
