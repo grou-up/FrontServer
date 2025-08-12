@@ -14,7 +14,6 @@ export const getExecutionAboutCampaign = async ({ campaignId }) => {
 export const getMyAllExecution = async ({ }) => {
     try {
         const response = await apiRequest(`/marginforcam/getMyAllExecution`);
-
         return response;
     } catch (error) {
         console.error("Error fetching campaigns:", error);
