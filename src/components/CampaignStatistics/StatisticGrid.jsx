@@ -91,7 +91,7 @@ const StatisticGrid = ({ campaignId, startDate, endDate }) => {
                 <div className="grid-item">
                     {/* 2. '매출 대비 이익' 텍스트 대신 차트 컴포넌트를 렌더링 */}
                     {/* marginData가 로드되었을 때만 차트를 보여주도록 조건부 렌더링 */}
-                    <div style={{ width: '180px' }}>
+                    <div>
                         {marginData.length > 0 ? (
                             <ProfitDonutChart marginData={marginData} />
                         ) : (
@@ -131,7 +131,7 @@ const StatisticGrid = ({ campaignId, startDate, endDate }) => {
                     </div>
                     <div className="graph-content-area">
                         {/* ActiveGraphComponent가 null이 아닐 때만 렌더링 */}
-                        <div style={{ width: '1000px', height: '300px' }}>
+                        <div style={{ height: '300px' }}>
                             {ActiveGraphComponent && (
                                 <ActiveGraphComponent
                                     search={searchStats}
@@ -146,7 +146,7 @@ const StatisticGrid = ({ campaignId, startDate, endDate }) => {
                 </div>
 
                 <div className="grid-item">
-                    <div style={{ width: '1000px', height: '250px' }}>
+                    <div style={{ height: '250px' }}>
                         <StatGraphTable
                             margin={marginData}
                             search={searchStats}

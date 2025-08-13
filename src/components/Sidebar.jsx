@@ -139,7 +139,14 @@ const Sidebar = ({ campaigns }) => {
   const menuGroups = [
     [
       { title: "대시보드", icon: <Home size={16} />, path: "/main" },
-      { title: "액셀 업로드", icon: <Upload size={16} />, path: "/upload" }
+      {
+        title: "액셀 업로드",
+        icon: <Upload size={16} />,
+        path: "/upload",
+        children: [
+          { title: "데이터 삭제", path: "/delete-data" } // 자식 메뉴 추가!
+        ]
+      }
     ],
     [
       {
