@@ -6,6 +6,7 @@ import MainForm from "./components/MainForm";
 import LoginCallback from "./pages/LoginCallback";
 import PrivateRoute from "./components/PrivateRoute"; // PrivateRoute 추가
 import Sidebar from "./components/Sidebar";
+import DeleteScreen from "./components/DataSetting/DataDeletionComponent";
 // import FileUploadForm from "./components/FileUploadForm";
 import FileUploadGrid from "./components/Upload/FileUploadGrid";
 import CampaignDetail from "./components/CampaignDetail";
@@ -79,6 +80,18 @@ class AppRoutes extends React.Component {
                             </PrivateRoute>
                         }
                     />
+                    <Route
+                        path="/delete-data"
+                        element={
+                            <PrivateRoute>
+                                <Sidebar campaigns={campaigns} />
+                                <DeleteScreen />
+                            </PrivateRoute>
+                        }
+                    >
+
+
+                    </Route>
                     <Route
                         path="/margin-overview"
                         element={
