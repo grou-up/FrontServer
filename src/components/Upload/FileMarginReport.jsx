@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import FileUploadComponent from "../FileUploadComponent";
 import UploadButton from "../Upload/UploadButton";
 import useFileUpload from "../../hooks/useFileUpload";
+import UploadLoadingOverlay from "./UploadLoadingOverlay";
 import { CircleHelp } from "lucide-react";
 import { uploadFile3 } from "../../services/pythonapi";
 import "../../styles/FileUpload.css";
@@ -65,62 +66,73 @@ const FileMarginReport = () => {
             : `선택된 파일: ${selectedDate}_${file3[0].name}`;
 
     return (
-        <div className="file-card file-margin-report">
-            <div
-                className="upload-title-row flex items-center justify-between"
-                style={{ gap: 8 }}
-            >
-                <div className="flex items-center">
-                    <h2 className="upload-title">마진 보고서</h2>
-                    <CircleHelp
-                        className="help-icon ml-2"
-                        onClick={() => setShowHelp(true)}
-                        style={{ cursor: "pointer" }}
-                    />
-                </div>
-                {/* 달력은 오른쪽 끝에 */}
-                <input
-                    type="date"
-                    value={selectedDate}
-                    onChange={(e) => setSelectedDate(e.target.value)}
-                    className="date-input"
-                    style={{
-                        padding: "4px 8px",
-                        fontSize: 14,
-                        borderRadius: 4,
-                        border: "1px solid #ccc",
-                    }}
-                />
-            </div>
-
-            <FileUploadComponent
-                label={fileLabel}
-                files={file3}
-                setFiles={setFile3}
-                multiple={false}
-            />
-
-            <div className="file-upload-wrapper">
-                <UploadButton
-                    onClick={handleUploadAndAdvance}
-                    className="upload-action-button"
-                    disabled={file3.length === 0 || uploadingGlobal}
+        <>
+            <div className="file-card file-margin-report">
+                <div
+                    className="upload-title-row flex items-center justify-between"
+                    style={{ gap: 8 }}
                 >
-                    파일 업로드
-                </UploadButton>
-            </div>
-
-            {showHelp && (
-                <div className="help-overlay" onClick={() => setShowHelp(false)}>
-                    <div className="help-modal">
-                        <img
-                            src={require("../../images/MarginReport.png")}
-                            alt="도움말"
+                    <div className="flex items-center">
+                        <h2 className="upload-title">마진 보고서</h2>
+                        <CircleHelp
+                            className="help-icon ml-2"
+                            onClick={() => setShowHelp(true)}
+                            style={{ cursor: "pointer" }}
                         />
                     </div>
+                    {/* 달력은 오른쪽 끝에 */}
+                    <input
+                        type="date"
+                        value={selectedDate}
+                        onChange={(e) => setSelectedDate(e.target.value)}
+                        className="date-input"
+                        disabled={uploadingGlobal} // 업로드 중에는 날짜 변경 불가
+                        style={{
+                            padding: "4px 8px",
+                            fontSize: 14,
+                            borderRadius: 4,
+                            border: "1px solid #ccc",
+                            backgroundColor: uploadingGlobal ? "#f5f5f5" : "white", // 비활성화 시 배경색 변경
+                            cursor: uploadingGlobal ? "not-allowed" : "auto",
+                        }}
+                    />
                 </div>
-            )}
-        </div>
+
+                <FileUploadComponent
+                    label={fileLabel}
+                    files={file3}
+                    setFiles={setFile3}
+                    multiple={false}
+                />
+
+                <div className="file-upload-wrapper">
+                    <UploadButton
+                        onClick={handleUploadAndAdvance}
+                        className="upload-action-button"
+                        disabled={file3.length === 0 || uploadingGlobal}
+                    >
+                        {uploadingGlobal ? "업로드 중..." : "파일 업로드"}
+                    </UploadButton>
+                </div>
+
+                {showHelp && (
+                    <div className="help-overlay" onClick={() => setShowHelp(false)}>
+                        <div className="help-modal">
+                            <img
+                                src={require("../../images/MarginReport.png")}
+                                alt="도움말"
+                            />
+                        </div>
+                    </div>
+                )}
+            </div>
+
+            {/* 업로드 로딩 오버레이 추가 */}
+            <UploadLoadingOverlay
+                isUploading={uploadingGlobal}
+                message="마진 보고서 업로드 중입니다..."
+            />
+        </>
     );
 };
 
