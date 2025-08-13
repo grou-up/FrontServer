@@ -6,11 +6,11 @@ import MainForm from "./components/MainForm";
 import LoginCallback from "./pages/LoginCallback";
 import PrivateRoute from "./components/PrivateRoute"; // PrivateRoute 추가
 import Sidebar from "./components/Sidebar";
+
 import DeleteScreen from "./components/DataSetting/DataDeletionComponent";
 // import FileUploadForm from "./components/FileUploadForm";
 import FileUploadGrid from "./components/Upload/FileUploadGrid";
 import CampaignDetail from "./components/CampaignDetail";
-import MarginTabNavigation from "./components/Margin/MarginTabNavigation";
 import OtherComponent from "./components/memo/MemoComponent";
 import MemoButton from "./components/memo/MemoButton";
 import MarginCalculatorForm from "./components/Margin_v2/MarginCalculatorForm";

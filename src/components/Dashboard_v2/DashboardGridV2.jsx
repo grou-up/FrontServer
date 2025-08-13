@@ -1,7 +1,6 @@
-// src/components/Dashboard_v2/DashboardGridV2.jsx (최종본)
 
 import React from "react";
-import Joyride, { ACTIONS, EVENTS, STATUS } from 'react-joyride'; // Joyride import 수정
+import Joyride from 'react-joyride'; // Joyride import 수정
 
 import { useProductTour } from "../../hooks/useProductTour";
 import { useDashboardData } from "../../hooks/useDashboardData";
