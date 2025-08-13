@@ -11,7 +11,7 @@ export const useDashboardData = () => {
     const [dateRange, setDateRange] = useState({ startDate: null, endDate: null });
     const [isLoading, setIsLoading] = useState(true);
 
-    const { startDate, endDate } = dateRange;
+    const { startDate } = dateRange;
     const formatDate = (d) => d.toISOString().split("T")[0];
 
     const fetchAll = useCallback(async (selectedDate, campaignList) => {

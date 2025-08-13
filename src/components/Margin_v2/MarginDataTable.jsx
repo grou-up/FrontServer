@@ -9,22 +9,16 @@ const MarginDataTable = ({ startDate, endDate, campaignId, onDataChange, onSave 
     const {
         data,
         dateRange,
-        isInitialLoading,
         handleInputChange,
         handleCellClick
     } = useMarginData(startDate, endDate, campaignId, onDataChange);
 
-    // 로딩 중일 때 표시할 UI
-    if (isInitialLoading) {
-        return <div>데이터를 로딩하고 있습니다...</div>;
-    }
 
     // "몸"인 Presenter 컴포넌트에 필요한 모든 것을 전달하여 화면을 그리게 합니다.
     return (
         <MarginTablePresenter
             data={data}
             dateRange={dateRange}
-            isInitialLoading={isInitialLoading}
             handleInputChange={handleInputChange}
             handleCellClick={handleCellClick}
             campaignId={campaignId}
