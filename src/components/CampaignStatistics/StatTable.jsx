@@ -33,7 +33,7 @@ const StatTable = ({ search, nonSearch }) => {
 
     return (
         <div>
-            <table style={{ borderCollapse: 'collapse', width: '100%' }}>
+            <table style={{ borderCollapse: 'collapse' }}>
                 <thead>
                     <tr>
                         <th>노출 영역</th>

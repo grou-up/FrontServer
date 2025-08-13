@@ -59,7 +59,7 @@ const CampaignOptionDetailsComponent = ({ campaignId, startDate, endDate }) => {
     if (error) return <div>{error}</div>; // 에러 상태 표시
 
     return (
-        <div className="keyword-component">
+        <div className="keyword-content">
             <table>
                 <thead>
                     <tr>
