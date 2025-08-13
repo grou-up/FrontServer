@@ -232,7 +232,7 @@ const MarginCalculatorForm = ({ campaigns: initialCampaigns }) => {
                 alert(`저장에 실패한 상품이 있습니다:\n${allFailedProductNames.join(", ")}`);
             } else {
                 alert("저장이 성공적으로 완료되었습니다.");
-                // window.location.reload(); // 성공 시에만 페이지 새로고침
+                window.location.reload(); // 성공 시에만 페이지 새로고침
             }
 
         } catch (error) {
