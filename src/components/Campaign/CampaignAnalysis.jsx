@@ -156,7 +156,7 @@ const CampaignAnalysis = () => {
     }
 
     if (error) {
-        return <div className="CampaignAnalysisPage"><h2>앗! 에러가 발생했어요 😱</h2><p>{error.message}</p></div>;
+        return <div className="CampaignAnalysisPage"><h2>엑셀 업로드 먼저 부탁드려요 !</h2></div>;
     }
 
     return (

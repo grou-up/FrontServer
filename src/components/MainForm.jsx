@@ -1,5 +1,4 @@
 import { React, useEffect } from "react";
-import DashboardGrid from "../components/Dashboard/DashboardGrid";
 import DashboardGridV2 from "./Dashboard_v2/DashboardGridV2";
 import "../styles/Mainform.css"; // 메인 폼 전용 스타일
 

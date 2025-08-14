@@ -49,7 +49,7 @@ export default function FileSalesHistory() {
         const first = new Date(year, month, 1);
         const start = new Date(first);
         start.setDate(first.getDate() - first.getDay());
-        return Array.from({ length: 42 }).map((_, i) => {
+        return Array.from({ length: 35 }).map((_, i) => {
             const d = new Date(start);
             d.setDate(start.getDate() + i);
             return d;
@@ -119,13 +119,13 @@ export default function FileSalesHistory() {
         const title = new Date(year, month, 1);
 
         return (
-            <div className="flex-1 min-w-0 max-w-full bg-white rounded-lg p-4">
-                <div className="text-center font-semibold text-gray-800 mb-4">
+            <div className="flex-1 min-w-0 max-w-full bg-white rounded-lg p-2 sm:p-4">
+                <div className="text-center font-semibold text-gray-800 mb-2 sm:mb-4 text-sm sm:text-base">
                     {title.getFullYear()}년 {monthNames[title.getMonth()]}
                 </div>
                 <div className="grid grid-cols-7 gap-1 mb-2">
                     {dayNames.map(d => (
-                        <div key={d} className="text-center text-sm text-gray-500 p-2">
+                        <div key={d} className="text-center text-xs sm:text-sm text-gray-500 p-1 sm:p-2">
                             {d}
                         </div>
                     ))}
@@ -148,16 +148,16 @@ export default function FileSalesHistory() {
                                     setIsModalOpen(true);
                                 }}
                                 className={`
-                                    relative group h-12 flex flex-col items-center justify-center text-sm rounded-md
+                                    relative group h-8 sm:h-12 flex flex-col items-center justify-center text-xs sm:text-sm rounded-md
                                     ${inMonth ? "text-gray-900" : "text-gray-300"}
                                     ${isToday ? "bg-blue-100 font-semibold" : "hover:bg-gray-50"}
                                     ${clickable ? "cursor-pointer hover:bg-gray-50" : ""}
                                 `}
                             >
-                                <span>{day.getDate()}</span>
-                                <div className="flex gap-1 mt-2">
-                                    {flags.isAdv && <div className="w-2 h-2 bg-red-500 rounded-full" />}
-                                    {flags.isNet && <div className="w-2 h-2 bg-blue-500 rounded-full" />}
+                                <span className="leading-none">{day.getDate()}</span>
+                                <div className="flex gap-0.5 sm:gap-1 mt-0.5 sm:mt-2">
+                                    {flags.isAdv && <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-red-500 rounded-full" />}
+                                    {flags.isNet && <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 bg-blue-500 rounded-full" />}
                                 </div>
                             </div>
                         );
@@ -169,32 +169,33 @@ export default function FileSalesHistory() {
 
     return (
         <>
-            {/* overflow-hidden 추가 */}
-            <div className="file-card file-sales-history overflow-hidden">
-                <div className="file-sales-header">
-                    <div className="legend flex items-center gap-4 text-sm text-gray-600">
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-red-500 rounded-full" />
+            <div className="file-card file-sales-history flex flex-col h-full overflow-hidden">
+                <div className="file-sales-header flex-shrink-0">
+                    <div className="legend flex items-center gap-2 sm:gap-4 text-xs sm:text-sm text-gray-600 mb-2">
+                        <div className="flex items-center gap-1 sm:gap-2">
+                            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-500 rounded-full" />
                             <span>광고 보고서</span>
                         </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-blue-500 rounded-full" />
+                        <div className="flex items-center gap-1 sm:gap-2">
+                            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-blue-500 rounded-full" />
                             <span>순매출 보고서</span>
                         </div>
                     </div>
-                    <div className="flex items-center justify-center gap-2 text-xl font-semibold -mt-1">
-                        <button onClick={() => navigateMonth(-1)} className="p-2 hover:bg-gray-200 rounded-md">
-                            <ChevronLeft size={20} />
+                    <div className="flex items-center justify-center gap-2 text-lg sm:text-xl font-semibold">
+                        <button onClick={() => navigateMonth(-1)} className="p-1 sm:p-2 hover:bg-gray-200 rounded-md">
+                            <ChevronLeft size={16} className="sm:w-5 sm:h-5" />
                         </button>
-                        {currentDate.getFullYear()}년
-                        <button onClick={() => navigateMonth(1)} className="p-2 hover:bg-gray-200 rounded-md">
-                            <ChevronRight size={20} />
+                        <span className="text-base sm:text-xl">{currentDate.getFullYear()}년</span>
+                        <button onClick={() => navigateMonth(1)} className="p-1 sm:p-2 hover:bg-gray-200 rounded-md">
+                            <ChevronRight size={16} className="sm:w-5 sm:h-5" />
                         </button>
                     </div>
                 </div>
-                {/* 내부 스크롤이 필요하면 overflow-auto */}
-                <div className="calendars flex overflow-x-auto">
-                    <Calendar offset={0} />
+                {/* 스크롤 가능한 달력 영역 */}
+                <div className="calendars flex-1 overflow-auto min-h-0">
+                    <div className="min-w-fit w-full h-full">
+                        <Calendar offset={0} />
+                    </div>
                 </div>
             </div>
 
@@ -204,11 +205,8 @@ export default function FileSalesHistory() {
                 files={modalFiles}
                 onClose={() => setIsModalOpen(false)}
                 onDeleted={(deletedId) => {
-                    // 1) 모달 닫기
                     setIsModalOpen(false);
-                    // 2) 리스트에서 해당 항목 제거 (선택 사항)
                     setModalFiles(prev => prev.filter(f => f.id !== deletedId));
-                    // 3) 전체 히스토리 리로드
                     reloadHistory();
                 }}
             />

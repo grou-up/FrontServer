@@ -1,8 +1,9 @@
 import { useState } from "react";
 
 const useFileUpload = (uploadFunction, successMessage, shouldNavigate = false, setFileData = null, setUploadingGlobal) => {
-  const [file, setFile] = useState([]); // 배열로 변경
+  const [file, setFile] = useState([]);
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
 
   const handleUploadFile = async () => {
     if (file.length === 0) {
@@ -12,24 +13,38 @@ const useFileUpload = (uploadFunction, successMessage, shouldNavigate = false, s
 
     setUploading(true);
     setUploadingGlobal(true);
+    setUploadProgress(0);
 
     try {
       for (let i = 0; i < file.length; i++) {
-        const response = await uploadFunction(file[i]);
-        if (response.status !== 200) {
-          throw new Error("파일 업로드 실패");
-        }
+        const progressCallback = (progressEvent) => {
+          // S3 업로드 진행률 (0-50%)
+          const uploadProgress = Math.round((progressEvent.loaded * 50) / progressEvent.total);
+          setUploadProgress(uploadProgress);
+        };
+
+        // S3 업로드 및 데이터 처리
+        const response = await uploadFunction(file[i], progressCallback);
+
+        // 데이터 처리 완료 (100%)
+        setUploadProgress(100);
+
+        console.log("처리 완료:", response.data);
       }
+
       alert(successMessage);
       window.location.reload();
       if (setFileData) setFileData(file);
       return true;
+
     } catch (error) {
-      alert("업로드 실패!");
+      console.error("업로드 및 처리 오류:", error);
+      alert(`업로드 실패: ${error.message || error}`);
       return false;
     } finally {
       setUploading(false);
       setUploadingGlobal(false);
+      setUploadProgress(0);
     }
   };
 
@@ -38,6 +53,7 @@ const useFileUpload = (uploadFunction, successMessage, shouldNavigate = false, s
     setFile,
     handleUploadFile,
     uploading,
+    uploadProgress,
   };
 };
 

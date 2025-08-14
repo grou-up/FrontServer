@@ -3,12 +3,18 @@
     /* gap: 20px; */
     /* 각 그리드 아이템 간의 간격 */
     /* 부모 요소에 padding 추가 */
-    /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-    반응형 그리드 설정 */
+    /* grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); */
+    ;
     grid-template-columns: 2fr 8fr;
     /* 그리드 아이템 사이의 간격 */
     gap: 10px;
     /* 1.5rem */
+}
+
+.grid-left-column,
+.grid-right-column {
+    min-width: 0;
+    /* 이 한 줄이 마법의 코드! */
 }
 
 .grid-item {
@@ -39,6 +45,7 @@
     /* 그림자 추가 */
     overflow: hidden;
     /* 내용이 넘칠 경우 숨김 처리 */
+    min-height: 100vh;
 }
 
 .grid-item-graph {
@@ -61,8 +68,6 @@
 }
 
 .grid-item table {
-    width: 100%;
-    /* 테이블 너비를 100%로 설정 */
     border-collapse: collapse;
     /* 테이블 경계 합치기 */
     margin-bottom: 10px;

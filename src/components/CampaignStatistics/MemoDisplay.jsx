@@ -12,14 +12,15 @@ const MemoDisplay = ({ memoData }) => {
     }
 
     // 1. 데이터 가공 로직에서 author 부분을 제거
+    // 1. 데이터를 평평하게 가공하는 부분
     const flatMemoList = Object.entries(memoData).flatMap(([date, memos]) => {
-        // 이제 memos는 ['메모 내용1', '메모 내용2'] 같은 단순 문자열 배열이야.
         return memos.map((memoContent, index) => ({
             id: `${date}-${index}`,
             date: date,
             content: memoContent,
         }));
     });
+    const sortedMemoList = flatMemoList.sort((a, b) => a.date.localeCompare(b.date));
 
     // 2. 렌더링 부분도 author 관련 코드를 모두 제거
     return (
@@ -32,7 +33,7 @@ const MemoDisplay = ({ memoData }) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {flatMemoList.map(memo => (
+                    {sortedMemoList.map(memo => (
                         <tr key={memo.id}>
                             <td>{memo.date}</td>
                             <td>

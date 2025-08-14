@@ -1,27 +1,69 @@
-/* DashboardMarginReport.css */
-
-.margin-report-content {
-    overflow-y: hidden;
-    overflow-x: hidden;
-    border-radius: 20px;
+/* --- 카드 전체 레이아웃 --- */
+.dashboard-card.dashboard-margin-report {
+    display: flex;
+    /* 1. 부모를 Flex 컨테이너로 */
+    flex-direction: column;
+    /* 세로 방향으로 쌓기 */
+    /* 🚨 중요: 이 카드 자체의 높이가 정해져 있어야 함! */
+    /* 예를 들어, 대시보드 그리드에서 이 카드의 높이를 지정해줘야 해. */
+    /* 여기서는 예시로 min-height를 줌 */
+    min-height: 300px;
+    overflow: hidden;
+    /* 내부 요소가 카드를 벗어나지 않도록 */
 }
 
-.margin-table-body-scroll {
-    max-height: 250px;
-    /* 원하는 높이 조정 */
-    overflow-y: auto;
-    overflow-x: hidden;
+.dashboard-card .card-label {
+    flex-shrink: 0;
+    /* 제목은 줄어들지 않도록 고정 */
+    margin-bottom: 10px;
+    /* 제목과 테이블 사이 간격 */
+}
+
+/* --- 테이블 레이아웃 --- */
+.margin-report-table-container {
+    flex-grow: 1;
+    /* 2. 테이블 컨테이너가 남은 공간을 모두 차지 */
+    display: flex;
+    /* 자식인 table이 flex-grow를 쓸 수 있도록 */
+    min-height: 0;
+    /* flex-grow 버그 방지용 꿀팁 */
 }
 
 .margin-table {
-    margin-top: 1%;
     width: 100%;
     border-collapse: collapse;
     font-family: 'Pretendard', sans-serif;
     font-size: 14px;
     table-layout: fixed;
+
+    /* 3. 테이블 자체도 Flex 컨테이너로 만들어 thead/tbody 제어 */
+    display: flex;
+    flex-direction: column;
 }
 
+.margin-table thead {
+    flex-shrink: 0;
+    /* 헤더는 줄어들지 않게 고정 */
+}
+
+.margin-table-body-scroll {
+    flex-grow: 1;
+    /* 4. tbody가 테이블의 남은 공간을 모두 차지 */
+    overflow-y: auto;
+    /* 내용이 넘치면 세로 스크롤! */
+    display: block;
+    /* tbody가 높이를 가질 수 있게 block으로 변경 */
+}
+
+/* 5. (꿀팁) thead와 tbody의 컬럼 너비를 맞추기 */
+.margin-table thead tr,
+.margin-table tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+}
+
+/* --- 테이블 세부 스타일 --- */
 .margin-table th {
     background-color: #ffffff;
     border-bottom: 1px solid #e0e6ed;
@@ -36,26 +78,21 @@
     font-weight: 600;
     padding: 12px 10px;
     text-align: left;
-    border-bottom: none;
-    box-sizing: border-box;
+    border-bottom: 1px solid #f0f2f5;
 }
 
-.margin-table tr:hover {
+.margin-table tbody tr:hover {
     background-color: #f0f4fa;
     transition: background-color 0.2s;
 }
 
-.margin-table .highlight-row td {
-    font-weight: 800;
-    color: #000000;
-}
-
-.margin-table td:first-child {
+.margin-table td.text-red {
+    color: #d32f2f;
+    /* 좀 더 세련된 빨간색 */
     font-weight: 700;
-    text-align: left;
 }
 
-/* 스크롤바 안쪽으로 */
+/* --- 스크롤바 스타일 --- */
 .margin-table-body-scroll::-webkit-scrollbar {
     width: 8px;
 }
@@ -67,9 +104,4 @@
 
 .margin-table-body-scroll::-webkit-scrollbar-track {
     background-color: transparent;
-}
-
-.margin-table td.text-red {
-    color: red;
-    font-weight: 700;
 }

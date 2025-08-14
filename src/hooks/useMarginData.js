@@ -6,7 +6,6 @@ import { getMarginByCampaignId, createMarginTable } from "../services/margin";
 export const useMarginData = (startDate, endDate, campaignId, onDataChange) => {
     const [data, setData] = useState([]);
     const [modifiedData, setModifiedData] = useState({});
-    const [isInitialLoading, setIsInitialLoading] = useState(false);
 
     const dateRange = useMemo(() => {
         const range = [];
@@ -74,7 +73,6 @@ export const useMarginData = (startDate, endDate, campaignId, onDataChange) => {
     return {
         data,
         dateRange,
-        isInitialLoading,
         handleInputChange,
         handleCellClick
     };
