@@ -1,4 +1,5 @@
 import React, { useState, useContext } from 'react';
+import ReactDOM from 'react-dom'; // 1. ReactDOM을 import!
 import DatePicker from 'react-datepicker'; // DatePicker import
 import { useLocation } from 'react-router-dom'; // useLocation import
 // import { addMemo } from '../../services/memo.js'; // addMemo 함수 import
@@ -12,6 +13,7 @@ const MemoCreate = ({ onAddMemo }) => {
 
     const [selectedDate, setSelectedDate] = useState(new Date()); // 선택된 날짜 상태
     const [memoText, setMemoText] = useState(''); // 메모 텍스트 상태
+    const MAX_MEMO_LENGTH = 500; // 최대 글자 수를 상수로 정의 (관리하기 편하게)
 
     const handleAddMemo = async () => {
         if (!memoText.trim()) {
@@ -44,8 +46,14 @@ const MemoCreate = ({ onAddMemo }) => {
                     onChange={(date) => setSelectedDate(date)}
                     dateFormat="yyyy-MM-dd" // 날짜 포맷 설정
                     className="date-picker-memo-create" // 스타일을 위한 클래스
+                    // --- 바로 이 부분을 추가! ---
+                    popperContainer={({ children }) => (
+                        ReactDOM.createPortal(children, document.body)
+                    )}
+                    // --- 이 부분을 추가! ---
+                    popperClassName="high-z-index-datepicker-popper"
                 />
-                <button className="memo-add-button" onClick={handleAddMemo}>추가</button>
+
             </div>
             <hr />
             <textarea
@@ -54,7 +62,12 @@ const MemoCreate = ({ onAddMemo }) => {
                 rows="4"
                 value={memoText}
                 onChange={(e) => setMemoText(e.target.value)} // 메모 텍스트 업데이트
+                maxLength={MAX_MEMO_LENGTH} // 1. 최대 입력 길이 설정
             />
+            <div className={`memo-char-counter ${memoText.length > MAX_MEMO_LENGTH ? 'limit-exceeded' : ''}`}>
+                ({memoText.length} / {MAX_MEMO_LENGTH})
+            </div>
+            <button className="memo-add-button" onClick={handleAddMemo}>추가</button>
         </div>
     );
 };

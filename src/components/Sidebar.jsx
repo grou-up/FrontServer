@@ -71,7 +71,9 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
         onClick={handleClick}
       >
         <span className="menu-item-icon">{item.icon || (hasChildren ? <Folder size={16} /> : null)}</span>
-        <span className="menu-item-text">{item.title}</span>
+        <span className="menu-item-text" title={item.title}>
+          {item.title}
+        </span>
       </div>
 
       {hasChildren && isOpen && (
@@ -151,7 +153,7 @@ const Sidebar = ({ campaigns }) => {
     [
       {
         title: "광고 캠페인 분석",
-        icon: <Folder size={16} />,
+        icon: <Folder size={13} />,
         // ✅ 이동할 경로(path) 추가
         path: "/campaigns/analysis",
         children: campaigns.map(c => ({
@@ -172,7 +174,7 @@ const Sidebar = ({ campaigns }) => {
       }
     ],
     [
-      { title: "설정", icon: <Settings size={16} />, path: "/settings" },
+      // { title: "설정", icon: <Settings size={16} />, path: "/settings" },
       { title: "로그아웃", icon: <LogOut size={16} />, path: "/logout" }
     ]
   ];

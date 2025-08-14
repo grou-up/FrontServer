@@ -3,6 +3,8 @@ import { getMyCampaigns, deleteCampaignAll, deleteCampaignData } from "../../ser
 import DateRangeCalendar from "../Date/DateRangeCalendar";
 import styles from "./DataDeletionComponent.module.css";
 import "react-datepicker/dist/react-datepicker.css";
+import UploadLoadingOverlay from "../Upload/UploadLoadingOverlay"; // 로딩 오버레이 컴포넌트 import
+
 
 // 순수 함수는 컴포넌트 밖으로
 const formatDate = (date) => date.toISOString().slice(0, 10);
@@ -16,6 +18,8 @@ const DataDeletionComponent = () => {
     const [showCalendar, setShowCalendar] = useState(false);
     const [campaigns, setCampaigns] = useState([]);
     const [isAllChecked, setIsAllChecked] = useState(false);
+    // / --- 1. 삭제 작업 중인지 여부를 알려주는 state 추가 ---
+    const [isDeleting, setIsDeleting] = useState(false);
 
     useEffect(() => {
         const fetchCampaigns = async () => {
@@ -59,54 +63,54 @@ const DataDeletionComponent = () => {
         setCampaigns(campaigns.map(c => ({ ...c, checked })));
     };
 
+    // handleDeleteAll 함수 수정
     const handleDeleteAll = async () => {
         const selectedCampaigns = campaigns.filter((campaign) => campaign.checked);
         if (selectedCampaigns.length > 0) {
             const confirmation = window.confirm(`정말 ${selectedCampaigns.length}개의 캠페인을 삭제하시겠습니까?`);
             if (confirmation) {
                 try {
+                    setIsDeleting(true); // --- 2. 로딩 시작 ---
                     const campaignIdsToDelete = selectedCampaigns.map(campaign => Number(campaign.campaignId));
                     await deleteCampaignAll(campaignIdsToDelete);
                     const response = await getMyCampaigns();
                     setCampaigns(response.data || []);
-                    alert(`${selectedCampaigns.length}개의 캠패인이 삭제되었습니다.`)
+                    alert(`${selectedCampaigns.length}개의 캠패인이 삭제되었습니다.`);
                 } catch (error) {
                     console.error("캠페인 삭제 실패:", error);
-                    alert("캠페인 삭제에 실패했습니다."); // 삭제 실패 알림 추가
+                    alert("캠페인 삭제에 실패했습니다.");
+                } finally {
+                    setIsDeleting(false); // --- 3. 로딩 끝 (성공/실패 상관없이) ---
                 }
             }
         } else {
             alert("선택된 캠페인이 없습니다.");
         }
     };
-    // --- 수정한 handleDeleteByDate ---
+    // handleDeleteByDate 함수 수정
     const handleDeleteByDate = async () => {
         const selectedCampaigns = campaigns.filter((campaign) => campaign.checked);
-
         if (selectedCampaigns.length > 0) {
-            // state 변수를 바로 사용!
             const confirmation = window.confirm(`정말 ${selectedCampaigns.length}개의 캠페인의 ${startDate} 부터 ${endDate} 까지의 데이터를 삭제할까요?`);
-
             if (confirmation) {
                 try {
+                    setIsDeleting(true); // --- 2. 로딩 시작 ---
                     const campaignIdsToDelete = selectedCampaigns.map(campaign => Number(campaign.campaignId));
-
                     const response = await deleteCampaignData({
                         campaignIds: campaignIdsToDelete,
-                        start: startDate, // 바로 사용
-                        end: endDate      // 바로 사용
+                        start: startDate,
+                        end: endDate
                     });
-
                     const getresponse = await getMyCampaigns();
                     const refreshedCampaigns = getresponse.data.map(c => ({ ...c, checked: false })) || [];
                     setCampaigns(refreshedCampaigns);
-
                     const { campaignOptionDetail, keyword, margin, memo } = response.data;
                     alert(`삭제된 데이터:\n캠페인 옵션 상세: ${campaignOptionDetail}개\n키워드: ${keyword}개\n마진: ${margin}개\n메모: ${memo}개`);
-
                 } catch (error) {
                     console.error("캠페인 삭제 실패:", error);
                     alert("캠페인 삭제에 실패했습니다.");
+                } finally {
+                    setIsDeleting(false); // --- 3. 로딩 끝 (성공/실패 상관없이) ---
                 }
             }
         } else {
@@ -179,6 +183,12 @@ const DataDeletionComponent = () => {
                     </tbody>
                 </table>
             </div>
+            {isDeleting && (
+                <UploadLoadingOverlay
+                    isUploading={isDeleting}
+                    message="선택한 데이터를 삭제하는 중입니다..."
+                />
+            )}
         </div>
     );
 };

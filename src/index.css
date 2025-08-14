@@ -12,6 +12,11 @@ code {
     monospace;
 }
 
+/* react-datepicker의 팝업(popper) z-index를 최상위로 올리기 */
+.high-z-index-datepicker-popper {
+  z-index: 9999 !important;
+}
+
 /* Tailwind CSS 지시어 추가 */
 @tailwind base;
 @tailwind components;
