@@ -5,6 +5,8 @@ import UploadLoadingOverlay from "./UploadLoadingOverlay";
 import useFileUpload from '../../hooks/useFileUpload';
 import { CircleHelp } from "lucide-react";
 import { uploadFile1 } from "../../services/pythonapi";
+import { uploadFileWithPresignedUrl } from "../../services/pythonapi";
+
 import "../../styles/FileUpload.css";
 
 const FileSalesReport = () => {
@@ -14,7 +16,7 @@ const FileSalesReport = () => {
         file: file1,
         setFile: setFile1,
         handleUploadFile: handleUploadFile1,
-    } = useFileUpload(uploadFile1, "광고 보고서 업로드 성공!", false, null, setUploadingGlobal);
+    } = useFileUpload(uploadFileWithPresignedUrl, "광고 보고서 업로드 성공!", false, null, setUploadingGlobal);
 
     return (
         <>

@@ -18,22 +18,28 @@ const useFileUpload = (uploadFunction, successMessage, shouldNavigate = false, s
     try {
       for (let i = 0; i < file.length; i++) {
         const progressCallback = (progressEvent) => {
-          const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
-          setUploadProgress(progress);
+          // S3 업로드 진행률 (0-50%)
+          const uploadProgress = Math.round((progressEvent.loaded * 50) / progressEvent.total);
+          setUploadProgress(uploadProgress);
         };
 
+        // S3 업로드 및 데이터 처리
         const response = await uploadFunction(file[i], progressCallback);
-        if (response.status !== 200) {
-          throw new Error("파일 업로드 실패");
-        }
+
+        // 데이터 처리 완료 (100%)
+        setUploadProgress(100);
+
+        console.log("처리 완료:", response.data);
       }
+
       alert(successMessage);
       window.location.reload();
       if (setFileData) setFileData(file);
       return true;
+
     } catch (error) {
-      console.error("업로드 오류:", error);
-      alert("업로드 실패!");
+      console.error("업로드 및 처리 오류:", error);
+      alert(`업로드 실패: ${error.message || error}`);
       return false;
     } finally {
       setUploading(false);
