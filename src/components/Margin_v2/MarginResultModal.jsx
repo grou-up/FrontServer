@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css"; // DatePicker 스타일
 import "../../styles/margin/MarginResultModal.css"; // 스타일 파일
 import { getMyAllExecution } from "../../services/marginforcampaign";
 import { marginUpdatesByPeriod } from "../../services/margin";
+
 const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(new Date());
@@ -44,34 +45,33 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
             console.error("옵션 데이터를 가져오는 중 오류 발생:", error);
         }
     };
-    const handleCalculate = () => {
-        const updatedOptions = [...tableData];
 
-        selectedOptions.forEach(index => {
-            if (index < 0 || index >= updatedOptions.length) {
-                console.warn(`Invalid index: ${index}`);
-                return; // 유효하지 않은 인덱스는 무시
-            }
+    // 자동 계산 함수 - 단일 아이템에 대해서만 계산
+    const calculateMarginForItem = (item) => {
+        if (item.mfcSalePrice > 0 && item.mfcTotalPrice > 0 && item.mfcCostPrice > 0) {
+            const margin = Math.round(item.mfcSalePrice - (1.1 * item.mfcTotalPrice) - item.mfcCostPrice) || 0;
+            const zeroROAS = margin !== 0 ? ((item.mfcSalePrice / margin) * 1.1 * 100).toFixed(2) : "0.00";
 
-            const option = updatedOptions[index];
-
-            // 필요한 값이 존재하는지 확인
-            if (option && option.mfcSalePrice && option.mfcTotalPrice && option.mfcCostPrice) {
-                const margin = Math.round(option.mfcSalePrice - (1.1 * option.mfcTotalPrice) - option.mfcCostPrice) || 0;
-                const zeroROAS = margin !== 0 ? ((option.mfcSalePrice / margin) * 1.1 * 100).toFixed(2) : "0.00";
-
-                updatedOptions[index] = {
-                    ...option,
-                    mfcPerPiece: margin,
-                    mfcZeroRoas: parseFloat(zeroROAS), // 문자열로 변환된 값을 다시 숫자로 변환
-                };
-            } else {
-                console.warn(`Missing data for option at index ${index}:`, option);
-            }
-        });
-
-        setTableData(updatedOptions); // 업데이트된 데이터를 상태에 설정
+            return {
+                ...item,
+                mfcPerPiece: margin,
+                mfcZeroRoas: parseFloat(zeroROAS),
+            };
+        }
+        return item;
     };
+
+    // 입력값 변경 핸들러 - 자동 계산 포함
+    const handleInputChange = (index, field, value) => {
+        const updatedTableData = [...tableData];
+        updatedTableData[index][field] = parseFloat(value) || 0;
+
+        // 자동 계산 실행
+        updatedTableData[index] = calculateMarginForItem(updatedTableData[index]);
+
+        setTableData(updatedTableData);
+    };
+
     // mfcType을 한국어로 변환하는 함수
     const getMfcTypeDisplayName = (mfcType) => {
         switch (mfcType) {
@@ -190,9 +190,7 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
                         />
                     </div>
                     <div className="marginupdate-action-buttons">
-                        <button className="marginupdate-calculate" onClick={handleCalculate}>
-                            계산하기
-                        </button>
+                        {/* 계산하기 버튼 제거 - 이제 자동으로 계산됩니다 */}
                         <button className="marginupdate-save" onClick={handleSave}>
                             수정하기
                         </button>
@@ -251,39 +249,31 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
                                             <td>{item.mfcProductName}</td>
                                             <td>{getMfcTypeDisplayName(item.mfcType)}</td>
                                             <td>
-                                                <input type="number" value={item.mfcSalePrice}
-                                                    onChange={(e) => {
-                                                        const updatedTableData = [...tableData];
-                                                        updatedTableData[index].mfcSalePrice = parseFloat(e.target.value) || 0;
-                                                        setTableData(updatedTableData);
-                                                    }}
+                                                <input
+                                                    type="number"
+                                                    value={item.mfcSalePrice}
+                                                    onChange={(e) => handleInputChange(index, 'mfcSalePrice', e.target.value)}
                                                 />
                                             </td>
                                             <td>
-                                                <input type="number" value={item.mfcTotalPrice}
-                                                    onChange={(e) => {
-                                                        const updatedTableData = [...tableData];
-                                                        updatedTableData[index].mfcTotalPrice = parseFloat(e.target.value) || 0;
-                                                        setTableData(updatedTableData);
-                                                    }}
+                                                <input
+                                                    type="number"
+                                                    value={item.mfcTotalPrice}
+                                                    onChange={(e) => handleInputChange(index, 'mfcTotalPrice', e.target.value)}
                                                 />
                                             </td>
                                             <td>
-                                                <input type="number" value={item.mfcCostPrice}
-                                                    onChange={(e) => {
-                                                        const updatedTableData = [...tableData];
-                                                        updatedTableData[index].mfcCostPrice = parseFloat(e.target.value) || 0;
-                                                        setTableData(updatedTableData);
-                                                    }}
+                                                <input
+                                                    type="number"
+                                                    value={item.mfcCostPrice}
+                                                    onChange={(e) => handleInputChange(index, 'mfcCostPrice', e.target.value)}
                                                 />
                                             </td>
                                             <td>
-                                                <input type="number" value={item.mfcReturnPrice}
-                                                    onChange={(e) => {
-                                                        const updatedTableData = [...tableData];
-                                                        updatedTableData[index].mfcReturnPrice = parseFloat(e.target.value) || 0;
-                                                        setTableData(updatedTableData);
-                                                    }}
+                                                <input
+                                                    type="number"
+                                                    value={item.mfcReturnPrice}
+                                                    onChange={(e) => handleInputChange(index, 'mfcReturnPrice', e.target.value)}
                                                 />
                                             </td>
                                             <td><span className="option-text">{item.mfcPerPiece}</span></td>
