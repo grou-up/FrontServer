@@ -222,3 +222,80 @@ th .required-asterisk {
     font-size: 12px;
     vertical-align: super;
 }
+
+.options-table-container {
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+/* 헤더 고정 */
+.options-table-component thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #f8f9fa;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 1200px) {
+
+    .options-table-component th:nth-child(2),
+    .options-table-component td:nth-child(2) {
+        width: 18%;
+    }
+
+    .options-table-component th:nth-child(3),
+    .options-table-component td:nth-child(3) {
+        width: 15%;
+    }
+}
+
+@media (max-width: 768px) {
+    .options-table-container {
+        overflow-x: auto;
+        /* 가로 스크롤 추가 */
+    }
+
+    .options-table-component {
+        min-width: 800px;
+        /* 최소 너비 설정 */
+    }
+
+    .options-table-component th,
+    .options-table-component td {
+        font-size: 12px;
+        padding: 8px;
+    }
+
+    .options-table-input-name {
+        padding: 6px;
+        font-size: 12px;
+    }
+
+    .options-table-input,
+    .options-table-dropdown {
+        padding: 4px;
+        font-size: 11px;
+    }
+
+    .add-option-button-inline {
+        font-size: 10px;
+        padding: 2px 6px;
+    }
+}
+
+@media (max-width: 480px) {
+    .options-table-component {
+        min-width: 600px;
+    }
+
+    .options-table-component th,
+    .options-table-component td {
+        font-size: 11px;
+        padding: 6px;
+    }
+
+    .campaign-name {
+        font-size: 12px;
+    }
+}

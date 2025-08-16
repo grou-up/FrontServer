@@ -101,12 +101,12 @@
     gap: 10px;
 }
 
-.marginupdate-calculate,
 .marginupdate-save {
     padding: 5px 25px;
     border: none;
     border-radius: 30px;
     color: white;
+    background-color: #4caf50;
     font-size: 15px;
     font-weight: bold;
     transition: background-color 0.3s, transform 0.2s;
