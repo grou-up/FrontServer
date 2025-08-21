@@ -1,8 +1,8 @@
 
 import React from "react";
-import Joyride from 'react-joyride'; // Joyride import 수정
+// import Joyride from 'react-joyride'; // Joyride import 수정
 
-import { useProductTour } from "../../hooks/useProductTour";
+// import { useProductTour } from "../../hooks/useProductTour";
 import { useDashboardData } from "../../hooks/useDashboardData";
 
 import DashboardCalendar from "./DashboardCalendar";
@@ -38,11 +38,11 @@ const DashboardGridV2 = () => {
     } = useDashboardData();
 
     // '투어 전문가'에게 대본과 고유 키를 전달하며 호출
-    const { runTour, steps, stepIndex, handleJoyrideCallback } = useProductTour({
-        steps: dashboardTourSteps,
-        isLoading: isLoading,
-        tourKey: 'hasCompletedDashboardTour' // 대시보드 투어 전용 키
-    });
+    // const { runTour, steps, stepIndex, handleJoyrideCallback } = useProductTour({
+    //     steps: dashboardTourSteps,
+    //     isLoading: isLoading,
+    //     tourKey: 'hasCompletedDashboardTour' // 대시보드 투어 전용 키
+    // });
 
     // 데이터 로딩 중에는 로딩 화면을 보여줍니다.
     if (isLoading) {
@@ -52,7 +52,7 @@ const DashboardGridV2 = () => {
     // 3. 받아온 정보들로 화면을 그리기만 합니다.
     return (
         <div className="dashboard-container">
-            <Joyride
+            {/* <Joyride
                 run={runTour}
                 steps={steps}
                 stepIndex={stepIndex}
@@ -67,7 +67,7 @@ const DashboardGridV2 = () => {
                     buttonNext: { backgroundColor: '#5E87E3', borderRadius: '20px' }
                 }}
                 locale={{ back: '이전', close: '닫기', last: '완료', next: '다음', skip: '건너뛰기' }}
-            />
+            /> */}
 
             <div className="tour-step-calendar">
                 {startDate && (<DashboardCalendar initialDate={startDate} onDateChange={handleDateChange} />)}
