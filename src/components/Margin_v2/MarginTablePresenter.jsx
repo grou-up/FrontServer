@@ -8,6 +8,7 @@ const MarginTablePresenter = ({ data, dateRange, isInitialLoading, handleInputCh
 
     useEffect(() => {
         if (!data.length || !dateRange.length) return;
+
         const validDates = data
             .map(item => item.marDate)
             .filter(Boolean)
@@ -16,15 +17,18 @@ const MarginTablePresenter = ({ data, dateRange, isInitialLoading, handleInputCh
         const lastDataDate = validDates[validDates.length - 1];
         const isLastDateInRange = dateRange.some(d => d.fullDate === lastDataDate);
 
-        if (tableContainerRef.current) {
-            const container = tableContainerRef.current;
+        // ✅ DOM 업데이트가 완료된 후 스크롤 실행
+        const performScroll = () => {
+            if (!tableContainerRef.current) return;
 
+            const container = tableContainerRef.current;
             const lastRef = document.querySelector(`[data-date="${lastDataDate}"]`);
+
             if (isLastDateInRange && lastRef) {
+                // ✅ 스크롤 대상 요소가 실제로 존재하는지 확인
                 const scrollLeft = lastRef.offsetLeft
                     - container.clientWidth
                     + lastRef.offsetWidth
-                    + 100;
 
                 container.scrollTo({
                     left: scrollLeft,
@@ -36,8 +40,15 @@ const MarginTablePresenter = ({ data, dateRange, isInitialLoading, handleInputCh
                     behavior: 'smooth',
                 });
             }
-        }
-    }, [isInitialLoading, dateRange]);
+        };
+
+        // ✅ requestAnimationFrame으로 다음 페인트 사이클에 스크롤 실행
+        const timeoutId = setTimeout(() => {
+            requestAnimationFrame(performScroll);
+        }, 100);
+
+        return () => clearTimeout(timeoutId);
+    }, [isInitialLoading, dateRange, data]); // ✅ data도 의존성에 추가
 
     const options = [
         { optionName: "목표효율", key: "marTargetEfficiency", editable: true, totalType: 'averageValue', unit: '%', showSaveButton: true, isGroupStart: true },
@@ -50,7 +61,14 @@ const MarginTablePresenter = ({ data, dateRange, isInitialLoading, handleInputCh
         { optionName: "전환률", key: "marCvr", totalType: 'averageRate', unit: '%' },
         { optionName: "광고 전환 판매 수", key: "marAdConversionSales", totalType: 'sum', isGroupStart: true, className: 'margin-table-highlight-row' },
         { optionName: "실제 판매 수", key: "marActualSales", totalType: 'sum', className: 'margin-table-highlight-row' },
-        { optionName: "순이익", key: "marNetProfit", totalType: 'sum', className: 'margin-table-highlight-row' },
+        {
+            optionName: "순이익",
+            key: "marNetProfit",
+            totalType: 'sum',
+            className: 'margin-table-highlight-row',
+            hasTooltip: true,
+            tooltipText: "반품 비용은 포함되지 않습니다."
+        },
         { optionName: "반품 수", key: "marReturnCount", totalType: 'sum', isGroupStart: true },
         { optionName: "반품 비용", key: "marReturnCost", totalType: 'sum' },
     ];
@@ -75,10 +93,20 @@ const MarginTablePresenter = ({ data, dateRange, isInitialLoading, handleInputCh
                             className={`${option.isGroupStart ? 'margin-table-group-start' : ''} ${option.className || ''}`.trim()}
                         >
                             <td className="margin-table-sticky-col margin-table-first-col margin-table-option-name">
-                                {option.optionName}
-                                {option.showSaveButton && (
-                                    <button className="margin-table-save-button" onClick={() => handleSave(campaignId)}>저장</button>
-                                )}
+                                <div className="margin-table-option-container">
+                                    <span className="margin-table-option-text">
+                                        {option.optionName}
+                                        {option.hasTooltip && (
+                                            <span className="margin-table-tooltip-container">
+                                                <span className="margin-table-tooltip-icon">?</span>
+                                                <span className="margin-table-tooltip">{option.tooltipText}</span>
+                                            </span>
+                                        )}
+                                    </span>
+                                    {option.showSaveButton && (
+                                        <button className="margin-table-save-button" onClick={() => handleSave(campaignId)}>저장</button>
+                                    )}
+                                </div>
                             </td>
                             <td className="margin-table-sticky-col margin-table-second-col margin-table-total-cell">
                                 <b>
