@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - develop  # develop 브랜치도 트리거하도록 추가
+      - dev  # develop 브랜치도 트리거하도록 추가
 
 jobs:
   sync:
