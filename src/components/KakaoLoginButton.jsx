@@ -14,7 +14,7 @@ const KakaoLoginButton = () => {
 
     return (
         <Button onClick={handleLogin} variant="kakao">
-            로그인
+            로그인1
         </Button>
     );
 };
