@@ -14,7 +14,7 @@ const KakaoLoginButton = () => {
 
     return (
         <Button onClick={handleLogin} variant="kakao">
-            카카오로 로그인
+            개발자 로그인
         </Button>
     );
 };

@@ -81,17 +81,17 @@
 }
 
 /* 작은 화면 대응 */
-@media (max-width: 1000px) {
+@media (max-width: 1300px) {
     .calendar-day {
-        font-size: 35px;
+        font-size: 20px;
     }
 
     .calendar-button {
-        font-size: 18px;
+        font-size: 14px;
     }
 
     .calendar-month,
     .calendar-picker-button {
-        font-size: 12px;
+        font-size: 10px;
     }
 }
