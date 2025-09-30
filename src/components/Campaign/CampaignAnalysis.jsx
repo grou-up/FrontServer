@@ -11,6 +11,16 @@ const calculateRoas = (sales, cost) => {
     }
     return `${Math.round((sales / cost) * 100).toLocaleString()}%`;
 };
+// ✨ 1. 캠페인 타입과 CSS 클래스를 매핑하는 객체와 헬퍼 함수 추가
+const tagClassMapping = {
+    '매출 최적화': 'TagBlue',
+    '수동 성과형': 'TagGreen',
+    '간편 매출 스타트': 'TagYellow',
+    'default': 'TagGray' // 기본값 또는 알 수 없는 타입을 위한 클래스
+};
+const getTagClass = (campaignType) => {
+    return tagClassMapping[campaignType] || tagClassMapping['default'];
+};
 
 const CampaignAnalysis = () => {
     const navigate = useNavigate();
@@ -57,7 +67,7 @@ const CampaignAnalysis = () => {
                 // 1. 캠페인 분석 데이터 가져오기
                 const response = await getMyCampaignsAnalysis({ start: startDate, end: endDate });
                 const apiCardData = response.sumOfAdSalesAndAdCostByCampaignType;
-
+                console.log(response);
                 const formattedCardData = {
                     total: {
                         adSpend: apiCardData['총 매출']?.adCost?.toLocaleString() || '0',
@@ -208,7 +218,12 @@ const CampaignAnalysis = () => {
                                 {productReportData.map((item) => (
                                     // [개선] key 속성에 고유한 id 값을 사용
                                     <tr key={item.id}>
-                                        <td><span className={`Tag ${item.type === '매출 최적화' ? 'TagBlue' : 'TagGreen'}`}>{item.type}</span></td>
+                                        {/* ✨ 2. <td> 안의 span 클래스를 헬퍼 함수로 동적으로 할당 */}
+                                        <td>
+                                            <span className={`Tag ${getTagClass(item.type)}`}>
+                                                {item.type}
+                                            </span>
+                                        </td>
                                         <td className="clickable-cell" onClick={() => handleNavigateToDetails(item.name, item.id)}>
                                             {item.name} <span className="ExternalLinkIcon">↗</span>
                                         </td>

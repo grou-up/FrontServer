@@ -6,7 +6,24 @@ import SortableHeader from '../components/SortableHeader';
 const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loading, error }) => {
     const [editableBids, setEditableBids] = useState({}); // 각 키워드에 대한 입찰가 상태 관리
     const [sortConfig, setSortConfig] = useState({ key: 'keyKeyword', direction: 'asc' }); // 정렬 상태 관리
-
+    // ✨ 1. 스켈레톤 UI를 위한 예시 데이터 생성 함수와 데이터
+    const createPlaceholderData = (count = 3) => {
+        return Array.from({ length: count }, (_, i) => ({
+            keyKeyword: `데이터가 없습니다!`,
+            impressions: 0,
+            clicks: 0,
+            clickRate: 0,
+            totalSales: 0,
+            cvr: 0,
+            adSales: 0,
+            adCost: 0,
+            roas: 0,
+            cpc: 0,
+            bid: 0, // '설정 입찰가'를 위한 필드 추가
+            isPlaceholder: true,
+        }));
+    };
+    const placeholderData = createPlaceholderData(3);
     const filteredKeywords = keywords
         .sort((a, b) => {
             if (!sortConfig.key) return 0;
@@ -59,14 +76,6 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
 
     if (loading) return <div>Loading...</div>; // 로딩 상태 표시
     if (error) return <div>{error}</div>; // 에러 상태 표시
-    if (filteredKeywords.length === 0) {
-        return (
-            <div className="keyword-table">
-                <p className="no-data-message">등록된 수동 입찰 키워드가 없습니다!</p>
-            </div>
-        );
-    }
-
     return (
         <div className="keyword-table">
             <table>
@@ -86,55 +95,91 @@ const KeywordComponent = ({ selectedKeywords, setSelectedKeywords, keywords, loa
                         <th>
                             <input
                                 type="checkbox"
-                                checked={selectedKeywords.length === filteredKeywords.length}
+                                checked={filteredKeywords.length > 0 && selectedKeywords.length === filteredKeywords.length}
                                 onChange={() => {
-                                    const allKeywords = filteredKeywords.map(item => ({
-                                        keyword: item.keyKeyword,
-                                        bid: editableBids[item.keyKeyword] || item.cpc // 사용자가 입력한 값 또는 기본값 사용
-                                    }));
-                                    setSelectedKeywords(allKeywords);
+                                    if (selectedKeywords.length === filteredKeywords.length) {
+                                        setSelectedKeywords([]);
+                                    } else {
+                                        const allKeywords = filteredKeywords.map(item => ({
+                                            keyword: item.keyKeyword,
+                                            bid: editableBids[item.keyKeyword] || item.cpc
+                                        }));
+                                        setSelectedKeywords(allKeywords);
+                                    }
                                 }}
                             />
                         </th>
                     </tr>
                 </thead>
                 <tbody>
-                    {filteredKeywords.map((item, index) => (
-                        <tr key={index}>
-                            <td>{item.keyKeyword}</td>
-                            <td>{item.impressions.toLocaleString()}</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.clicks.toLocaleString()}</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.clickRate.toLocaleString()}%</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.totalSales.toLocaleString()}</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.cvr.toLocaleString()}%</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.adSales.toLocaleString()}원</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.adCost.toLocaleString()}원</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.roas.toLocaleString()}%</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>{item.cpc.toLocaleString()}원</td> {/* 천 단위 구분 기호 추가 */}
-                            <td>
-                                <input
-                                    type="number" // 숫자 입력 필드로 변경
-                                    style={{
-                                        border: '1px solid #007bff', // 테두리 색상
-                                        borderRadius: '4px', // 테두리 둥글게
-                                        padding: '4px', // 여백 추가
-                                        width: '100%', // 너비 100%로 설정
-                                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)', // 그림자 추가
-                                        transition: 'border-color 0.3s, box-shadow 0.3s', // 부드러운 변화 효과
-                                    }}
-                                    value={editableBids[item.keyKeyword] !== undefined ? editableBids[item.keyKeyword] : Math.round(item.cpc)} // 사용자가 입력한 값 또는 기본값 사용
-                                    onChange={(e) => handleBidChange(item.keyKeyword, e.target.value)} // 입력값 변경 시 상태 업데이트
-                                />
-                            </td>
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    checked={selectedKeywords.some(kw => kw.keyword === item.keyKeyword)} // keyword로 체크 여부 확인
-                                    onChange={() => handleCheckboxChange(item)} // item을 인자로 전달
-                                />
-                            </td>
-                        </tr>
-                    ))}
+                    {/* ✨ 3. 데이터 유무에 따라 실제 데이터 또는 스켈레톤 UI를 렌더링 */}
+                    {filteredKeywords.length > 0 ? (
+                        filteredKeywords.map((item, index) => (
+                            <tr key={index}>
+                                <td>{item.keyKeyword}</td>
+                                <td>{item.impressions.toLocaleString()}</td>
+                                <td>{item.clicks.toLocaleString()}</td>
+                                <td>{item.clickRate.toLocaleString()}%</td>
+                                <td>{item.totalSales.toLocaleString()}</td>
+                                <td>{item.cvr.toLocaleString()}%</td>
+                                <td>{item.adSales.toLocaleString()}원</td>
+                                <td>{item.adCost.toLocaleString()}원</td>
+                                <td>{item.roas.toLocaleString()}%</td>
+                                <td>{item.cpc.toLocaleString()}원</td>
+                                <td>
+                                    <input
+                                        type="number"
+                                        style={{
+                                            border: '1px solid #007bff',
+                                            borderRadius: '4px',
+                                            padding: '4px',
+                                            width: '100%',
+                                            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                            transition: 'border-color 0.3s, box-shadow 0.3s',
+                                        }}
+                                        value={editableBids[item.keyKeyword] !== undefined ? editableBids[item.keyKeyword] : Math.round(item.cpc)}
+                                        onChange={(e) => handleBidChange(item.keyKeyword, e.target.value)}
+                                    />
+                                </td>
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedKeywords.some(kw => kw.keyword === item.keyKeyword)}
+                                        onChange={() => handleCheckboxChange(item)}
+                                    />
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        // 데이터가 없을 때 보여줄 스켈레톤 UI
+                        placeholderData.map((item, index) => (
+                            <tr key={`placeholder-${index}`}>
+                                <td>{item.keyKeyword}</td>
+                                <td>---</td>
+                                <td>---</td>
+                                <td>--%</td>
+                                <td>---</td>
+                                <td>--%</td>
+                                <td>---원</td>
+                                <td>---원</td>
+                                <td>--%</td>
+                                <td>---원</td>
+                                <td>
+                                    <input type="number" value={110} disabled style={{
+                                        border: '1px solid #007bff',
+                                        borderRadius: '4px',
+                                        padding: '4px',
+                                        width: '100%',
+                                        boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                                        transition: 'border-color 0.3s, box-shadow 0.3s',
+                                    }} />
+                                </td>
+                                <td>
+                                    <input type="checkbox" disabled />
+                                </td>
+                            </tr>
+                        ))
+                    )}
                 </tbody>
             </table>
         </div>

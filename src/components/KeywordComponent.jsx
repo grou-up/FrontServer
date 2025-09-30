@@ -13,6 +13,25 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
     const [dragStartIndex, setDragStartIndex] = useState(null);
     const [lastSelectedIndex, setLastSelectedIndex] = useState(null); // ✨ Shift 클릭 기준점 state
     const tbodyRef = useRef(null);
+    // KeywordComponent 최상단에 추가
+    const createPlaceholderData = (count = 3) => {
+        return Array.from({ length: count }, (_, i) => ({
+            keyKeyword: `데이터가 없습니다!`,
+            impressions: 0,
+            clicks: 0,
+            clickRate: 0,
+            totalSales: 0,
+            cvr: 0,
+            cpc: 0,
+            adCost: 0,
+            adSales: 0,
+            roas: 0,
+            // 실제 데이터에는 없는, 플레이스홀더임을 구분하기 위한 플래그
+            isPlaceholder: true,
+        }));
+    };
+
+    const placeholderData = createPlaceholderData(3);
 
     // --- 드래그 중 텍스트 선택 방지 및 커서 변경 Effect ---
     useEffect(() => {
@@ -207,73 +226,93 @@ const KeywordComponent = ({ campaignId, startDate, endDate, selectedKeywords, se
                     </tr>
                 </thead>
                 <tbody ref={tbodyRef} onMouseUp={handleMouseUp}>
-                    {filteredKeywords.map((item, index) => (
-                        <tr
-                            key={item.keyKeyword} // key는 고유한 값으로 사용하는 것이 좋음
-                            className={isDragging && dragStartIndex !== null && (index >= Math.min(dragStartIndex, index) && index <= Math.max(dragStartIndex, index)) ? 'dragging-highlight' : ''}
-                            onMouseDown={(e) => handleMouseDown(e, index)}
-                            onMouseMove={(e) => handleMouseMove(e, index)}
-                        >
-                            <td style={{ color: item.keyExcludeFlag && item.keyKeyword !== '-' ? '#d3264f' : 'inherit' }}>
-                                {item.keyKeyword === '-' ? (
-                                    // 조건이 참일 때: "비검색" 텍스트를 회색으로 표시
-                                    <span style={{ color: '#888' }}>비검색</span>
-                                ) : (
-                                    // 조건이 거짓일 때: 기존 내용을 그대로 표시
-                                    <>
-                                        {item.keyKeyword}
-                                        {item.totalSales >= 1 && <button
-                                            className="icon-button"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                handleRowClick(item);
-                                            }}
-                                            aria-label="Search"
-                                        >
-                                            🔍
-                                        </button>}
-                                        {item.keyBidFlag && <span className="badge">수동</span>}
-                                    </>
-                                )}
-                            </td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.impressions.toLocaleString()}
-                            </td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.clicks.toLocaleString()}
-                            </td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.clickRate.toLocaleString()}%
-                            </td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.totalSales.toLocaleString()}
-                            </td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.cvr.toLocaleString()}%
-                            </td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.cpc.toLocaleString()}원
-                            </td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.adCost.toLocaleString()}원
-                            </td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.adSales.toLocaleString()}원
-                            </td>
-                            <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
-                                {item.roas.toLocaleString()}%
-                            </td>
-                            <td>
-                                <input
-                                    type="checkbox"
-                                    checked={selectedKeywords.some(kw => kw.keyword === item.keyKeyword)}
-                                    // ✨ index를 인자로 전달하도록 수정!
-                                    onChange={(e) => handleCheckboxChange(e, item, index)}
-                                    onClick={(e) => e.stopPropagation()}
-                                />
-                            </td>
-                        </tr>
-                    ))}
+                    {filteredKeywords.length > 0 ? (
+                        filteredKeywords.map((item, index) => (
+                            <tr
+                                key={item.keyKeyword} // key는 고유한 값으로 사용하는 것이 좋음
+                                className={isDragging && dragStartIndex !== null && (index >= Math.min(dragStartIndex, index) && index <= Math.max(dragStartIndex, index)) ? 'dragging-highlight' : ''}
+                                onMouseDown={(e) => handleMouseDown(e, index)}
+                                onMouseMove={(e) => handleMouseMove(e, index)}
+                            >
+                                <td style={{ color: item.keyExcludeFlag && item.keyKeyword !== '-' ? '#d3264f' : 'inherit' }}>
+                                    {item.keyKeyword === '-' ? (
+                                        // 조건이 참일 때: "비검색" 텍스트를 회색으로 표시
+                                        <span style={{ color: '#888' }}>비검색</span>
+                                    ) : (
+                                        // 조건이 거짓일 때: 기존 내용을 그대로 표시
+                                        <>
+                                            {item.keyKeyword}
+                                            {item.totalSales >= 1 && <button
+                                                className="icon-button"
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleRowClick(item);
+                                                }}
+                                                aria-label="Search"
+                                            >
+                                                🔍
+                                            </button>}
+                                            {item.keyBidFlag && <span className="badge">수동</span>}
+                                        </>
+                                    )}
+                                </td>
+                                <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                    {item.impressions.toLocaleString()}
+                                </td>
+                                <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                    {item.clicks.toLocaleString()}
+                                </td>
+                                <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                    {item.clickRate.toLocaleString()}%
+                                </td>
+                                <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                    {item.totalSales.toLocaleString()}
+                                </td>
+                                <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                    {item.cvr.toLocaleString()}%
+                                </td>
+                                <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                    {item.cpc.toLocaleString()}원
+                                </td>
+                                <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                    {item.adCost.toLocaleString()}원
+                                </td>
+                                <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                    {item.adSales.toLocaleString()}원
+                                </td>
+                                <td style={{ color: item.keyExcludeFlag ? '#d3264f' : 'inherit' }}>
+                                    {item.roas.toLocaleString()}%
+                                </td>
+                                <td>
+                                    <input
+                                        type="checkbox"
+                                        checked={selectedKeywords.some(kw => kw.keyword === item.keyKeyword)}
+                                        // ✨ index를 인자로 전달하도록 수정!
+                                        onChange={(e) => handleCheckboxChange(e, item, index)}
+                                        onClick={(e) => e.stopPropagation()}
+                                    />
+                                </td>
+                            </tr>
+                        ))
+                    ) : (
+                        placeholderData.map((item, index) => (
+                            <tr key={`placeholder-${index}`} className="placeholder-row">
+                                <td><span className="placeholder-text">{item.keyKeyword}</span></td>
+                                <td><span className="placeholder-text">---</span></td>
+                                <td><span className="placeholder-text">---</span></td>
+                                <td><span className="placeholder-text">--%</span></td>
+                                <td><span className="placeholder-text">---</span></td>
+                                <td><span className="placeholder-text">--%</span></td>
+                                <td><span className="placeholder-text">---원</span></td>
+                                <td><span className="placeholder-text">---원</span></td>
+                                <td><span className="placeholder-text">---원</span></td>
+                                <td><span className="placeholder-text">--%</span></td>
+                                <td>
+                                    <input type="checkbox" disabled />
+                                </td>
+                            </tr>
+                        ))
+                    )}
                 </tbody>
             </table>
 
