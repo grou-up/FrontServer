@@ -79,7 +79,7 @@ const DashboardGridV2 = () => {
             <div className="tour-step-ad-cost"> <DashboardAdCost value={totalAdCost} /> </div>
             <div className="tour-step-roas"> <DashboardRoas value={roas} /> </div>
             <div className="tour-step-sun"> <DashboardSun value={sun} /> </div>
-            <div className="tour-step-campaign"> <DashboardCampaign count={campaigns.length} /> </div>
+            <div className="tour-step-campaign"> <DashboardCampaign selectedDate={latestDate} /> </div>
             <div className="tour-step-sales-report"> <DashboardSalesReport tableData={tableData} /> </div>
             <div className="tour-step-margin-report"> <DashboardMarginReport selectedDate={latestDate} /> </div>
         </div>
