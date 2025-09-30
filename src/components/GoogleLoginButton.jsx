@@ -8,7 +8,7 @@ const GoogleLoginButton = () => {
 
     return (
         <Button onClick={handleLogin} variant="google">
-            구글로 로그인
+            구글 로그인
         </Button>
     );
 };

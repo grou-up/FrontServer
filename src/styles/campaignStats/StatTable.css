@@ -2,6 +2,8 @@
 .sticky-cell {
     position: sticky;
     left: 0;
+    color: white;
+    font-weight: 500;
     /* 왼쪽에 고정 */
     background-color: #5E87E3;
     /* 배경색 설정 */

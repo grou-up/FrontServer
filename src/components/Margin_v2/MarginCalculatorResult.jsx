@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 // import CampaignDataTable from "./MarginDataTable";
 import MarginDataTable from "./MarginDataTable";
 import MarginResultModal from "./MarginResultModal";
@@ -14,6 +14,10 @@ const MarginCalculatorResult = ({ campaigns }) => {
     const [tableData, setTableData] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modifiedData, setModifiedData] = useState({});
+    const [isDataLoaded, setIsDataLoaded] = useState(false); // ✅ 데이터 로딩 상태 추가
+
+    // MarginNetTable 최신화를 위한 ref 추가
+    const marginNetTableRef = useRef(null);
 
     const today = new Date();
     const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).toISOString().slice(0, 10);
@@ -25,30 +29,53 @@ const MarginCalculatorResult = ({ campaigns }) => {
 
     const toggleCalendar = () => setShowCalendar(v => !v);
 
+    // MarginNetTable 강제 새로고침 함수 - useEffect보다 먼저 선언
+    const refreshMarginNetTable = useCallback(() => {
+        if (marginNetTableRef.current && typeof marginNetTableRef.current.refreshData === 'function') {
+            marginNetTableRef.current.refreshData();
+        }
+    }, []);
+
     const handleDateRangeChange = ({ startDate, endDate }) => {
         setStartDate(startDate);
         setEndDate(endDate);
+        // ✅ 날짜 변경 시에도 MarginNetTable 새로고침
+        setTimeout(() => {
+            refreshMarginNetTable();
+        }, 100);
     };
 
     const fetchMarginResults = useCallback(async () => {
         // ✅ 훅에서 제공하는 startDate, endDate를 사용
         if (!campaigns || campaigns.length === 0 || !startDate || !endDate) return;
+
+        setIsDataLoaded(false); // ✅ 로딩 시작
+
         try {
             const allCampaignData = await Promise.all(campaigns.map(async ({ campaignId }) => {
                 const response = await getMarginByCampaignId({ startDate, endDate, campaignId });
                 return { campaignId, data: response?.data ?? [] };
             }));
             setTableData(allCampaignData);
+
+            // ✅ 모든 데이터 로딩 완료 후 약간의 지연시간을 두고 MarginNetTable 표시
+            setTimeout(() => {
+                setIsDataLoaded(true);
+            }, 300);
+
         } catch (error) {
             console.error("마진 결과 데이터 로딩 중 에러 발생:", error);
             // 에러 발생 시 tableData를 비워주는 것이 좋습니다.
             setTableData([]);
+            setIsDataLoaded(true); // ✅ 에러 시에도 MarginNetTable은 표시
         }
     }, [startDate, endDate, campaigns]);
+
     useEffect(() => {
         fetchMarginResults();
-    }, [fetchMarginResults]);
-
+        // ✅ 화면 로드 시 MarginNetTable도 새로고침
+        refreshMarginNetTable();
+    }, [fetchMarginResults, refreshMarginNetTable]);
 
     useEffect(() => {
         const initialExpandedIds = new Set(campaigns.map(campaign => campaign.campaignId));
@@ -106,6 +133,11 @@ const MarginCalculatorResult = ({ campaigns }) => {
             // 데이터 다시 불러오기
             await fetchMarginResults();
 
+            // ✅ MarginNetTable도 새로고침 - fetchMarginResults 완료 후 실행
+            setTimeout(() => {
+                refreshMarginNetTable();
+            }, 400);
+
             // 일정 시간 후 다시 열기
             setTimeout(() => {
                 setExpandedCampaignId(prev => {
@@ -120,6 +152,7 @@ const MarginCalculatorResult = ({ campaigns }) => {
             alert("저장 실패");
         }
     };
+
     useEffect(() => {
     }, [modifiedData]); // 의존성 배열에 modifiedData를 넣습니다.
 
@@ -160,7 +193,26 @@ const MarginCalculatorResult = ({ campaigns }) => {
                 </div>
             </div>
 
-            <MarginNetTable startDate={startDate} endDate={endDate} />
+            {/* ✅ MarginNetTable을 다시 위로 이동하고 로딩 상태 관리 */}
+            {isDataLoaded ? (
+                <MarginNetTable
+                    ref={marginNetTableRef}
+                    startDate={startDate}
+                    endDate={endDate}
+                />
+            ) : (
+                <div style={{
+                    padding: '40px',
+                    textAlign: 'center',
+                    color: '#666',
+                    backgroundColor: '#f9f9f9',
+                    borderRadius: '8px',
+                    margin: '20px 0'
+                }}>
+                    <div>데이터를 불러오는 중...</div>
+                </div>
+            )}
+
             <div className="campaign-list">
                 {(campaigns || []).map((campaign) => (
                     <div

@@ -4,13 +4,6 @@ import LoginNavbar from "./Login/LoginNavbar";
 import WelcomeSection from "./Login/WelcomeSection";
 import LoginSection from "./Login/LoginSection"; // 로그인 섹션
 import ContactSection from "./Login/ContactSection";
-import FeaturesSection from "./Login/FeaturesStartSection";
-import PricingSection from "./Login/PricingSection";
-import FeaturesSectionEx from "./Login/FeautresSectionEx";
-import FeautresSectionGrouup from "./Login/FeautresSectionGrouup";
-import FeaturesSectionGrouupEx from "./Login/FeaturesSectionGrouupEx";
-import FeatureLastSection from "./Login/FeatureLastSection";
-import FeatureSectionMeetSellerOrDev from "./Login/FeatureSectionMeetSellerOrDev";
 
 const LoginForm = () => {
   const sectionsRef = useRef([]);
@@ -46,35 +39,34 @@ const LoginForm = () => {
   return (
     <div className="login-page">
       <LoginNavbar /> {/* 네비게이션 바 추가 */}
-      <div style={{ marginTop: '100px' }}>
-        <div ref={el => sectionsRef.current[0] = el} className="section">
-          <FeaturesSection /> {/* 기능 소개 이전 불편함 섹션 */}
+      {/* <div ref={el => sectionsRef.current[0] = el} className="section">
+          <FeaturesSection />
         </div>
         <div ref={el => sectionsRef.current[1] = el} className="section">
-          <FeaturesSectionEx /> {/* 기능 소개 이전 불편함 섹션 (예시) */}
+          <FeaturesSectionEx />
         </div>
         <div ref={el => sectionsRef.current[2] = el} className="section">
-          <FeatureSectionMeetSellerOrDev /> {/* 개발자 + 셀러 */}
+          <FeatureSectionMeetSellerOrDev />
         </div>
         <div ref={el => sectionsRef.current[3] = el} className="section">
-          <FeautresSectionGrouup />{/* 기능 소개 섹션 */}
-          <FeaturesSectionGrouupEx />{/* 본격 소개 */}
+          <FeautresSectionGrouup />
+          <FeaturesSectionGrouupEx />
         </div>
         <div ref={el => sectionsRef.current[4] = el} className="section">
-          <FeatureLastSection /> {/* 그로우 업 써라 홍보 */}
+          <FeatureLastSection />
         </div>
         <div ref={el => sectionsRef.current[5] = el} className="section">
-          <PricingSection /> {/* 요금 정책 섹션 */}
+          <PricingSection />
+        </div> */}
+
+      <div className="min-h-screen bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center">
+        <div className="w-full max-w-screen-lg grid grid-cols-1 lg:grid-cols-2 bg-white rounded-lg shadow-xl overflow-hidden">
+          <WelcomeSection /> {/* 환영 메시지 섹션 */}
+          <LoginSection /> {/* 로그인 섹션 */}
         </div>
-        <div className="min-h-screen bg-gradient-to-br from-purple-600 to-blue-500 flex items-center justify-center">
-          <div className="w-full max-w-screen-lg grid grid-cols-1 lg:grid-cols-2 bg-white rounded-lg shadow-xl overflow-hidden">
-            <WelcomeSection /> {/* 환영 메시지 섹션 */}
-            <LoginSection /> {/* 로그인 섹션 */}
-          </div>
-        </div>
-        <div ref={el => sectionsRef.current[6] = el} className="section">
-          <ContactSection /> {/* 문의 섹션 */}
-        </div>
+      </div>
+      <div ref={el => sectionsRef.current[6] = el} className="section">
+        <ContactSection /> {/* 문의 섹션 */}
       </div>
     </div>
   );

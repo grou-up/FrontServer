@@ -6,7 +6,9 @@ import {
   Home,
   Settings,
   LogOut,
-  Folder
+  Folder,
+  BookOpen,
+  MessageCircle
 } from 'lucide-react';
 import logo from "../images/Logo.png";
 import '../styles/Sidebar.css';
@@ -95,6 +97,26 @@ const MenuItem = ({ item, activePath, onSelect, currentPath = [], level = 0, loc
   );
 };
 
+// 외부 링크를 위한 새로운 컴포넌트
+const ExternalLinkItem = ({ title, icon, url }) => {
+  const handleClick = () => {
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  return (
+    <div className="menu-item level-0">
+      <div
+        className="menu-item-content"
+        onClick={handleClick}
+      >
+        <span className="menu-item-icon">{icon}</span>
+        <span className="menu-item-text" title={title}>
+          {title}
+        </span>
+      </div>
+    </div>
+  );
+};
 
 const Sidebar = ({ campaigns }) => {
   const [activePath, setActivePath] = useState([]);
@@ -146,7 +168,7 @@ const Sidebar = ({ campaigns }) => {
         icon: <Upload size={16} />,
         path: "/upload",
         children: [
-          { title: "데이터 삭제", path: "/delete-data" } // 자식 메뉴 추가!
+          { title: "데이터 삭제", path: "/delete-data" }
         ]
       }
     ],
@@ -154,7 +176,6 @@ const Sidebar = ({ campaigns }) => {
       {
         title: "광고 캠페인 분석",
         icon: <Folder size={13} />,
-        // ✅ 이동할 경로(path) 추가
         path: "/campaigns/analysis",
         children: campaigns.map(c => ({
           title: c.title,
@@ -174,7 +195,6 @@ const Sidebar = ({ campaigns }) => {
       }
     ],
     [
-      // { title: "설정", icon: <Settings size={16} />, path: "/settings" },
       { title: "로그아웃", icon: <LogOut size={16} />, path: "/logout" }
     ]
   ];
@@ -203,6 +223,18 @@ const Sidebar = ({ campaigns }) => {
               {groupIdx < menuGroups.length - 1 && <hr className="menu-divider" />}
             </React.Fragment>
           ))}
+          {/* 추가된 헬프 링크들 */}
+          <hr className="menu-divider" />
+          <ExternalLinkItem
+            title="사용자설명서"
+            icon={<BookOpen size={16} />}
+            url="https://flower-aunt-7b7.notion.site/1a1a559505a9804e85aee1b98355a5a2?pvs=74"
+          />
+          <ExternalLinkItem
+            title="오픈채팅"
+            icon={<MessageCircle size={16} />}
+            url="https://open.kakao.com/o/gR9R7s4g"
+          />
         </div>
       </nav>
     </aside>

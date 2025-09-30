@@ -4,7 +4,6 @@
 .dashboard-container {
     width: 100%;
     height: 100%;
-    background: #EBEFF9;
     position: relative;
 }
 
@@ -123,7 +122,7 @@
     height: 18.9%;
     left: 55%;
     top: 24.5%;
-    background: radial-gradient(50% 50% at 50% 50%, #FFCC3F 0%, #FFF5DF 100%);
+    /* background: radial-gradient(50% 50% at 50% 50%, #FFCC3F 0%, #FFF5DF 100%); */
 }
 
 .dashboard-campaign {

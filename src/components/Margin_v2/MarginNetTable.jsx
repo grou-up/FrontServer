@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { getNetProfitAndReturnCost } from "../../services/margin";
 import "../../styles/margin/MarginNetTable.css";
-import { formatNumber } from "../../utils/formatUtils";
+import { formatNumber, formatInteger } from "../../utils/formatUtils";
 import "../../styles/numberColor.css";
 
 const MarginNetTable = ({ startDate, endDate }) => {
@@ -49,7 +49,6 @@ const MarginNetTable = ({ startDate, endDate }) => {
                 setDailyData([]);
             }
         };
-
         fetchData();
         generateDateRange();
     }, [startDate, endDate, generateDateRange]);
@@ -92,13 +91,13 @@ const MarginNetTable = ({ startDate, endDate }) => {
                         <td className="row-header">매출</td>
                         <td className="total-cell">
                             <div className="cell-content">
-                                <span className="cell-value">{formatNumber(totalSales)}</span>
+                                <span className="cell-value">{formatInteger(totalSales)}</span>
                             </div>
                         </td>
                         {fullDateRange.map((date) => (
                             <td key={`sales-${date}`}>
                                 <div className="cell-content">
-                                    <span className="cell-value">{formatNumber(getDataForDate(date, 'marSales'))}</span>
+                                    <span className="cell-value">{formatInteger(getDataForDate(date, 'marSales'))}</span>
                                 </div>
                             </td>
                         ))}
@@ -107,7 +106,7 @@ const MarginNetTable = ({ startDate, endDate }) => {
                         <td className="row-header">순수익</td>
                         <td className="total-cell">
                             <div className="cell-content">
-                                <span className="cell-value positive-profit">{formatNumber(totalNetProfit)}</span>
+                                <span className="cell-value positive-profit">{formatInteger(totalNetProfit)}</span>
                             </div>
                         </td>
                         {fullDateRange.map((date) => {
@@ -116,7 +115,7 @@ const MarginNetTable = ({ startDate, endDate }) => {
                                 <td key={`profit-${date}`}>
                                     <div className="cell-content">
                                         <span className={`cell-value ${netProfit >= 0 ? 'positive-profit' : 'negative-profit'}`}>
-                                            {formatNumber(netProfit)}
+                                            {formatInteger(netProfit)}
                                         </span>
                                     </div>
                                 </td>

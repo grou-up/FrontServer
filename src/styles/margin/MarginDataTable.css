@@ -146,3 +146,84 @@ tr.margin-table-highlight-row>td {
 .margin-table-negative-profit b {
     color: #ff4d4f;
 }
+
+/* 툴팁 관련 스타일 추가 */
+.margin-table-option-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 8px;
+}
+
+.margin-table-option-text {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.margin-table-tooltip-container {
+    position: relative;
+    display: inline-block;
+}
+
+.margin-table-tooltip-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    background-color: #5E87E3;
+    color: white;
+    border-radius: 50%;
+    font-size: 10px;
+    font-weight: bold;
+    cursor: help;
+    margin-left: 4px;
+}
+
+.margin-table-tooltip {
+    visibility: hidden;
+    width: 280px;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 8px 12px;
+    position: absolute;
+    z-index: 1000;
+    bottom: 125%;
+    left: 0;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+    font-size: 12px;
+    line-height: 1.4;
+    white-space: nowrap;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* 툴팁 화살표 */
+.margin-table-tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 20px;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+}
+
+/* 호버 시 툴팁 표시 */
+.margin-table-tooltip-container:hover .margin-table-tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* 모바일에서 툴팁 위치 조정 */
+@media (max-width: 768px) {
+    .margin-table-tooltip {
+        width: 240px;
+        font-size: 11px;
+    }
+}
