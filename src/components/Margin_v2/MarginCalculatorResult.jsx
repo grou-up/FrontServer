@@ -224,17 +224,6 @@ const MarginCalculatorResult = ({ campaigns }) => {
                             onClick={() => toggleExpandCampaign(campaign.campaignId)}
                         >
                             <h3>{campaign.title}</h3>
-                            <div className="button-container">
-                                {/* <button
-                                    className="add-button"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        handleSave(campaign);
-                                    }}>
-                                    목표효율/예산 저장
-                                </button> */}
-
-                            </div>
                         </div>
 
                         {expandedCampaignId.has(campaign.campaignId) && (
