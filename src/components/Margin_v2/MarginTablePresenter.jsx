@@ -4,20 +4,27 @@ import "../../styles/margin/MarginDataTable.css"; // 고유 클래스명으로 �
 
 const MarginTablePresenter = ({ data, dateRange, isInitialLoading, handleInputChange, handleCellClick, handleSave, campaignId }) => {
     const tableContainerRef = useRef(null);
-
+    const hasScrolledRef = useRef(false);
 
     useEffect(() => {
-        if (!data.length || !dateRange.length) return;
+        hasScrolledRef.current = false;
+    }, [dateRange]);
+
+    useEffect(() => {
+        // 데이터가 없거나, 날짜가 없거나, **이미 스크롤을 했다면(true)** 실행하지 않음
+        if (!data.length || !dateRange.length || hasScrolledRef.current) return;
 
         const validDates = data
             .map(item => item.marDate)
             .filter(Boolean)
             .sort();
 
+        // 유효한 데이터가 없으면 중단 (계속 재실행되는 것 방지)
+        if (validDates.length === 0) return;
+
         const lastDataDate = validDates[validDates.length - 1];
         const isLastDateInRange = dateRange.some(d => d.fullDate === lastDataDate);
 
-        // ✅ DOM 업데이트가 완료된 후 스크롤 실행
         const performScroll = () => {
             if (!tableContainerRef.current) return;
 
@@ -25,10 +32,9 @@ const MarginTablePresenter = ({ data, dateRange, isInitialLoading, handleInputCh
             const lastRef = document.querySelector(`[data-date="${lastDataDate}"]`);
 
             if (isLastDateInRange && lastRef) {
-                // ✅ 스크롤 대상 요소가 실제로 존재하는지 확인
                 const scrollLeft = lastRef.offsetLeft
                     - container.clientWidth
-                    + lastRef.offsetWidth
+                    + lastRef.offsetWidth;
 
                 container.scrollTo({
                     left: scrollLeft,
@@ -40,15 +46,17 @@ const MarginTablePresenter = ({ data, dateRange, isInitialLoading, handleInputCh
                     behavior: 'smooth',
                 });
             }
+
+            // 3. [추가] 스크롤 실행 후 "완료됨"으로 표시 -> 이후 데이터가 바껴도 스크롤 안 함
+            hasScrolledRef.current = true;
         };
 
-        // ✅ requestAnimationFrame으로 다음 페인트 사이클에 스크롤 실행
         const timeoutId = setTimeout(() => {
             requestAnimationFrame(performScroll);
         }, 100);
 
         return () => clearTimeout(timeoutId);
-    }, [isInitialLoading, dateRange, data]); // ✅ data도 의존성에 추가
+    }, [isInitialLoading, dateRange, data]);
 
     const options = [
         { optionName: "목표효율", key: "marTargetEfficiency", editable: true, totalType: 'averageValue', unit: '%', showSaveButton: true, isGroupStart: true },
