@@ -69,6 +69,8 @@
 /* --- 버튼 공통 스타일 --- */
 .add-item-button,
 .save-button,
+.excel-upload-button,
+.excel-download-button,
 .delete-button {
     border: none;
     padding: 10px 20px;
@@ -335,4 +337,14 @@
     text-align: center;
     color: #9ca3af;
     font-size: 0.9rem;
+}
+
+.excel-upload-button {
+    color: white;
+    background-color: #eec438;
+}
+
+.excel-download-button {
+    color: white;
+    background-color: #f3844c;
 }
