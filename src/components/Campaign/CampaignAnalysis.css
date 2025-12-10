@@ -170,6 +170,10 @@ tbody tr:hover {
     background-color: #50e3c2;
 }
 
+.TagYellow {
+    background-color: #ecbd3b;
+}
+
 .ExternalLinkIcon {
     color: #a0aec0;
     cursor: pointer;

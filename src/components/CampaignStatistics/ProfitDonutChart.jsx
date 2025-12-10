@@ -35,18 +35,41 @@ const centerTextPlugin = {
     }
 };
 
+// ✨ 1. 계산 로직을 위한 헬퍼 함수 (컴포넌트 외부에 선언) ---
+const calculateTotalsFromData = (dataObject) => {
+    // 데이터가 없거나 객체가 아니면 0을 반환
+    if (!dataObject || typeof dataObject !== 'object') {
+        // console.log("is null");
+        return { totalAdCost: 0, totalAdSales: 0 };
+    }
 
-const ProfitDonutChart = ({ marginData }) => {
-    const totals = marginData[0].data.reduce(
+    // Object.values()를 사용해 객체의 값들을 배열로 만듦
+    const dataArray = Object.values(dataObject);
+
+    // 이제 배열이 되었으니 reduce를 사용 가능!
+    return dataArray.reduce(
         (acc, item) => {
-            acc.totalAdCost += item.marAdCost || 0;
-            acc.totalAdSales += item.marSales || 0; // 기준이 전체 매출이므로 marSales를 사용
+            // marAdCost -> adCost, marSales -> adSales 로 필드명 변경
+            acc.totalAdCost += item.adCost || 0;
+            acc.totalAdSales += item.adSales || 0;
             return acc;
         },
         { totalAdCost: 0, totalAdSales: 0 }
     );
+};
 
-    const { totalAdCost, totalAdSales } = totals;
+const ProfitDonutChart = ({ search, nonSearch }) => {
+    console.log('--- ProfitDonutChart 렌더링 시작 ---');
+    console.log('search prop:', search);
+    console.log('nonSearch prop:', nonSearch);
+    // ✨ 2. 헬퍼 함수를 사용해 search와 nonSearch 데이터의 합계를 각각 계산 ---
+    const searchTotals = calculateTotalsFromData(search);
+    const nonSearchTotals = calculateTotalsFromData(nonSearch);
+
+    // ✨ 3. 두 합계를 더해서 최종 total 값을 만듦 ---
+    const totalAdCost = searchTotals.totalAdCost + nonSearchTotals.totalAdCost;
+    const totalAdSales = searchTotals.totalAdSales + nonSearchTotals.totalAdSales;
+
     const adProfit = totalAdSales - totalAdCost;
 
     // --- 2. '매출 대비 이익 비율' 퍼센트 계산 ---

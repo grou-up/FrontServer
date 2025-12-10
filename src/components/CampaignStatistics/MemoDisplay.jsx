@@ -6,7 +6,7 @@ const MemoDisplay = ({ memoData }) => {
     if (!memoData || Object.keys(memoData).length === 0) {
         return (
             <div className="memo-container">
-                <p className="no-memo-text">작성된 메모가 없습니다.</p>
+                <p className="no-memo-text">  해당 기간에 작성된 메모가 없습니다.</p>
             </div>
         );
     }

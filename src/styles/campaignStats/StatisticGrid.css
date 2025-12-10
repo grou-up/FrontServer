@@ -9,6 +9,9 @@
     /* 그리드 아이템 사이의 간격 */
     gap: 10px;
     /* 1.5rem */
+    /* ✨ 바로 이 속성이야! */
+    align-items: stretch;
+
 }
 
 .grid-left-column,
@@ -57,7 +60,7 @@
     /* 모서리 둥글게 */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     /* 그림자 추가 */
-    height: 400px;
+    /* height: 400px; */
     /* 고정 높이 설정 */
     /* width: 1500px; */
     display: flex;
