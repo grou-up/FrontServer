@@ -55,6 +55,6 @@ export const downloadExcel = async () => { // 👈 일단 {}를 지우고 파라
     }
 }
 export const uploadExcel = async (formData) => {
-    const response = await apiRequest('/marginforcam/upload', 'DELETE', formData);
+    const response = await apiRequest('/marginforcam/upload', 'POST', formData);
     return response;
 };
