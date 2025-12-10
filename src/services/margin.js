@@ -19,7 +19,6 @@ export const getTotalSales = async ({ date }) => {
 export const getMarginByCampaignId = async ({ startDate, endDate, campaignId }) => {
     try {
         const response = await apiRequest(`/margin/getMargin?startDate=${startDate}&endDate=${endDate}&campaignId=${campaignId}`);
-        console.log(response);
         return response;
     } catch (error) {
         throw error;
@@ -27,7 +26,7 @@ export const getMarginByCampaignId = async ({ startDate, endDate, campaignId }) 
 }
 export const marginUpdatesByPeriod = async (data) => {
     try {
-        const response = await apiRequest('/margin/marginUpdatesByPeriod', 'PATCH', data);
+        const response = await apiRequest('/marginforcampaignchangedbyperiod/save', 'PATCH', data);
         return response; // 성공 시 반환
     } catch (error) {
         console.error('데이터 생성 중 오류 발생:', error.message);

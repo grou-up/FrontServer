@@ -16,7 +16,7 @@ const renderCustomizedLabel = ({ cx, cy, midAngle, innerRadius, outerRadius, per
 };
 
 const DashboardPieChartCard = ({ title, data, totalValue, onHover, formatCurrency, COLORS, PieTooltip }) => {
-    const totalLabel = title === '매출' ? '총 매출' : '총 순이익';
+    const totalLabel = title === '광고 매출' ? '총 매출' : '총 순이익';
 
     return (
         <div className="lg:col-span-4 bg-white rounded-2xl shadow-lg p-4 flex flex-col">

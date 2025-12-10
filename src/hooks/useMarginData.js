@@ -1,10 +1,13 @@
-// src/hooks/useMarginData.js
-
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { getMarginByCampaignId, createMarginTable } from "../services/margin";
+import { createMarginTable } from "../services/margin";
 
-export const useMarginData = (startDate, endDate, campaignId, onDataChange) => {
-    const [data, setData] = useState([]);
+// 파라미터에 initialData, onRefresh 확인
+export const useMarginData = (startDate, endDate, campaignId, onDataChange, initialData, onRefresh) => {
+
+    // 🚨 [수정 포인트 1] useState([]) 대신, initialData가 있으면 바로 넣고 시작합니다.
+    // 이렇게 해야 카드를 다시 열었을 때 깜빡임 없이 데이터가 바로 보입니다.
+    const [data, setData] = useState(initialData || []);
+
     const [modifiedData, setModifiedData] = useState({});
 
     const dateRange = useMemo(() => {
@@ -21,17 +24,12 @@ export const useMarginData = (startDate, endDate, campaignId, onDataChange) => {
         return range;
     }, [startDate, endDate]);
 
+    // 🚨 [수정 포인트 2] 부모의 데이터가 나중에 로딩되거나 변경되었을 때를 대비해 동기화 유지
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await getMarginByCampaignId({ startDate, endDate, campaignId });
-                setData(response.data[0].data);
-            } catch (error) {
-                console.error("데이터를 가져오는 중 오류 발생:", error);
-            }
-        };
-        fetchData();
-    }, [startDate, endDate, campaignId]);
+        if (initialData) {
+            setData(initialData);
+        }
+    }, [initialData]);
 
     const handleInputChange = useCallback((e, fullDate, key) => {
         const newValue = e.target.value;
@@ -52,23 +50,24 @@ export const useMarginData = (startDate, endDate, campaignId, onDataChange) => {
             };
             return { ...prev, [fullDate]: updatedData };
         });
-    }, [data]); // data를 의존성에 추가
+    }, [data]);
 
     const handleCellClick = useCallback(async (fullDate) => {
         try {
             await createMarginTable({ targetDate: fullDate, campaignId });
-            const updateResponse = await getMarginByCampaignId({ startDate, endDate, campaignId });
-
-            setData(updateResponse.data[0]?.data || []);
+            console.log("데이터갱신")
+            // 데이터 갱신 요청
+            if (onRefresh) {
+                onRefresh();
+            }
         } catch (error) {
             console.error("셀 클릭 후 마진 테이블 생성 실패:", error);
         }
-    }, [startDate, endDate, campaignId]);
+    }, [campaignId, onRefresh]);
 
     useEffect(() => {
         onDataChange(campaignId, modifiedData);
     }, [modifiedData, campaignId, onDataChange]);
-
 
     return {
         data,

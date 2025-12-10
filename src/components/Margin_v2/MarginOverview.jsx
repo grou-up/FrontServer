@@ -117,7 +117,7 @@ const MarginOverview = () => {
             <div className="dashboard-page-container">
                 <section className="dashboard-cards-section">
                     <DashboardPieChartCard
-                        title="매출"
+                        title="광고 매출"
                         data={processedData.pieDataRevenue}
                         totalValue={processedData.totalRevenue}
                         onHover={setHoveredProduct}

@@ -90,49 +90,32 @@ const MarginResultModal = ({ isOpen, onClose, campaignId }) => {
             return;
         }
 
-        // 1. 선택된 옵션들을 campaignId를 기준으로 그룹화합니다.
-        const groupedByCampaign = selectedOptions.reduce((acc, index) => {
-            const item = tableData[index];
-            if (!acc[item.campaignId]) {
-                acc[item.campaignId] = [];
-            }
-            acc[item.campaignId].push(item);
-            return acc;
-        }, {});
+        // ✅ 1. 선택된 각 항목에 대해 API 요청 Promise 배열을 만듭니다.
+        const savePromises = selectedOptions.map(index => {
+            const item = tableData[index]; // 선택된 행의 데이터
+
+            // ✅ 2. 백엔드의 SaveReqDto 형식에 정확히 맞춰 payload를 만듭니다.
+            const payload = {
+                mfcId: item.id, // 또는 item.mfcId (데이터 구조에 맞게)
+                startDate: startDate.toISOString().split("T")[0],
+                endDate: endDate.toISOString().split("T")[0],
+                salePrice: item.mfcSalePrice, // 사용자가 입력한 새 값
+                totalPrice: item.mfcTotalPrice, // 사용자가 입력한 새 값
+                costPrice: item.mfcCostPrice,   // 사용자가 입력한 새 값
+                returnPrice: item.mfcReturnPrice, // 사용자가 입력한 새 값
+            };
+
+            // ✅ 3. 이 payload로 API 서비스 함수를 호출합니다.
+            // (함수 이름은 marginUpdateByPeriod (단수형) 또는 적절한 것으로 가정)
+            return marginUpdatesByPeriod(payload);
+        });
 
         try {
-            // 2. 각 캠페인 그룹별로 API 요청 Promise 배열을 만듭니다.
-            const savePromises = Object.entries(groupedByCampaign).map(([campaignId, items]) => {
-
-                // ✅ 새로운 MfcRequestWithDatesDto 형식에 맞게 payload를 구성합니다.
-                const payload = {
-                    campaignId: Number(campaignId),
-                    startDate: startDate.toISOString().split("T")[0], // ✅ startDate 추가
-                    endDate: endDate.toISOString().split("T")[0],     // ✅ endDate 추가
-                    data: items.map(item => ({
-                        mfcId: item.id,
-                        mfcProductName: item.mfcProductName,
-                        mfcType: item.mfcType,
-                        mfcSalePrice: item.mfcSalePrice,
-                        mfcTotalPrice: item.mfcTotalPrice,
-                        mfcCostPrice: item.mfcCostPrice,
-                        mfcPerPiece: item.mfcPerPiece,
-                        mfcReturnPrice: item.mfcReturnPrice,
-                        mfcZeroRoas: item.mfcZeroRoas,
-                    })),
-                };
-                console.log(payload)
-
-                // ✅ 새로운 API 서비스 함수를 호출합니다.
-                return marginUpdatesByPeriod(payload);
-            });
-
-            // 3. 모든 API 요청을 동시에 보냅니다.
+            // ✅ 4. 모든 API 요청을 동시에 보냅니다. (선택한 항목이 3개면 3번의 요청이 나감)
             await Promise.all(savePromises);
 
             alert("선택된 데이터가 저장되었습니다!");
-            window.location.reload();
-
+            // window.location.reload();
         } catch (error) {
             console.error("저장 중 오류 발생:", error);
             alert("저장 중 오류가 발생했습니다.");

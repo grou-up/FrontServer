@@ -14,9 +14,8 @@ const MarginCalculatorResult = ({ campaigns }) => {
     const [tableData, setTableData] = useState([]);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modifiedData, setModifiedData] = useState({});
-    const [isDataLoaded, setIsDataLoaded] = useState(false); // ✅ 데이터 로딩 상태 추가
+    const [isDataLoaded, setIsDataLoaded] = useState(false);
 
-    // MarginNetTable 최신화를 위한 ref 추가
     const marginNetTableRef = useRef(null);
 
     const today = new Date();
@@ -29,7 +28,6 @@ const MarginCalculatorResult = ({ campaigns }) => {
 
     const toggleCalendar = () => setShowCalendar(v => !v);
 
-    // MarginNetTable 강제 새로고침 함수 - useEffect보다 먼저 선언
     const refreshMarginNetTable = useCallback(() => {
         if (marginNetTableRef.current && typeof marginNetTableRef.current.refreshData === 'function') {
             marginNetTableRef.current.refreshData();
@@ -39,41 +37,40 @@ const MarginCalculatorResult = ({ campaigns }) => {
     const handleDateRangeChange = ({ startDate, endDate }) => {
         setStartDate(startDate);
         setEndDate(endDate);
-        // ✅ 날짜 변경 시에도 MarginNetTable 새로고침
         setTimeout(() => {
             refreshMarginNetTable();
         }, 100);
     };
 
     const fetchMarginResults = useCallback(async () => {
-        // ✅ 훅에서 제공하는 startDate, endDate를 사용
         if (!campaigns || campaigns.length === 0 || !startDate || !endDate) return;
 
-        setIsDataLoaded(false); // ✅ 로딩 시작
+        setIsDataLoaded(false);
 
         try {
             const allCampaignData = await Promise.all(campaigns.map(async ({ campaignId }) => {
                 const response = await getMarginByCampaignId({ startDate, endDate, campaignId });
-                return { campaignId, data: response?.data ?? [] };
+                // ✅ 데이터 껍데기 벗기기
+                const realData = response?.data?.[0]?.data || [];
+
+                return { campaignId, data: realData };
             }));
+
             setTableData(allCampaignData);
 
-            // ✅ 모든 데이터 로딩 완료 후 약간의 지연시간을 두고 MarginNetTable 표시
             setTimeout(() => {
                 setIsDataLoaded(true);
             }, 300);
 
         } catch (error) {
             console.error("마진 결과 데이터 로딩 중 에러 발생:", error);
-            // 에러 발생 시 tableData를 비워주는 것이 좋습니다.
             setTableData([]);
-            setIsDataLoaded(true); // ✅ 에러 시에도 MarginNetTable은 표시
+            setIsDataLoaded(true);
         }
     }, [startDate, endDate, campaigns]);
 
     useEffect(() => {
         fetchMarginResults();
-        // ✅ 화면 로드 시 MarginNetTable도 새로고침
         refreshMarginNetTable();
     }, [fetchMarginResults, refreshMarginNetTable]);
 
@@ -94,58 +91,66 @@ const MarginCalculatorResult = ({ campaigns }) => {
         setIsModalOpen(true);
     };
 
-    const handleSave = async (campaignId) => {
-
+    // ✅ [신규 추가] 특정 캠페인 하나만 빠르게 새로고침하는 함수 (화면 깜빡임 없이 데이터 교체)
+    const refreshOneCampaign = useCallback(async (targetCampaignId) => {
         try {
-            // ✅ selectedCampaign.campaignId 대신, 인자로 받은 campaignId를 바로 사용합니다.
+            // 1. 해당 캠페인만 API 호출
+            const response = await getMarginByCampaignId({ startDate, endDate, campaignId: targetCampaignId });
+            const newMarginList = response?.data?.[0]?.data || [];
+
+            // 2. 전체 데이터 중 해당 캠페인만 쏙 바꿔치기 (Partial Update)
+            // 이렇게 하면 자식 컴포넌트(MarginDataTable)의 props.data가 바뀌면서 즉시 화면이 갱신됨
+            setTableData(prevTableData =>
+                prevTableData.map(item =>
+                    item.campaignId === targetCampaignId
+                        ? { ...item, data: newMarginList }
+                        : item
+                )
+            );
+
+            // 3. 전체 집계표 갱신
+            setTimeout(() => {
+                refreshMarginNetTable();
+            }, 100);
+
+        } catch (error) {
+            console.error(`캠페인(${targetCampaignId}) 새로고침 실패:`, error);
+        }
+    }, [startDate, endDate, refreshMarginNetTable]);
+
+
+    const handleSave = async (campaignId) => {
+        try {
             const changedData = modifiedData[campaignId] || {};
 
-            // ... (이하 로직은 거의 동일)
-            if (typeof changedData !== 'object' || Array.isArray(changedData)) {
-                throw new Error("변경된 데이터의 형식이 올바르지 않습니다.");
-            }
             const data = {
-                campaignId: campaignId, // ✅ campaignId를 그대로 사용
-                data: Object.values(changedData).map(item => {
-                    return {
-                        id: item?.id,
-                        mardate: item.marDate,
-                        marTargetEfficiency: item.marTargetEfficiency,
-                        marAdBudget: item.marAdBudget
-                    };
-                }),
+                campaignId: campaignId,
+                data: Object.values(changedData).map(item => ({
+                    id: item?.id,
+                    mardate: item.marDate,
+                    marTargetEfficiency: item.marTargetEfficiency,
+                    marAdBudget: item.marAdBudget
+                })),
             };
+
             if (data.data.length === 0) {
                 alert("바뀐 데이터가 없습니다.");
                 return;
             }
 
+            // 1. 서버 저장
             await updateEfficiencyAndAdBudget(data);
             alert("저장되었습니다.");
 
-            // 캠페인을 닫았다가 다시 여는 처리
-            setExpandedCampaignId(prev => {
-                const newSet = new Set(prev);
-                newSet.delete(campaignId);
-                return newSet;
+            // ✅ 2. 저장 후 해당 캠페인 데이터만 조용히 갱신 (카드는 열린 상태 유지)
+            await refreshOneCampaign(campaignId);
+
+            // 3. 임시 데이터 초기화
+            setModifiedData(prev => {
+                const next = { ...prev };
+                delete next[campaignId];
+                return next;
             });
-
-            // 데이터 다시 불러오기
-            await fetchMarginResults();
-
-            // ✅ MarginNetTable도 새로고침 - fetchMarginResults 완료 후 실행
-            setTimeout(() => {
-                refreshMarginNetTable();
-            }, 400);
-
-            // 일정 시간 후 다시 열기
-            setTimeout(() => {
-                setExpandedCampaignId(prev => {
-                    const newSet = new Set(prev);
-                    newSet.add(campaignId);
-                    return newSet;
-                });
-            }, 50); // 100ms 후 다시 열기
 
         } catch (error) {
             console.error("저장 중 오류 발생:", error);
@@ -154,22 +159,21 @@ const MarginCalculatorResult = ({ campaigns }) => {
     };
 
     useEffect(() => {
-    }, [modifiedData]); // 의존성 배열에 modifiedData를 넣습니다.
+    }, [modifiedData]);
 
     const handleDataChange = useCallback((campaignId, newData) => {
         setModifiedData(prev => ({
             ...prev,
             [campaignId]: newData
         }));
-    }, []); // 의존성 배열이 비어있으면 이 함수는 단 한번만 생성됩니다.
+    }, []);
 
     return (
         <div className="form-main-content">
-            {/* 날짜 선택 UI 추가 */}
             <div className="flex items-center justify-end mb-4">
                 <button
-                    className="add-button" // 스타일은 필요에 맞게 조정하세요.
-                    onClick={handleOptionMarginClick} // ✅ campaign 객체 전달을 제거합니다.
+                    className="add-button"
+                    onClick={handleOptionMarginClick}
                 >
                     기간별 원가 수정
                 </button>
@@ -193,7 +197,6 @@ const MarginCalculatorResult = ({ campaigns }) => {
                 </div>
             </div>
 
-            {/* ✅ MarginNetTable을 다시 위로 이동하고 로딩 상태 관리 */}
             {isDataLoaded ? (
                 <MarginNetTable
                     ref={marginNetTableRef}
@@ -224,16 +227,17 @@ const MarginCalculatorResult = ({ campaigns }) => {
                             onClick={() => toggleExpandCampaign(campaign.campaignId)}
                         >
                             <h3>{campaign.title}</h3>
+
+                            {/* ✅ [추가] 저장 버튼 복구 */}
                             <div className="button-container">
-                                {/* <button
+                                <button
                                     className="add-button"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        handleSave(campaign);
+                                        handleSave(campaign.campaignId);
                                     }}>
                                     목표효율/예산 저장
-                                </button> */}
-
+                                </button>
                             </div>
                         </div>
 
@@ -244,7 +248,10 @@ const MarginCalculatorResult = ({ campaigns }) => {
                                 endDate={endDate}
                                 campaignId={campaign.campaignId}
                                 onDataChange={handleDataChange}
-                                onSave={handleSave} // ✅ onSave라는 이름으로 함수를 내려줍니다.
+                                onSave={handleSave}
+
+                                // ✅ [핵심] 빈 셀 클릭 시 -> 이 함수가 실행되어 -> 데이터만 교체됨 (카드 안 닫힘)
+                                onRefresh={() => refreshOneCampaign(campaign.campaignId)}
                             />
                         )}
                     </div>
