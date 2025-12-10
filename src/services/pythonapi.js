@@ -42,6 +42,10 @@ export const uploadFile3 = (file, date, onUploadProgress) => {
   // 토큰 가져오기
   const token = getToken();
 
+  for (let [key, value] of formData.entries()) {
+    console.log(`FormData Check -> ${key}:`, value);
+  }
+
   return axios.post(`${PYTHON_URL}/django/upload_margin/`, formData, {
     headers: {
       'Content-Type': 'multipart/form-data',
